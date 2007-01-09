@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<reuters>
+<newsitem itemid="2330" id="root" date="1996-08-20" xml:lang="en">
+<title>USA: Tylan stock jumps; weighs sale of company.</title>
+<headline>Tylan stock jumps; weighs sale of company.</headline>
+<dateline>SAN DIEGO</dateline>
+<text>
+<p>The stock of Tylan General Inc. jumped Tuesday after the maker of
+process-management equipment said it is exploring the sale of the
+company and added that it has already received some inquiries from
+potential buyers.</p>
+<p>Tylan was up $2.50 to $12.75 in early trading on the Nasdaq market.</p>
+<p>The company said it has set up a committee of directors to oversee
+the sale and that Goldman, Sachs &amp; Co. has been retained as its
+financial adviser.</p>
+</text>
+<copyright>(c) Reuters Limited 1996</copyright>
+<metadata>
+<codes class="bip:countries:1.0">
+<code code="USA"> </code>
+</codes>
+<codes class="bip:industries:1.0">
+<code code="I34420"> </code>
+</codes>
+<codes class="bip:topics:1.0">
+<code code="C15"> </code>
+<code code="C152"> </code>
+<code code="C18"> </code>
+<code code="C181"> </code>
+<code code="CCAT"> </code>
+</codes>
+<dc element="dc.publisher" value="Reuters Holdings Plc"/>
+<dc element="dc.date.published" value="1996-08-20"/>
+<dc element="dc.source" value="Reuters"/>
+<dc element="dc.creator.location" value="SAN DIEGO"/>
+<dc element="dc.creator.location.country.name" value="USA"/>
+<dc element="dc.source" value="Reuters"/>
+</metadata>
+</newsitem>
+<newsitem itemid="2286" id="root" date="1996-08-20" xml:lang="en">
+<title>MEXICO: Recovery excitement brings Mexican markets to life.</title>
+<headline>Recovery excitement brings Mexican markets to life.</headline>
+<byline>Henry Tricks</byline>
+<dateline>MEXICO CITY</dateline>
+<text>
+<p>Emerging evidence that Mexico's economy was back on the recovery track sent Mexican markets into
+a buzz of excitement Tuesday, with stocks closing at record highs and interest rates at 19-month lows.</p>
+<p>"Mexico has been trying to stage a recovery since the beginning of this year and it's always been
+getting ahead of itself in terms of fundamentals," said Matthew Hickman of Lehman Brothers in New York.</p>
+<p>"Now we're at the point where the fundamentals are with us. The history is now falling out of
+view."</p>
+<p>That history is one etched into the minds of all investors in Mexico: an economy in crisis since
+December 1994, a free-falling peso and stubbornly high interest rates.</p>
+<p>This week, however, second-quarter gross domestic product was reported up 7.2 percent, much
+stronger than most analysts had expected. Interest rates on governent Treasury bills, or Cetes, in the
+secondary market fell on Tuesday to 23.90 percent, their lowest level since Jan. 25, 1995.</p>
+<p>The stock market's main price index rallied 77.12 points, or 2.32 percent, to a record 3,401.79 points,
+with volume at a frenzied 159.89 million shares.</p>
+<p>Confounding all expectations has been the strength of the peso, which ended higher in its longer-term
+contracts on Tuesday despite the secondary Cetes drop and expectations of lower benchmark rates in
+Tuesday's weekly auction.</p>
+<p>With U.S. long-term interest rates expected to remain steady after the Federal Reserve refrained from
+raising short-term rates on Tuesday, the attraction of Mexico, analysts say, is that it offers robust returns for
+foreigners and growing confidence that they will not fall victim to a crumbling peso.</p>
+<p>"The focus is back on Mexican fundamentals," said Lars Schonander, head of researcher at
+Santander in Mexico City. "You have a continuing decline in inflation, a stronger-than-expected GDP growth
+figure and the lack of any upward move in U.S. rates."</p>
+<p>Other factors were also at play, said Felix Boni, head of research at James Capel in Mexico City,
+such as positive technicals and economic uncertainty in Argentina, which has put it and neighbouring Brazil's
+markets at risk.</p>
+<p>"There's a movement out of South American markets into Mexico," he said. But Boni was also wary of
+what he said could be "a lot of hype."</p>
+<p>The economic recovery was still export-led, and evidence was patchy that the domestic consumer
+was back with a vengeance. Also, corporate earnings need to grow strongly to justify the run-up in the stock
+market, he said.</p>
+</text>
+<copyright>(c) Reuters Limited 1996</copyright>
+<metadata>
+<codes class="bip:countries:1.0">
+<code code="MEX"> </code>
+</codes>
+<codes class="bip:topics:1.0">
+<code code="E11"> </code>
+<code code="ECAT"> </code>
+<code code="M11"> </code>
+<code code="M12"> </code>
+<code code="MCAT"> </code>
+</codes>
+<dc element="dc.publisher" value="Reuters Holdings Plc" />
+<dc element="dc.date.published" value="1996-08-20" />
+<dc element="dc.source" value="Reuters" />
+<dc element="dc.creator.location" value="MEXICO CITY" />
+<dc element="dc.creator.location.country.name" value="MEXICO" />
+<dc element="dc.source" value="Reuters" />
+</metadata>
+</newsitem>
+</reuters>

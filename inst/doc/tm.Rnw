@@ -1,0 +1,311 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{courier}
+
+\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\class}[1]{\mbox{\textsf{#1}}}
+\newcommand{\func}[1]{\mbox{\texttt{#1()}}}
+\newcommand{\code}[1]{\mbox{\texttt{#1}}}
+\newcommand{\pkg}[1]{\strong{#1}}
+\newcommand{\samp}[1]{`\mbox{\texttt{#1}}'}
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\set}[1]{\mathcal{#1}}
+
+%% \VignetteIndexEntry{Introduction to tm}
+
+\begin{document}
+<<echo=FALSE>>=
+options(width = 75)
+### for sampling
+set.seed <- 1234
+@
+\title{Introduction to \pkg{tm} --- Text Mining in \proglang{R}}
+\author{Ingo Feinerer}
+\maketitle
+\sloppy
+
+\begin{abstract}
+This vignette gives a short overview over available features in the
+\pkg{tm} package for text mining purposes in \proglang{R}.
+\end{abstract}
+
+\section*{Loading the Package}
+Before actually working we need to load the package:
+<<>>=
+library("tm")
+@
+
+\section*{Data Import}
+The main structure for managing documents is a socalled text document
+collection (\class{TextDocCol}). Its constructor takes following arguments:
+\begin{itemize}
+\item \code{object}: a \class{Source} object which abstracts the input location
+\item \code{parser}: a parser which constructs a text document from a single element
+  delivered by a source. A parser must have the argument signature \code{(elem,
+    load, id)}. The first argument is the element provided
+  from the source, the second indicates whether the user wants to load
+  the documents immediately into memory, and the third is a unique
+  identification string.
+\item \code{...}: formally if the passed over \code{parser} function is of
+  class \code{FunctionGenerator}, it is assumed to be a function
+  generating a parser. This way custom parsers taking various
+  parameters (specified in \code{...}) can be built, which in fact
+  must produce a valid parser signature but can access additional
+  parameters via lexical scoping (i.e., by the including
+  environment).
+\end{itemize}
+
+Available sources are \class{DirSource}, \class{CSVSource},
+\class{GmaneSource} and
+\class{ReutersSource} which handle a directory, a mixed CSV, a Gmane
+mailing list archive RSS feed or a
+mixed Reuters file (mixed means several documents are in a single
+file). Except \class{DirSource}, which is designated
+solely for directories on a file system, all other implemented sources
+can take connections as input (a character string is interpreted as
+filename).
+
+This package ships with several readers (\code{readPlain()}
+(default), \code{readRCV1()}, \code{readReut21578XML()},
+\code{readGmane()} and \code{readNewsgroup()}). The default just
+reads in the whole input file and interprets the content as text.
+
+Plain text files in a directory:
+<<>>=
+# Plain text
+txt <- system.file("texts", "txt", package = "tm")
+(Ovid.tdc <- TextDocCol(DirSource(txt), load = TRUE))
+@
+
+A single comma separated values file:
+<<>>=
+# Comma separated values
+cars.csv <- system.file("texts", "cars.csv", package = "tm")
+TextDocCol(CSVSource(cars.csv))
+@
+
+Reuters21578 files either in directory (one document per file) or a single
+file (several documents per file). Note that connections can be used
+as input:
+<<>>=
+# Reuters21578 XML
+reut21578 <- system.file("texts", "reut21578", package = "tm")
+reut21578.xml <- system.file("texts", "reut21578.xml", package = "tm")
+reut21578.xml.gz <- system.file("texts", "reut21578.xml.gz", package = "tm")
+
+(reut21578.tdc <- TextDocCol(DirSource(reut21578), readReut21578XML))
+
+TextDocCol(ReutersSource(reut21578.xml), readReut21578XML)
+TextDocCol(ReutersSource(gzfile(reut21578.xml.gz)), readReut21578XML)
+@
+
+Analogously for files in the Reuters Corpus Volume 1 format:
+<<>>=
+# Reuters Corpus Volume 1
+rcv1 <- system.file("texts", "rcv1", package = "tm")
+rcv1.xml <- system.file("texts", "rcv1.xml", package = "tm")
+
+TextDocCol(DirSource(rcv1), readRCV1, load = TRUE)
+TextDocCol(ReutersSource(rcv1.xml), readRCV1)
+@
+
+Or mails from newsgroups (as found in the UCI KDD newsgroup dataset):
+<<>>=
+# UCI KDD Newsgroup Mails
+newsgroup <- system.file("texts", "newsgroup", package = "tm")
+
+TextDocCol(DirSource(newsgroup), readNewsgroup, load = TRUE)
+@
+
+RSS feed as delivered by Gmane for the R mailing list archive:
+<<>>=
+rss <- system.file("texts", "gmane.comp.lang.r.gr.rdf", package = "tm")
+
+TextDocCol(GmaneSource(rss), readGmane)
+@
+
+\section*{Inspecting the Text Document Collection}
+Custom \code{show} and \code{summary} methods are available, which
+hide the raw amount of information (consider a collection could
+consists of several thousand documents, like a
+database). \code{summary} gives more details on metadata than
+\code{show}, whereas in order to actually see the content of text
+documents use the command \code{inspect} on a collection.
+<<>>=
+show(Ovid.tdc)
+summary(Ovid.tdc)
+inspect(Ovid.tdc[1:2])
+@
+
+\section*{Transformations}
+Once we have a text document collection one typically wants to modify
+the documents in it, e.g., stemming, stopword removal, et cetera. All
+this functionality is subsumed by the concept of
+\emph{transformation}s in \pkg{tm}. Transformations are done via
+the \code{tmMap} function which applies a function to all elements
+of the collection. Basically, all transformations work on single text
+documents and \code{tmMap} just applies them to all documents in a
+document collection.
+
+\subsection*{Loading Documents into Memory}
+If the source objects supports load on demand, but the user has not
+enforced the package to load the input content directly into memory,
+this can be done manually via \code{loadDoc}. Normally it is not
+necessary to call this explicitly, as other functions working on text
+corpora trigger this function for not-loaded documents (the corpus is
+automatically loaded if accessed via \code{[[}).
+<<>>=
+reut21578.tdc <- tmMap(reut21578.tdc, loadDoc)
+@
+
+\subsection*{Converting to Plaintext Documents}
+The text document collection \code{reut21578.tdc} contains documents
+in XML format. We have no further use for the XML interna and just
+want to work with the text content. This can be done by converting the
+documents to plaintext documents. It is done by the generic
+\code{asPlain} in assistance by a converter function
+\code{convertReut21578XMLPlain} which knows how to actually do it.
+<<>>=
+reut21578.tdc <- tmMap(reut21578.tdc, asPlain, convertReut21578XMLPlain)
+@
+
+\subsection*{Eliminating Extra Whitespace}
+Extra whitespace is eliminated by:
+<<>>=
+reut21578.tdc <- tmMap(reut21578.tdc, stripWhitespace)
+@
+
+\subsection*{Convert to Lower Case}
+Conversion to lower case by:
+<<>>=
+reut21578.tdc <- tmMap(reut21578.tdc, tmTolower)
+@
+
+\subsection*{Remove Stopwords}
+Removal of stopwords by:
+<<>>=
+data(stopwords_en)
+reut21578.tdc <- tmMap(reut21578.tdc, removeWords, stopwords_en)
+@
+
+\subsection*{Stemming}
+Stemming is done by:
+<<>>=
+tmMap(reut21578.tdc, stemDoc)
+@
+
+\section*{Filters}
+Often it is of special interest to filter out documents satisfying given
+properties. For this purpose the function \code{tmFilter} is
+designated. It is possible to write custom filter functions, but for
+most cases the default filter does its job: it integrates a minimal
+query language to filter metadata. Statements in this query language
+are statements as used for subsetting data frames.
+
+E.g., the following statement filters out those documents having
+\code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE} as their
+heading and an \code{ID} equal to 10 (both are metadata slot
+variables of the text document).
+<<>>=
+query <- "identifier == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
+tmFilter(reut21578.tdc, query)
+@
+
+There is also a full text search filter available which accepts regular
+expressions:
+<<>>=
+tmFilter(reut21578.tdc, FUN = searchFullText, "partnership", doclevel = TRUE)
+@
+
+\section*{Adding Data or Metadata}
+Text documents or metadata can be added to text document collections
+with \code{appendElem} and \code{appendMeta}, respectively. The
+text document collection has two types of metadata: one is the
+metadata on the document collection level (\code{cmeta}), the other
+is the metadata related to the documents (e.g., clusterings)
+(\code{dmeta}) in form of a dataframe. For the method
+\code{appendElem} it is possible to give a row of values in the
+dataframe for the added data element.
+<<>>=
+data(crude)
+reut21578.tdc <- appendElem(reut21578.tdc, crude[[1]], 0)
+reut21578.tdc <- appendMeta(reut21578.tdc, cmeta = list(test = c(1,2,3)), dmeta = list(cl1 = 1:11))
+summary(reut21578.tdc)
+CMetaData(reut21578.tdc)
+DMetaData(reut21578.tdc)
+@
+
+\section*{Removing Metadata}
+The metadata of text document collections can be easily modified or
+removed:
+<<>>=
+data(crude)
+reut21578.tdc <- removeMeta(reut21578.tdc, cname = "test", dname = "cl1")
+CMetaData(reut21578.tdc)
+DMetaData(reut21578.tdc)
+@
+
+\section*{Operators}
+Most standard operators (\code{[}, \code{[<-}, \code{[[}, \code{[[<-},
+  \code{c}, \code{length}) are available for text document
+collections with semantics similar to standard \proglang{R}
+routines.
+E.g. \code{c} concatenates two (or more) text document
+collections. Applied to several text documents it returns a text
+document collection. The metadata is automatically updated, if text
+document collections are concatenated (i.e., merged).
+
+Note also the custom element-of operator---it checks whether a text
+document is already in a text document collection (metadata is not
+checked, only the corpus):
+<<>>=
+crude[[1]] %IN% reut21578.tdc
+crude[[2]] %IN% reut21578.tdc
+@
+
+\section*{Keeping Track of Text Document Collections}
+There is a mechanism available for managing text document
+collections. It is called \class{TextRepository}. A typical use would
+be to save different states of a text document collection. A
+repository has metadata in list format which can be either set with
+\code{appendElem} as additional argument (e.g., a date when a new
+element is added), or directly with \code{appendMeta}.
+<<>>=
+data(acq)
+repo <- TextRepository(reut21578.tdc)
+repo <- appendElem(repo, acq, list(modified = date()))
+repo <- appendMeta(repo, list(moremeta = 5:10))
+summary(repo)
+RepoMetaData(repo)
+summary(repo[[1]])
+summary(repo[[2]])
+@
+
+\section*{Creating Term-Document Matrices}
+A common approach in text mining is to create a term-document matrix
+for given texts. In this package the class \class{TermDocMatrix}
+handles this for text document collections.
+<<>>=
+tdm <- TermDocMatrix(reut21578.tdc)
+tdm[1:8,50:55]
+@
+
+\section*{Operations on Term-Document Matrices}
+Besides the fact that on this matrix a huge amount of \proglang{R}
+functions (like clustering, classifications, etc.) is possible, this
+package brings some shortcuts. Consider we
+want to find those terms that occur at least 5 times:
+<<>>=
+findFreqTerms(tdm, 5, Inf)
+@
+Or we want to find associations (i.e., terms which correlate) with at
+least $0.97$ correlation for the term \code{crop}:
+<<>>=
+findAssocs(tdm, "crop", 0.97)
+@
+The function also accepts a matrix as first argument (which does not
+inherit from a term-document matrix). This matrix is then interpreted
+as a correlation matrix and directly used. With this approach
+different correlation measures can be employed.
+\end{document}

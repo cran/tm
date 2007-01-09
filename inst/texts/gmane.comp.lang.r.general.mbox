@@ -1,0 +1,2781 @@
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Petr Pikal" <petr.pikal@precheza.cz>
+Subject: Re: Plotting multiple smooth lines on the same graph
+Date: Fri, 15 Dec 2006 17:47:03 +0100
+Lines: 56
+Message-ID: <4582DF97.26169.12A889F@localhost>
+References: <1166190144.4582a641009a0@webmail.cryst.bbk.ac.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 17:48:26 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvGEQ-0005NQ-JS
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 17:48:22 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFGlN0t005823;
+	Fri, 15 Dec 2006 17:47:49 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.2 required=5.0 tests=AWL, BAYES_50,
+	FORGED_RCVD_HELO autolearn=no version=3.1.7
+Received: from mail.precheza.cz (mail.precheza.cz [80.188.29.243])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFGlBuw005713
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 17:47:11 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by mail.precheza.cz (Mailer) with ESMTP id 27F2F34E585;
+	Fri, 15 Dec 2006 17:47:07 +0100 (CET)
+Received: from mail.precheza.cz ([127.0.0.1])
+	by localhost (mail.precheza.cz [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 08457-05-11; Fri, 15 Dec 2006 17:47:05 +0100 (CET)
+Received: from n5en1.precheza.cz (smtp.precheza.cz [192.168.210.35])
+	by mail.precheza.cz (Mailer) with ESMTP id 9AB3634E582;
+	Fri, 15 Dec 2006 17:47:05 +0100 (CET)
+Received: from pikal ([192.168.210.65])
+	by n5en1.precheza.cz (Lotus Domino Release 7.0.1FP1)
+	with ESMTP id 2006121517470616-1293 ;
+	Fri, 15 Dec 2006 17:47:06 +0100 
+To: Eleni Rapsomaniki <e.rapsomaniki@mail.cryst.bbk.ac.uk>,
+        r-help@stat.math.ethz.ch
+Priority: normal
+In-reply-to: <1166190144.4582a641009a0@webmail.cryst.bbk.ac.uk>
+X-mailer: Pegasus Mail for Windows (4.21c)
+X-MIMETrack: Itemize by SMTP Server on SRVDomino/PRECHEZA(Release 7.0.1FP1 |
+	May 25, 2006) at 15.12.2006 17:47:06,
+	Serialize by Router on SRVDomino/PRECHEZA(Release 7.0.1FP1 | May 25,
+	2006) at 15.12.2006 17:47:07,
+	Serialize complete at 15.12.2006 17:47:07
+Content-description: Mail message body
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75840>
+
+Hi
+
+you can either use supsmu smoother
+
+plot(d1) # make sure limits for axes are OK (which is not in this 
+case and you need to set xlim and ylim accordingly
+lines(supsmu(d1[,1], d1[,2]))
+points(d2, pch=2) 
+lines(supsmu(d2[,1], d2[,2]))
+
+or you can use loess smoother which is used in scatter.smooth and do 
+some ordering before plotting and similar plot lines points lines 
+construction.
+
+HTH
+Petr
+
+
+On 15 Dec 2006 at 13:42, Eleni Rapsomaniki wrote:
+
+Date sent:      	Fri, 15 Dec 2006 13:42:25 +0000
+From:           	Eleni Rapsomaniki <e.rapsomaniki@mail.cryst.bbk.ac.uk>
+To:             	r-help@stat.math.ethz.ch
+Subject:        	[R] Plotting multiple smooth lines on the same graph
+
+> Hi
+> 
+> Say we have the following data sets:
+> d1=cbind(rnorm(100,1,1), rnorm(100,10,50))
+> d2=cbind(rnorm(100,5,1), rnorm(100,1,5))
+> 
+> I want to plot them both on the same graph with a curve fitted for
+> each. I could call scatter.smooth to plot the first curve, but how do
+> I add the second?
+> 
+> scatter.smooth(d1)
+> 
+> Many thanks
+> Eleni Rapsomaniki
+> 
+> ______________________________________________
+> R-help@stat.math.ethz.ch mailing list
+> https://stat.ethz.ch/mailman/listinfo/r-help
+> PLEASE do read the posting guide
+> http://www.R-project.org/posting-guide.html and provide commented,
+> minimal, self-contained, reproducible code.
+
+Petr Pikal
+petr.pikal@precheza.cz
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "R. Villegas" <villegas.ro@gmail.com>
+Subject: Re: series de tiempo diarias
+Date: Fri, 15 Dec 2006 19:50:49 +0100
+Lines: 22
+Message-ID: <29cf68350612151050t54b140b3tcef7623e280db5b2@mail.gmail.com>
+References: <cedd6fb60612150715u41e82a55w99387d352dad2b0d@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 19:55:52 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvIDo-0007Ov-2M
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 19:55:52 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFIp7aj015172;
+	Fri, 15 Dec 2006 19:53:21 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.4 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.236])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFIos5P015127
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 19:50:54 +0100
+Received: by wr-out-0506.google.com with SMTP id i4so494864wra
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 10:50:53 -0800 (PST)
+Received: by 10.78.138.6 with SMTP id l6mr365079hud.1166208649429;
+	Fri, 15 Dec 2006 10:50:49 -0800 (PST)
+Received: by 10.78.182.6 with HTTP; Fri, 15 Dec 2006 10:50:49 -0800 (PST)
+To: "Santiago Cilintano" <santiagote@gmail.com>
+In-Reply-To: <cedd6fb60612150715u41e82a55w99387d352dad2b0d@mail.gmail.com>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-MIME-Autoconverted: from base64 to 8bit by hypatia.math.ethz.ch id
+	kBFIos5P015127
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75841>
+
+MjAwNi8xMi8xNSwgU2FudGlhZ28gQ2lsaW50YW5vIDxzYW50aWFnb3RlQGdtYWlsLmNvbT46Cj4g
+RXhpc3RlIGFsZ8O6biBwYXF1ZXRlIGVuIGRvbmRlIHB1ZWRvIG1vZGVsaXphciBlc3BlY8OtZmlj
+YW1lbnRlIHNlcmllcyBkaWFyaWFzCj4gdW5pdmFyaWFkYXMgc2lndWllbmRvIGxhIG1ldG9kb2xv
+Z8OtYSBkZSBCb3gtSmVua2lucz8KPiBDw7NtbyBtb2RlbGl6YXIgbWFzIGRlIHVuYSBlc3RhY2lv
+bmFsaWRhZCBlbiBkaWNoYXMgc2VyaWVzIHBvciBlamVtcGxvIHVuYQo+IGVzdGFjaW9uYWxpZGFk
+IHNlbWFuYWwgeSBhbnVhbD8KPgo+IEdSYWNpYXMKPiBTYW50aWFnbyBDaWxpbnRhbm8KPgo+ICAg
+ICAgICAgW1thbHRlcm5hdGl2ZSBIVE1MIHZlcnNpb24gZGVsZXRlZF1dCj4KPgo+Cj4gX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IFItaGVscEBzdGF0Lm1h
+dGguZXRoei5jaCBtYWlsaW5nIGxpc3QKPiBodHRwczovL3N0YXQuZXRoei5jaC9tYWlsbWFuL2xp
+c3RpbmZvL3ItaGVscAo+IFBMRUFTRSBkbyByZWFkIHRoZSBwb3N0aW5nIGd1aWRlIGh0dHA6Ly93
+d3cuUi1wcm9qZWN0Lm9yZy9wb3N0aW5nLWd1aWRlLmh0bWwKPiBhbmQgcHJvdmlkZSBjb21tZW50
+ZWQsIG1pbmltYWwsIHNlbGYtY29udGFpbmVkLCByZXByb2R1Y2libGUgY29kZS4KPgo+Cj4KCkNs
+YXNzaWNhbCB0aW1lIHNlcmllcyBtb2RlbGxpbmcgdG9vbHMgYXJlIGNvbnRhaW5lZCBpbiB0aGUg
+c3RhdHMKcGFja2FnZSBhbmQgaW5jbHVkZSAgYXJpbWEoKSAgZm9yIEFSSU1BIG1vZGVsbGluZyBh
+bmQgQm94LUplbmtpbnMtdHlwZQphbmFseXNpcy4KClBsZWFzZSByZWFkIHRoZSBwb3N0aW5nLWd1
+aWRlLCBodHRwOi8vd3d3LnItcHJvamVjdC5vcmcvcG9zdGluZy1ndWlkZS5odG1sCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClItaGVscEBzdGF0Lm1hdGgu
+ZXRoei5jaCBtYWlsaW5nIGxpc3QKaHR0cHM6Ly9zdGF0LmV0aHouY2gvbWFpbG1hbi9saXN0aW5m
+by9yLWhlbHAKUExFQVNFIGRvIHJlYWQgdGhlIHBvc3RpbmcgZ3VpZGUgaHR0cDovL3d3dy5SLXBy
+b2plY3Qub3JnL3Bvc3RpbmctZ3VpZGUuaHRtbAphbmQgcHJvdmlkZSBjb21tZW50ZWQsIG1pbmlt
+YWwsIHNlbGYtY29udGFpbmVkLCByZXByb2R1Y2libGUgY29kZS4K
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Muenchen, Robert A (Bob)" <muenchen@utk.edu>
+Subject: Switching labels on a factor
+Date: Fri, 15 Dec 2006 15:34:15 -0500
+Lines: 66
+Message-ID: <7270AEC73132194E8BC0EE06B35D93D84A061C@UTKFSVS3.utk.tennessee.edu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 21:38:58 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvJpW-0004R1-MV
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 21:38:54 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFKajD8015866;
+	Fri, 15 Dec 2006 21:37:25 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from liger.mail.utk.edu (liger.mail.utk.edu [160.36.178.184])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFKaNxI015707
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <R-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 21:36:24 +0100
+X-ASG-Debug-ID: 1166214982-768300240000-ttKww0
+X-Barracuda-URL: http://tigon.mail.utk.edu:8000/cgi-bin/mark.cgi
+X-Barracuda-Connect: utkfscb3.utk.tennessee.edu[160.36.76.190]
+X-Barracuda-Start-Time: 1166214982
+Received: from UTKFSVS3.utk.tennessee.edu (utkfscb3.utk.tennessee.edu
+	[160.36.76.190])
+	by liger.mail.utk.edu (Spam Firewall) with ESMTP id A15FB7D9DEB
+	for <R-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 15:36:22 -0500 (EST)
+X-MimeOLE: Produced By Microsoft Exchange V6.5
+Content-class: urn:content-classes:message
+X-ASG-Orig-Subj: Switching labels on a factor
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Thread-Topic: Switching labels on a factor
+Thread-Index: AccgiGNBNkD+I6nwTNm73QQr00XxQw==
+To: <R-help@stat.math.ethz.ch>
+X-Barracuda-Virus-Scanned: by Barracuda Spam Firewall at mail.utk.edu
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-MIME-Autoconverted: from quoted-printable to 8bit by hypatia.math.ethz.ch id
+	kBFKaNxI015707
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75842>
+
+Hi All,
+
+I'm perplexed by the way the unclass function displays a factor whose
+labels have been swapped with the relevel function. I realize it won't
+affect any results and that the relevel did nothing useful in this
+particular case. I'm just doing it to learn ways to manipulate factors.
+The display of unclass leaves me feeling that the relevel had failed.
+
+I've checked three books & searched R-help, but found no mention of this
+particular issue.  
+
+The program below demonstrates the problem. Is this a bug, or is there a
+reason for it to work this way?
+
+Thanks,
+Bob
+
+mystring<-
+("id,workshop,gender,q1,q2,q3,q4
+ 1,1,f,1,1,5,1
+ 2,2,f,2,1,4,1
+ 3,1,f,2,2,4,3
+ 4,2,f,3,1, ,3
+ 5,1,m,4,5,2,4
+ 6,2,m,5,4,5,5
+ 7,1,m,5,3,4,4
+ 8,2,m,4,5,5,9")
+mydata<-read.table(textConnection(mystring),
+   header=TRUE,sep=",",row.names="id",na.strings="9")
+mydata
+
+# Create a gender Releveled variable, gR. 
+# Now 1=m, 2=f
+mydata$gR <- relevel(mydata$gender, "m")
+
+# Print the data to show that the labels of gR match those of gender.
+mydata
+
+# Show that the underlying codes have indeed reversed.
+as.numeric(mydata$gender)
+as.numeric(mydata$gR)
+
+# Unclass the two variables to see that print order 
+# implies that both the codes and labels have
+# flipped, cancelling each other out. For gR,
+# m appears to be associated with 2, and f with 1
+unclass(mydata$gender)
+unclass(mydata$gR)
+
+=========================================================
+  Bob Muenchen (pronounced Min'-chen), Manager  
+  Statistical Consulting Center
+  U of TN Office of Information Technology
+  200 Stokely Management Center, Knoxville, TN 37996-0520
+  Voice: (865) 974-5230  
+  FAX:   (865) 974-4810
+  Email: muenchen@utk.edu
+  Web:   http://oit.utk.edu/scc, 
+  News:  http://listserv.utk.edu/archives/statnews.html
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: RMan54 <RMan54@cox.net>
+Subject: xyplot: legend title + legend on 1 line
+Date: Fri, 15 Dec 2006 12:41:06 -0800 (PST)
+Lines: 23
+Message-ID: <7898800.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 21:42:16 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvJsk-00056a-Rb
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 21:42:14 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFKfMRG017955;
+	Fri, 15 Dec 2006 21:41:32 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.1 required=5.0 tests=AWL, BAYES_50,
+	SPF_HELO_PASS autolearn=no version=3.1.7
+Received: from talk.nabble.com (www.nabble.com [72.21.53.35])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFKf77Q017908
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 21:41:08 +0100
+Received: from [72.21.53.38] (helo=jubjub.nabble.com)
+	by talk.nabble.com with esmtp (Exim 4.50) id 1GvJre-0002LX-V9
+	for r-help@stat.math.ethz.ch; Fri, 15 Dec 2006 12:41:06 -0800
+To: r-help@stat.math.ethz.ch
+X-Nabble-From: RMan54@cox.net
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75843>
+
+
+Does anybody know how in xyplot to put the legend title on one line with the
+legend? I can get the legend on one line with columns=... but the title is
+always on top. I tried a custom key with key=... and text=... but I can't
+put the title text in front of the plotting symbol.
+
+I am looking for the following layout of the legend, on one line:
+
+"Legend Title:" + plot symbol1 + legend text1 + plot symbol2 + legend text2
++ ...
+
+Thanks. Rene
+ 
+-- 
+View this message in context: http://www.nabble.com/xyplot%3A-legend-title-%2B-legend-on-1-line-tf2829327.html#a7898800
+Sent from the R help mailing list archive at Nabble.com.
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Deepayan Sarkar" <deepayan.sarkar@gmail.com>
+Subject: Re: xyplot: legend title + legend on 1 line
+Date: Fri, 15 Dec 2006 13:01:56 -0800
+Lines: 38
+Message-ID: <eb555e660612151301q324b99fctf8e7924f20014c6@mail.gmail.com>
+References: <7898800.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 22:08:43 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by ciao.gmane.org with esmtp (Exim 4.43)
+	id 1GvKI0-0007IB-QX
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 22:08:21 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFL26L6025290;
+	Fri, 15 Dec 2006 22:02:28 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.238])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFL1vZY025218
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 22:01:58 +0100
+Received: by nz-out-0506.google.com with SMTP id i11so464706nzh
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 13:01:57 -0800 (PST)
+Received: by 10.64.10.2 with SMTP id 2mr1758743qbj.1166216516836;
+	Fri, 15 Dec 2006 13:01:56 -0800 (PST)
+Received: by 10.65.97.6 with HTTP; Fri, 15 Dec 2006 13:01:56 -0800 (PST)
+To: RMan54 <RMan54@cox.net>
+In-Reply-To: <7898800.post@talk.nabble.com>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75844>
+
+On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>
+> Does anybody know how in xyplot to put the legend title on one line with the
+> legend? I can get the legend on one line with columns=... but the title is
+> always on top. I tried a custom key with key=... and text=... but I can't
+> put the title text in front of the plotting symbol.
+>
+> I am looking for the following layout of the legend, on one line:
+>
+> "Legend Title:" + plot symbol1 + legend text1 + plot symbol2 + legend text2
+> + ...
+
+You can create a grob (grid object) representing this legend, or a
+function that produces such a grob, and pass it to xyplot through the
+'legend' argument (see ?xyplot). The 'key' argument essentially
+controls one such built-in function, namely 'draw.key', which does not
+support such legends.
+
+Note however, that column types can be repeated in key, so you might
+be able to fake such a legend. E.g.:
+
+
+xyplot(1 ~ 1,
+       key =
+       list(text = list("title: ", font = 2),
+            points = list(pch = 1),
+            text = list("1"),
+            points = list(pch = 2),
+            text = list("2")))
+
+-Deepayan
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: RMan54 <RMan54@cox.net>
+Subject: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 14:12:22 -0800 (PST)
+Lines: 46
+Message-ID: <7900202.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 23:13:53 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvLJM-0000QA-5e
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 23:13:48 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMCY1R013097;
+	Fri, 15 Dec 2006 23:13:09 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.0 required=5.0 tests=AWL, BAYES_50,
+	SPF_HELO_PASS autolearn=no version=3.1.7
+Received: from talk.nabble.com (www.nabble.com [72.21.53.35])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMCOQh013029
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 23:12:26 +0100
+Received: from [72.21.53.38] (helo=jubjub.nabble.com)
+	by talk.nabble.com with esmtp (Exim 4.50) id 1GvLHy-00065q-7B
+	for r-help@stat.math.ethz.ch; Fri, 15 Dec 2006 14:12:22 -0800
+To: r-help@stat.math.ethz.ch
+X-Nabble-From: RMan54@cox.net
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75845>
+
+
+This should be simple but I am struggling. I like to easily switch in xyplot
+between a linear or logarithmic y-axis by setting a logical flag logY to
+False or True. This switch changes the scales argument of xyplot. I found
+out that the original two-dimentional data (Conc vs Time in my case) are
+converted to log10(Conc) if log=TRUE in scales, but it appears that
+functions like panel.curve need to provide the y values in log10 form (if
+there is an automatic method, I would like to know). I therefore like to
+pass on the value logY to my custom panel.curve function. How do I do that?
+I think that the value of logY should go into xyplot that should pass it on
+to the panel function and then to the panel.curve function.
+
+Thanks, -Rene
+
+logY=TRUE
+
+# Custom panel.curve function
+myCurve <-function(x, log) {
+    f <- ...   #  calculate curve here
+    if (log==TRUE) f <- log10(f)
+    return(f)
+}
+
+xyplot(Conc ~ Time | Subj,
+       groups=Dose,
+       data = mydata,
+       as.table=TRUE,
+       scales=list(y=list(log=logY)),
+       panel = function(...) {
+           panel.abline(h=c(0, 50, 100, 150, 200, 250) ,
+                      v=c(0,24,48,72,96), col.line="gray")
+           panel.xyplot(...)
+           panel.curve(myCurve, from=0, to=96, n=300))
+           }
+       )
+
+-- 
+View this message in context: http://www.nabble.com/xyplot%3A-logarithmic-y-axis-tf2829755.html#a7900202
+Sent from the R help mailing list archive at Nabble.com.
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Deepayan Sarkar" <deepayan.sarkar@gmail.com>
+Subject: Re: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 14:26:47 -0800
+Lines: 23
+Message-ID: <eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+References: <7900202.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 23:27:39 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvLWb-0002EO-Q3
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 23:27:29 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMQsmb017293;
+	Fri, 15 Dec 2006 23:27:11 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.178])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMQl01017253
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 23:26:48 +0100
+Received: by py-out-1112.google.com with SMTP id a25so595617pyi
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 14:26:47 -0800 (PST)
+Received: by 10.65.188.20 with SMTP id q20mr1868166qbp.1166221607119;
+	Fri, 15 Dec 2006 14:26:47 -0800 (PST)
+Received: by 10.65.97.6 with HTTP; Fri, 15 Dec 2006 14:26:47 -0800 (PST)
+To: RMan54 <RMan54@cox.net>
+In-Reply-To: <7900202.post@talk.nabble.com>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75846>
+
+On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>
+> This should be simple but I am struggling. I like to easily switch in xyplot
+> between a linear or logarithmic y-axis by setting a logical flag logY to
+> False or True. This switch changes the scales argument of xyplot. I found
+> out that the original two-dimentional data (Conc vs Time in my case) are
+> converted to log10(Conc) if log=TRUE in scales, but it appears that
+> functions like panel.curve need to provide the y values in log10 form (if
+> there is an automatic method, I would like to know). I therefore like to
+> pass on the value logY to my custom panel.curve function. How do I do that?
+> I think that the value of logY should go into xyplot that should pass it on
+> to the panel function and then to the panel.curve function.
+
+It probably should, but doesn't.
+
+-Deepayan
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "BRENDAN KLICK" <bklick1@jhmi.edu>
+Subject: DF for GAM function (mgcv package)
+Date: Fri, 15 Dec 2006 17:38:26 -0500
+Lines: 26
+Message-ID: <4582DD92020000F500007D2A@cis27.hosts.jhmi.edu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 23:39:38 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvLiC-0003jf-L3
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 23:39:28 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMcmIF020547;
+	Fri, 15 Dec 2006 23:39:03 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=0.5 required=5.0 tests=AWL, BAYES_50, FORGED_RCVD_HELO,
+	HTML_30_40, HTML_MESSAGE autolearn=no version=3.1.7
+Received: from ipex2.johnshopkins.edu (ipex2.johnshopkins.edu [162.129.8.151])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMcdv8020523
+	(version=TLSv1/SSLv3 cipher=RC4-SHA bits=128 verify=FAIL)
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 23:38:40 +0100
+Received: from jhuadig.admin.jhu.edu (HELO cis27.hosts.jhmi.edu)
+	([10.15.69.48]) by ipex2.johnshopkins.edu with ESMTP/TLS/AES256-SHA;
+	15 Dec 2006 17:38:38 -0500
+X-BrightmailFiltered: true
+X-Brightmail-Tracker: AAAAAA==
+X-IronPort-AV: i="4.12,176,1165208400"; 
+	d="scan'208,217"; a="235370832:sNHT40483456"
+Received: from Jhmipri-MTA by cis27.hosts.jhmi.edu
+	with Novell_GroupWise; Fri, 15 Dec 2006 17:38:38 -0500
+X-Mailer: Novell GroupWise Internet Agent 7.0.1 
+To: <r-help@stat.math.ethz.ch>
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+Content-Disposition: inline
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75847>
+
+For summary(GAM) in the mgcv package smooth the degrees of freedom for
+the F value for test of smooth terms are the rank of covariance matrix
+of \hat{beta} and the residuals df.  I've noticed that in a lot of GAMs
+I've fit the rank of the covariance turns out to be 9.  In Simon Wood's
+book, the rank of covariance matrix is usually either 9 or 99 (pages
+239-230 and 259).  
+ 
+Can anyone comment on why so many smooth terms have a denominator
+degree of freedom involving 9.  Simon Wood writes "r is usually
+determinted numerically, while forming the pseudoinverse of the
+covariance matrix, or with reference to the effective degrees of freedom
+of the term" which doesn't really clarify the issue for me at least.
+ 
+Thanks.
+ 
+Brendan Klick
+Johns Hopkins University School of Medicine.
+
+	[[alternative HTML version deleted]]
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: RMan54 <RMan54@cox.net>
+Subject: Re: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 14:41:49 -0800 (PST)
+Lines: 51
+Message-ID: <7900634.post@talk.nabble.com>
+References: <7900202.post@talk.nabble.com>
+	<eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 23:44:19 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvLmo-0004Hl-0L
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 23:44:14 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMgA8X022210;
+	Fri, 15 Dec 2006 23:42:39 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.0 required=5.0 tests=AWL, BAYES_40,
+	SPF_HELO_PASS autolearn=no version=3.1.7
+Received: from talk.nabble.com (www.nabble.com [72.21.53.35])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMfoeU022040
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 23:41:51 +0100
+Received: from [72.21.53.38] (helo=jubjub.nabble.com)
+	by talk.nabble.com with esmtp (Exim 4.50) id 1GvLkT-0001gl-Fj
+	for r-help@stat.math.ethz.ch; Fri, 15 Dec 2006 14:41:49 -0800
+To: r-help@stat.math.ethz.ch
+In-Reply-To: <eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+X-Nabble-From: RMan54@cox.net
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75848>
+
+
+Please take no offence since none was intended. What I meant is that it
+should be simple for me to know how to do this but it isn't because of my
+inexperience. I  think that the lattice package is great.
+
+However, how can I pass on my own varaibles through xyplot?
+
+Thanks, -Rene
+
+
+Deepayan Sarkar wrote:
+> 
+> On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>>
+>> This should be simple but I am struggling. I like to easily switch in
+>> xyplot
+>> between a linear or logarithmic y-axis by setting a logical flag logY to
+>> False or True. This switch changes the scales argument of xyplot. I found
+>> out that the original two-dimentional data (Conc vs Time in my case) are
+>> converted to log10(Conc) if log=TRUE in scales, but it appears that
+>> functions like panel.curve need to provide the y values in log10 form (if
+>> there is an automatic method, I would like to know). I therefore like to
+>> pass on the value logY to my custom panel.curve function. How do I do
+>> that?
+>> I think that the value of logY should go into xyplot that should pass it
+>> on
+>> to the panel function and then to the panel.curve function.
+> 
+> It probably should, but doesn't.
+> 
+> -Deepayan
+> 
+> ______________________________________________
+> R-help@stat.math.ethz.ch mailing list
+> https://stat.ethz.ch/mailman/listinfo/r-help
+> PLEASE do read the posting guide
+> http://www.R-project.org/posting-guide.html
+> and provide commented, minimal, self-contained, reproducible code.
+> 
+> 
+
+-- 
+View this message in context: http://www.nabble.com/xyplot%3A-logarithmic-y-axis-tf2829755.html#a7900634
+Sent from the R help mailing list archive at Nabble.com.
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Deepayan Sarkar" <deepayan.sarkar@gmail.com>
+Subject: Re: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 14:57:07 -0800
+Lines: 49
+Message-ID: <eb555e660612151457u5858ccdag9f344000e833a5ab@mail.gmail.com>
+References: <7900202.post@talk.nabble.com>
+	<eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+	<7900634.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Fri Dec 15 23:58:23 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvM0U-00060d-9C
+	for gclrg-r-help@gmane.org; Fri, 15 Dec 2006 23:58:22 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMvM96026748;
+	Fri, 15 Dec 2006 23:57:48 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.232])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFMv8nP026689
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 23:57:08 +0100
+Received: by nz-out-0506.google.com with SMTP id i11so473194nzh
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 14:57:08 -0800 (PST)
+Received: by 10.65.236.18 with SMTP id n18mr1890531qbr.1166223427948;
+	Fri, 15 Dec 2006 14:57:07 -0800 (PST)
+Received: by 10.65.97.6 with HTTP; Fri, 15 Dec 2006 14:57:07 -0800 (PST)
+To: RMan54 <RMan54@cox.net>
+In-Reply-To: <7900634.post@talk.nabble.com>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75849>
+
+On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>
+> Please take no offence since none was intended. What I meant is that it
+> should be simple for me to know how to do this but it isn't because of my
+> inexperience. I  think that the lattice package is great.
+
+I didn't mean to suggest that I was offended. I only agreed with you
+that it would be nice if there were a way of knowing inside the panel
+function whether a log scale is being used, and informing you that
+there isn't.
+
+> However, how can I pass on my own varaibles through xyplot?
+
+Any arguments not recognized by xyplot will be passed to the panel function.
+
+-Deepayan
+
+>
+> Thanks, -Rene
+>
+>
+> Deepayan Sarkar wrote:
+> >
+> > On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+> >>
+> >> This should be simple but I am struggling. I like to easily switch in
+> >> xyplot
+> >> between a linear or logarithmic y-axis by setting a logical flag logY to
+> >> False or True. This switch changes the scales argument of xyplot. I found
+> >> out that the original two-dimentional data (Conc vs Time in my case) are
+> >> converted to log10(Conc) if log=TRUE in scales, but it appears that
+> >> functions like panel.curve need to provide the y values in log10 form (if
+> >> there is an automatic method, I would like to know). I therefore like to
+> >> pass on the value logY to my custom panel.curve function. How do I do
+> >> that?
+> >> I think that the value of logY should go into xyplot that should pass it
+> >> on
+> >> to the panel function and then to the panel.curve function.
+> >
+> > It probably should, but doesn't.
+> >
+> > -Deepayan
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: RMan54 <RMan54@cox.net>
+Subject: Re: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 15:16:38 -0800 (PST)
+Lines: 100
+Message-ID: <7901073.post@talk.nabble.com>
+References: <7900202.post@talk.nabble.com>
+	<eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+	<7900634.post@talk.nabble.com>
+	<eb555e660612151457u5858ccdag9f344000e833a5ab@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 00:21:18 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvMMf-0000nO-AX
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 00:21:17 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNGsuT017555;
+	Sat, 16 Dec 2006 00:19:58 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.0 required=5.0 tests=AWL, BAYES_40,
+	SPF_HELO_PASS autolearn=no version=3.1.7
+Received: from talk.nabble.com (www.nabble.com [72.21.53.35])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNGcbw017499
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 00:16:40 +0100
+Received: from [72.21.53.38] (helo=jubjub.nabble.com)
+	by talk.nabble.com with esmtp (Exim 4.50) id 1GvMIA-0006xn-Cg
+	for r-help@stat.math.ethz.ch; Fri, 15 Dec 2006 15:16:38 -0800
+To: r-help@stat.math.ethz.ch
+In-Reply-To: <eb555e660612151457u5858ccdag9f344000e833a5ab@mail.gmail.com>
+X-Nabble-From: RMan54@cox.net
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75850>
+
+
+I added logY as the last argument to xyplot and in my curve function. I got
+the following error message:
+
+Error in myCurve(x) : argument "log" is missing, with no default
+
+myCurve <-function(x, log) {
+    f <- ... # calculate curve here
+    if (log==T) f <- log10(f)
+    return(f)
+}
+
+logY=T
+xyplot(Conc ~ Time | Subj,
+       groups=Dose,
+       data = mydata,
+       scales=list(x=list(at=seq(0,96,24)), y=list(log=logY)),
+       panel = function(...) {
+           panel.abline(h=c(0, 50, 100, 150, 200, 250) ,
+                      v=c(0,24,48,72,96), col.line="gray")
+           panel.xyplot(...)
+           panel.curve(myCurve, from=0, to=96, n=300, ..., log=logY)
+           },
+       logY
+       )
+
+
+
+
+Deepayan Sarkar wrote:
+> 
+> On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>>
+>> Please take no offence since none was intended. What I meant is that it
+>> should be simple for me to know how to do this but it isn't because of my
+>> inexperience. I  think that the lattice package is great.
+> 
+> I didn't mean to suggest that I was offended. I only agreed with you
+> that it would be nice if there were a way of knowing inside the panel
+> function whether a log scale is being used, and informing you that
+> there isn't.
+> 
+>> However, how can I pass on my own varaibles through xyplot?
+> 
+> Any arguments not recognized by xyplot will be passed to the panel
+> function.
+> 
+> -Deepayan
+> 
+>>
+>> Thanks, -Rene
+>>
+>>
+>> Deepayan Sarkar wrote:
+>> >
+>> > On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>> >>
+>> >> This should be simple but I am struggling. I like to easily switch in
+>> >> xyplot
+>> >> between a linear or logarithmic y-axis by setting a logical flag logY
+>> to
+>> >> False or True. This switch changes the scales argument of xyplot. I
+>> found
+>> >> out that the original two-dimentional data (Conc vs Time in my case)
+>> are
+>> >> converted to log10(Conc) if log=TRUE in scales, but it appears that
+>> >> functions like panel.curve need to provide the y values in log10 form
+>> (if
+>> >> there is an automatic method, I would like to know). I therefore like
+>> to
+>> >> pass on the value logY to my custom panel.curve function. How do I do
+>> >> that?
+>> >> I think that the value of logY should go into xyplot that should pass
+>> it
+>> >> on
+>> >> to the panel function and then to the panel.curve function.
+>> >
+>> > It probably should, but doesn't.
+>> >
+>> > -Deepayan
+> 
+> ______________________________________________
+> R-help@stat.math.ethz.ch mailing list
+> https://stat.ethz.ch/mailman/listinfo/r-help
+> PLEASE do read the posting guide
+> http://www.R-project.org/posting-guide.html
+> and provide commented, minimal, self-contained, reproducible code.
+> 
+> 
+
+-- 
+View this message in context: http://www.nabble.com/xyplot%3A-logarithmic-y-axis-tf2829755.html#a7901073
+Sent from the R help mailing list archive at Nabble.com.
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "R. Villegas" <villegas.ro@gmail.com>
+Subject: Re: ks.test "greater" and "less"
+Date: Sat, 16 Dec 2006 00:27:16 +0100
+Lines: 24
+Message-ID: <29cf68350612151527t2d7fd565k10242d7064b38f47@mail.gmail.com>
+References: <45828599.2020504@web.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Cc: R-help <r-help@stat.math.ethz.ch>
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 00:29:54 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvMUu-0001iW-9s
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 00:29:48 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNRZUk020539;
+	Sat, 16 Dec 2006 00:27:57 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.3 required=5.0 tests=AWL,
+	BAYES_20 autolearn=no version=3.1.7
+Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.173])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNRHgb020455
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 00:27:18 +0100
+Received: by ug-out-1314.google.com with SMTP id p37so872486ugc
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 15:27:17 -0800 (PST)
+Received: by 10.78.170.17 with SMTP id s17mr583400hue.1166225237174;
+	Fri, 15 Dec 2006 15:27:17 -0800 (PST)
+Received: by 10.78.182.6 with HTTP; Fri, 15 Dec 2006 15:27:16 -0800 (PST)
+To: "Carmen Meier" <carmei3@web.de>
+In-Reply-To: <45828599.2020504@web.de>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-MIME-Autoconverted: from base64 to 8bit by hypatia.math.ethz.ch id
+	kBFNRHgb020455
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75851>
+
+MjAwNi8xMi8xNSwgQ2FybWVuIE1laWVyIDxjYXJtZWkzQHdlYi5kZT46Cj4gSGVsbG8gci1ncm91
+cAo+IEkgaGF2ZSBhIHF1ZXN0aW9uIHRvIHRoZSBrcy50ZXN0Lgo+IEkgd291bGQgZXhwZWN0IGRp
+ZmZlcmVudCB2YWx1ZXMgZm9yIGxlc3MgYW5kIGdyZWF0ZXIgYmV0d2VlbiBkYXRhMSBhbmQKPiBk
+YXRhMi4KPiBEb2VzIGFueWJvZHkgY291bGQgZXhwbGFpbiAgbXkgcG9pbnQgb2YgbWlzdW5kZXJz
+dGFuZGluZyB0aGUgZnVuY3Rpb24/Cj4KPiBkYXRhMTwtYyg4LDEyLDQzLDcwKQo+IGRhdGEyPC0g
+Yyg3MCw0MywxMiw4KQo+Cj4ga3MudGVzdChkYXRhMSwicG5vcm0iKQo+IGtzLnRlc3QoZGF0YTEs
+InBub3JtIixhbHRlcm5hdGl2ZSA9Imxlc3MiKSAgICAjZXhwZWN0ZWQgPCAwLjAwMQo+IGtzLnRl
+c3QoZGF0YTEsInBub3JtIixhbHRlcm5hdGl2ZSA9ImdyZWF0ZXIiKSAjZXhwZWN0ZWQgPTEKPgo+
+Cj4ga3MudGVzdChkYXRhMiwicG5vcm0iKQo+IGtzLnRlc3QoZGF0YTIsInBub3JtIixhbHRlcm5h
+dGl2ZSA9Imxlc3MiKSAgI2V4cGVjdGVkID0xCj4ga3MudGVzdChkYXRhMiwicG5vcm0iLGFsdGVy
+bmF0aXZlID0iZ3JlYXRlciIpICNleHBlY3RlZCA8IDAuMDAxCj4KPgo+IFdpdGggcmVnYXJkcyBD
+YXJtZW4KPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+PiBSLWhlbHBAc3RhdC5tYXRoLmV0aHouY2ggbWFpbGluZyBsaXN0Cj4gaHR0cHM6Ly9zdGF0LmV0
+aHouY2gvbWFpbG1hbi9saXN0aW5mby9yLWhlbHAKPiBQTEVBU0UgZG8gcmVhZCB0aGUgcG9zdGlu
+ZyBndWlkZSBodHRwOi8vd3d3LlItcHJvamVjdC5vcmcvcG9zdGluZy1ndWlkZS5odG1sCj4gYW5k
+IHByb3ZpZGUgY29tbWVudGVkLCBtaW5pbWFsLCBzZWxmLWNvbnRhaW5lZCwgcmVwcm9kdWNpYmxl
+IGNvZGUuCj4KClBvc3NpYmxlICB5b3UgYXJlIHVuYWJsZSB0byB1c2UgdGhlIEtvbG1vZ29yb3bi
+gJNTbWlybm92IHRlc3QgZ2l2ZW4gdGhhdAp0aGUgc2FtcGxlIHNpemUgaXMgc21hbGwuCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClItaGVscEBzdGF0Lm1h
+dGguZXRoei5jaCBtYWlsaW5nIGxpc3QKaHR0cHM6Ly9zdGF0LmV0aHouY2gvbWFpbG1hbi9saXN0
+aW5mby9yLWhlbHAKUExFQVNFIGRvIHJlYWQgdGhlIHBvc3RpbmcgZ3VpZGUgaHR0cDovL3d3dy5S
+LXByb2plY3Qub3JnL3Bvc3RpbmctZ3VpZGUuaHRtbAphbmQgcHJvdmlkZSBjb21tZW50ZWQsIG1p
+bmltYWwsIHNlbGYtY29udGFpbmVkLCByZXByb2R1Y2libGUgY29kZS4K
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Deepayan Sarkar" <deepayan.sarkar@gmail.com>
+Subject: Re: xyplot: logarithmic y-axis
+Date: Fri, 15 Dec 2006 15:43:57 -0800
+Lines: 48
+Message-ID: <eb555e660612151543h5ff09735x4f5e0fe7e28c6f9f@mail.gmail.com>
+References: <7900202.post@talk.nabble.com>
+	<eb555e660612151426s30981295r30e3d3ee123f412f@mail.gmail.com>
+	<7900634.post@talk.nabble.com>
+	<eb555e660612151457u5858ccdag9f344000e833a5ab@mail.gmail.com>
+	<7901073.post@talk.nabble.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 00:44:41 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvMjH-00039s-5x
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 00:44:39 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNiBgc025899;
+	Sat, 16 Dec 2006 00:44:29 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.224])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBFNhv37025478
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 00:43:58 +0100
+Received: by nz-out-0506.google.com with SMTP id i11so475322nzh
+	for <r-help@stat.math.ethz.ch>; Fri, 15 Dec 2006 15:43:57 -0800 (PST)
+Received: by 10.65.93.18 with SMTP id v18mr1924489qbl.1166226237131;
+	Fri, 15 Dec 2006 15:43:57 -0800 (PST)
+Received: by 10.65.97.6 with HTTP; Fri, 15 Dec 2006 15:43:57 -0800 (PST)
+To: RMan54 <RMan54@cox.net>
+In-Reply-To: <7901073.post@talk.nabble.com>
+Content-Disposition: inline
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75852>
+
+On 12/15/06, RMan54 <RMan54@cox.net> wrote:
+>
+> I added logY as the last argument to xyplot and in my curve function. I got
+> the following error message:
+>
+> Error in myCurve(x) : argument "log" is missing, with no default
+>
+> myCurve <-function(x, log) {
+>     f <- ... # calculate curve here
+>     if (log==T) f <- log10(f)
+>     return(f)
+> }
+>
+> logY=T
+> xyplot(Conc ~ Time | Subj,
+>        groups=Dose,
+>        data = mydata,
+>        scales=list(x=list(at=seq(0,96,24)), y=list(log=logY)),
+>        panel = function(...) {
+>            panel.abline(h=c(0, 50, 100, 150, 200, 250) ,
+>                       v=c(0,24,48,72,96), col.line="gray")
+>            panel.xyplot(...)
+>            panel.curve(myCurve, from=0, to=96, n=300, ..., log=logY)
+>            },
+>        logY
+>        )
+
+You need to learn more about (1) R functions and (2) R's scoping
+rules. Your last argument (logY) is not doing what you think it's
+doing (which doesn't really matter because of the scoping rules).
+
+Your error is caused because in
+
+panel.curve(myCurve, from=0, to=96, n=300, ..., log=logY)
+
+the 'log' argument is not being passed to myCurve (nor is it supposed
+to). However, you should be able to replace it by
+
+panel.curve(myCurve(x, log = logY), from=0, to=96, n=300, ...)
+
+-Deepayan
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: Don MacQueen <macq@llnl.gov>
+Subject: Re: Better way to change the name of a column in a dataframe?
+Date: Fri, 15 Dec 2006 16:49:25 -0800
+Lines: 88
+Message-ID: <p06230913c1a8f2cbae1c@[128.115.153.6]>
+References: <CA612484A337C6479EA341DF9EEE14AC05B7CDB5@hercules.ssainfo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 01:50:43 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvNl8-0000om-P1
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 01:50:38 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG0ncC7010329;
+	Sat, 16 Dec 2006 01:50:09 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from nspiron-2.llnl.gov (nspiron-2.llnl.gov [128.115.41.82])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG0nRvT010279
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 01:49:28 +0100
+Received: from macqmac.llnl.gov (HELO [128.115.153.6]) ([128.115.153.6])
+	by nspiron-2.llnl.gov with ESMTP; 15 Dec 2006 16:49:27 -0800
+X-Attachments: 
+X-IronPort-AV: i="4.12,178,1165219200"; 
+	d="scan'208"; a="14945408:sNHT29379632"
+In-Reply-To: <CA612484A337C6479EA341DF9EEE14AC05B7CDB5@hercules.ssainfo>
+To: "Ben Fairbank" <BEN@ssanet.com>, <r-help@stat.math.ethz.ch>
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75853>
+
+And there is the rename.vars() function in the gdata package.
+-Don
+
+At 11:39 AM -0600 12/14/06, Ben Fairbank wrote:
+>Hello R users --
+>
+>
+>
+>If I have a dataframe such as the following, named "frame" with the
+>columns intended to be named col1 through col6,
+>
+>
+>
+>>  frame
+>
+>      col1 col2 cmlo3 col4 col5 col6
+>
+>[1,]    3   10     2    6    5    7
+>
+>[2,]    6    8     4   10    7    1
+>
+>[3,]    7    5     1    3    1    8
+>
+>[4,]   10    6     5    4    9    2
+>
+>
+>
+>and I want to correct or otherwise change the name of one of the
+>columns, I can do so with
+>
+>
+>
+>>  dimnames(frame)[[2]][which(dimnames(frame)[[2]]=="cmlo3")] <- "col3"
+>
+>
+>
+>which renames the offending column:
+>
+>
+>
+>>  frame
+>
+>      col1 col2 col3 col4 col5 col6
+>
+>[1,]    3   10    2    6    5    7
+>
+>[2,]    6    8    4   10    7    1
+>
+>[3,]    7    5    1    3    1    8
+>
+>[4,]   10    6    5    4    9    2
+>
+>
+>
+>This seems cumbersome and not very intuitive.  How can one accomplish
+>this more simply?
+>
+>
+>
+>With thanks for any suggestions,
+>
+>
+>
+>Ben Fairbank
+>
+>
+>	[[alternative HTML version deleted]]
+>
+>______________________________________________
+>R-help@stat.math.ethz.ch mailing list
+>https://stat.ethz.ch/mailman/listinfo/r-help
+>PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+>and provide commented, minimal, self-contained, reproducible code.
+
+
+-- 
+--------------------------------------
+Don MacQueen
+Environmental Protection Department
+Lawrence Livermore National Laboratory
+Livermore, CA, USA
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: baud-bovy.gabriel@hsr.it
+Subject: how to adjust link function in logistic regression to predict
+ the proportion of correct responses in 2AFC task?
+Date: Sat, 16 Dec 2006 01:57:25 +0100
+Lines: 102
+Message-ID: <6.2.3.4.0.20061216001441.03746570@mail.hsr.it>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 01:58:12 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvNsQ-0001P0-86
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 01:58:10 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG0vcNT012156;
+	Sat, 16 Dec 2006 01:57:48 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_50, FORGED_RCVD_HELO,
+	NO_REAL_NAME autolearn=no version=3.1.7
+Received: from swip.net (mailfe05.tele2.it [212.247.154.141])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG0vWYH012136
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 01:57:33 +0100
+X-Cloudmark-Score: 0.000000 []
+Received: from [83.184.42.19] (HELO GABRIEL.hsr.it)
+	by mailfe05.swip.net (CommuniGate Pro SMTP 5.0.12)
+	with ESMTP id 257743746 for r-help@stat.math.ethz.ch;
+	Sat, 16 Dec 2006 01:57:32 +0100
+X-Mailer: QUALCOMM Windows Eudora Version 6.2.3.4
+To: r-help@stat.math.ethz.ch
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75854>
+
+
+I have would like to use logistic regression to analyze the
+percentage of correct responses in a 2 alternative forced
+choice task. The question is whether one needs to take into
+account the fact expected probabilities for the percentage of
+correct responses ranges between 0.5 and 1 in this case and
+how to adjust the link function accordingly in R (see details below).
+
+Gabriel
+
+Subjects were asked to match a tactile stimulus
+(shape A or B) with a visual template (response a or b).
+The exact stimulus properties depended on the
+experimental factors ecc (3 levels: 0.4, 0.7 and 1.0)
+and kappa (also 3 levels:  0.75, 1, 1.25), which yielded
+nine experimental conditions. Five subjects participated
+to the experiment and each stimulus was presented 10 times
+in each experimental condition.
+
+The following table reports the pooled responses of the
+5 subjects.
+
+     |       |           kappa          |
+     |       |  0.75      1.0     1.25  |
+ecc | shape +--------+--------+--------+
+     |       |  resp  |  resp  |  resp  |
+     |       |  a   b |  a   b |  a   b |
+----+-------+--------+--------+--------+
+0.4 |   A   |  41  9 |  38 12 | 35  15 |
+     |   B   |   3 47 |   7 43 | 11  39 |
+----+-------+--------+--------+--------+
+0.7 |   A   |  22 28 |  33 17 | 39  11 |
+     |   B   |  10 40 |  21 29 | 24  26 |
+----+-------+--------+--------+--------+
+1.0 |    A   |  26 24 |  26 24 | 28  22 |
+     |   B   |  20 30 |  18 32 | 25  25 |
+----+-------+--------+--------+--------+
+
+For this analysis, I define "correct response" as
+the resp=a for shape=A and resp=b for shape=B.
+The proportions of correct responses are therefore:
+
+     |       |           kappa          |
+ecc | shape |  0.75      1.0     1.25  |
+----+-------+--------+--------+--------+
+0.4 |   A   |  0.82  |  0.76  |  0.70  |
+     |   B   |  0.94  |  0.86  |  0.78  |
+----+-------+--------+--------+--------+
+0.7 |   A   |  0.44  |  0.66  |  0.78  |
+     |   B   |  0.80  |  0.58  |  0.52  |
+----+-------+--------+--------+--------+
+1.0 |    A   |  0.52  |  0.52  |  0.56  |
+     |   B   |  0.60  |  0.62  |  0.50  |
+----+-------+--------+--------+--------+
+
+The proportion of correct response is the
+largest for ecc=0.4 and, in general, smallest
+for ecc=1 as expected. It was expected that
+proportions of correct response would be
+close to 0.5 when ecc=1 because shapes
+A and  B were the same in this condition.
+
+I would like to use the logistic regression
+to assess the effect of the shape, ecc and kappa
+on the proportion of correct responses. For example,
+
+glm(resp~shape*ecc*kappa,data=data,link=binomial)
+
+or, better,
+
+gee(resp~shape*ecc*kappa,id=subject,data=data,family=binomial,
+         corstr = "exchangeable")
+
+given the fact that data that are correlated because
+the 50 responses come from five subjects.
+My first question is rather statistical: do I need to
+take into account the fact that the values of these proportions
+are expected to range in the interval [0.5-1] (0.5 corresponding
+to a random response) ? It seems to me that some sort
+of correction is needed as it is the case when one fits
+a psychometric function to this type of data (e.g. probit
+is rescaled to fit inside the [0.5-1] interval and the absolute
+threshold is defined as the point where the probit reaches
+the 0.75 probability level).
+
+Second, how can one implement a link function of the
+type f(x) = (1+exp(x)/(1+exp(x)))/2 in R?
+
+Third, can it be also done with gee and/or glmm?
+
+---------------------------------------------------------------------
+Gabriel Baud-Bovy               tel.: (+39) 02 2643 4839 (office)
+UHSR University                       (+39) 02 2643 3429 (laboratory)
+via Olgettina, 58                     (+39) 02 2643 4891 (secretary)
+20132 Milan, Italy               fax: (+39) 02 2643 4892
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: "Dr L. Y Hin" <lyhin@netvigator.com>
+Subject: Seeking advice on lattice package in R2.4.0 concerning stripplot
+Date: Sat, 16 Dec 2006 09:22:15 +0800
+Lines: 757
+Message-ID: <002101c720b0$9f27ff40$104efea9@yourgk68c57jh8>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_001E_01C720F3.ACC7DE70"
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 02:23:19 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvOGk-0003KO-Uh
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 02:23:19 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG1MRtL018207;
+	Sat, 16 Dec 2006 02:22:49 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.2 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from imsantv46.netvigator.com (imsantv46.netvigator.com
+	[210.87.253.94])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG1MCf1018159
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 02:22:14 +0100
+Received: from imsantv29.netvigator.com (imsantv46 [127.0.0.1])
+	by imsantv46.netvigator.com (8.13.8/8.13.1) with ESMTP id
+	kBG1MAGO027259
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 09:22:11 +0800
+Received: from yourgk68c57jh8 (awork090055.netvigator.com [203.198.110.55])
+	by imsantv29.netvigator.com (8.13.8/8.13.8) with SMTP id kBG1M9XN009655
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 09:22:10 +0800
+To: <r-help@stat.math.ethz.ch>
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2900.2869
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.2962
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-Content-Filtered-By: Mailman/MimeDel 2.1.9
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75855>
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_001E_01C720F3.ACC7DE70
+Content-Type: text/plain; format=flowed; charset="big5"; reply-type=original
+Content-Transfer-Encoding: 7bit
+
+Dear all,
+
+I am using the R 2.4.0 environment on Windows XP SP2 
+machine and trying to use the lattice package version 
+0.14-9 which you have kindly written to share with the 
+R community.
+
+I have a question concerning the stripplot which I'd be very
+grateful if you can kindly advise me on:
+
+I used the dataset called trydata to plot a graph using
+stripplot (dataset attached), and the scripts used to 
+procude the plot is as follows:
+
+trydata<-dget("trydata")
+stripplot(Position~Count|y*Grouping,jitter=T,group=subtype,
+data=trydata,xlab="Count rate (%)",
+pch=c(0,3,6,5),
+key=list(text=list(c("GS in front", "GS at the back",
+"MS in front","MS at the back")),
+points = Rows(trellis.par.get("superpose.symbol"),1:4),
+columns=2))
+
+When I plotted the graph and viewed it on
+R, the legend and the datapoint shapes are
+correct. However, when I export it into .pdf
+form using the pulldown menu in R, the legend for 
+"GS in front" is incorrect. 
+Instead if being a prism, it became
+a circle. How can I get around this?
+I've attached the figure thus generated in pdf form
+for your kind consideration.
+
+Specifically, how can I modify the specifications in the
+command to produce the correct pch type in the legend 
+as in the chart itself?
+
+Thank you very much in advance for your kind advice.
+
+Best
+Lin
+
+------=_NextPart_000_001E_01C720F3.ACC7DE70
+Content-Type: application/pdf;
+	name="trydatafigure.pdf"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+	filename="trydatafigure.pdf"
+
+%PDF-1.4=0A=
+%=81=E2=81=E3=81=CF=81=D3\r=0A=
+1 0 obj=0A=
+<<=0A=
+/CreationDate (D:20061215100702)=0A=
+/ModDate (D:20061215100702)=0A=
+/Title (R Graphics Output)=0A=
+/Producer (R 2.4.0)=0A=
+/Creator (R)=0A=
+>>=0A=
+endobj=0A=
+2 0 obj=0A=
+<<=0A=
+/Type /Catalog=0A=
+/Pages 3 0 R=0A=
+>>=0A=
+endobj=0A=
+5 0 obj=0A=
+<<=0A=
+/Type /Font=0A=
+/Subtype /Type1=0A=
+/Name /F1=0A=
+/BaseFont /ZapfDingbats=0A=
+>>=0A=
+endobj=0A=
+6 0 obj=0A=
+<<=0A=
+/Type /Page=0A=
+/Parent 3 0 R=0A=
+/Contents 7 0 R=0A=
+/Resources 4 0 R=0A=
+>>=0A=
+endobj=0A=
+7 0 obj=0A=
+<<=0A=
+/Length 8 0 R=0A=
+>>=0A=
+stream
+q=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 163.61 11.34 Tm (Count rate \(%\)) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 18.12 70.98 Tm (Back) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 17.01 115.40 Tm (Front) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+66.62 47.92 m 66.62 42.25 l S=0A=
+94.08 47.92 m 94.08 42.25 l S=0A=
+121.54 47.92 m 121.54 42.25 l S=0A=
+149.01 47.92 m 149.01 42.25 l S=0A=
+176.47 47.92 m 176.47 42.25 l S=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 59.67 29.41 Tm (1.5) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 87.13 29.41 Tm (2.0) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 114.59 29.41 Tm (2.5) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 142.06 29.41 Tm (3.0) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 169.52 29.41 Tm (3.5) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 47.92 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+168.88 112.78 4.20 4.20 re S=0A=
+70.01 75.19 4.20 4.20 re S=0A=
+157.02 115.51 m 162.96 115.51 l S=0A=
+159.99 112.54 m 159.99 118.48 l S=0A=
+118.57 77.92 m 124.51 77.92 l S=0A=
+121.54 74.95 m 121.54 80.89 l S=0A=
+187.46 114.49 m=0A=
+190.28 119.39 l=0A=
+184.63 119.39 l=0A=
+187.46 114.49 l=0A=
+S=0A=
+61.12 71.69 m=0A=
+63.95 76.59 l=0A=
+58.30 76.59 l=0A=
+61.12 71.69 l=0A=
+S=0A=
+140.54 118.97 m=0A=
+143.51 121.94 l=0A=
+146.48 118.97 l=0A=
+143.51 116.00 l=0A=
+140.54 118.97 l=0A=
+S=0A=
+113.08 77.32 m=0A=
+116.05 80.29 l=0A=
+119.02 77.32 l=0A=
+116.05 74.35 l=0A=
+113.08 77.32 l=0A=
+S=0A=
+46.02 47.92 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 145.64 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 145.64 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 84.56 148.53 Tm (Population one) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 145.64 156.54 14.40 re S=0A=
+Q q 46.02 145.64 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 160.04 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 101.95 162.93 Tm (Group A) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 160.04 156.54 14.40 re S=0A=
+Q q 46.02 145.64 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+223.16 47.92 m 223.16 42.25 l S=0A=
+250.62 47.92 m 250.62 42.25 l S=0A=
+278.08 47.92 m 278.08 42.25 l S=0A=
+305.55 47.92 m 305.55 42.25 l S=0A=
+333.01 47.92 m 333.01 42.25 l S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 47.92 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+349.49 115.73 m=0A=
+352.32 120.63 l=0A=
+346.66 120.63 l=0A=
+349.49 115.73 l=0A=
+S=0A=
+212.17 70.83 m=0A=
+215.00 75.73 l=0A=
+209.34 75.73 l=0A=
+212.17 70.83 l=0A=
+S=0A=
+313.56 122.58 m=0A=
+316.53 125.55 l=0A=
+319.50 122.58 l=0A=
+316.53 119.61 l=0A=
+313.56 122.58 l=0A=
+S=0A=
+280.61 74.88 m=0A=
+283.58 77.85 l=0A=
+286.55 74.88 l=0A=
+283.58 71.91 l=0A=
+280.61 74.88 l=0A=
+S=0A=
+202.56 47.92 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 145.64 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 145.64 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 241.84 148.53 Tm (Population two) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 145.64 156.54 14.40 re S=0A=
+Q q 202.56 145.64 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 160.04 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 258.49 162.93 Tm (Group A) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 160.04 156.54 14.40 re S=0A=
+Q q 202.56 145.64 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 18.12 197.50 Tm (Back) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 17.01 241.92 Tm (Front) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 174.44 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+168.88 239.99 4.20 4.20 re S=0A=
+80.99 199.39 4.20 4.20 re S=0A=
+124.07 244.28 m 130.01 244.28 l S=0A=
+127.04 241.31 m 127.04 247.25 l S=0A=
+118.57 205.08 m 124.51 205.08 l S=0A=
+121.54 202.11 m 121.54 208.05 l S=0A=
+181.96 241.55 m=0A=
+184.79 246.45 l=0A=
+179.13 246.45 l=0A=
+181.96 241.55 l=0A=
+S=0A=
+72.11 201.43 m=0A=
+74.94 206.33 l=0A=
+69.28 206.33 l=0A=
+72.11 201.43 l=0A=
+S=0A=
+118.57 243.49 m=0A=
+121.54 246.46 l=0A=
+124.51 243.49 l=0A=
+121.54 240.53 l=0A=
+118.57 243.49 l=0A=
+S=0A=
+118.57 198.08 m=0A=
+121.54 201.05 l=0A=
+124.51 198.08 l=0A=
+121.54 195.11 l=0A=
+118.57 198.08 l=0A=
+S=0A=
+46.02 174.44 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 272.16 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 272.16 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 84.56 275.05 Tm (Population one) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 272.16 156.54 14.40 re S=0A=
+Q q 46.02 272.16 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 286.56 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 101.95 289.45 Tm (Group B) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 286.56 156.54 14.40 re S=0A=
+Q q 46.02 272.16 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 174.44 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+232.04 197.72 4.20 4.20 re S=0A=
+291.59 198.51 m 297.53 198.51 l S=0A=
+294.56 195.54 m 294.56 201.48 l S=0A=
+344.00 239.07 m=0A=
+346.82 243.97 l=0A=
+341.17 243.97 l=0A=
+344.00 239.07 l=0A=
+S=0A=
+223.16 201.38 m=0A=
+225.99 206.28 l=0A=
+220.33 206.28 l=0A=
+223.16 201.38 l=0A=
+S=0A=
+280.61 247.19 m=0A=
+283.58 250.16 l=0A=
+286.55 247.19 l=0A=
+283.58 244.22 l=0A=
+280.61 247.19 l=0A=
+S=0A=
+280.61 205.09 m=0A=
+283.58 208.06 l=0A=
+286.55 205.09 l=0A=
+283.58 202.12 l=0A=
+280.61 205.09 l=0A=
+S=0A=
+202.56 174.44 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 272.16 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 272.16 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 241.84 275.05 Tm (Population two) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 272.16 156.54 14.40 re S=0A=
+Q q 202.56 272.16 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 286.56 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 258.49 289.45 Tm (Group B) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 286.56 156.54 14.40 re S=0A=
+Q q 202.56 272.16 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+66.62 427.48 m 66.62 433.15 l S=0A=
+94.08 427.48 m 94.08 433.15 l S=0A=
+121.54 427.48 m 121.54 433.15 l S=0A=
+149.01 427.48 m 149.01 433.15 l S=0A=
+176.47 427.48 m 176.47 433.15 l S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 18.12 324.02 Tm (Back) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 17.01 368.44 Tm (Front) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 300.96 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+163.38 370.73 4.20 4.20 re S=0A=
+86.49 327.70 4.20 4.20 re S=0A=
+118.57 376.40 m 124.51 376.40 l S=0A=
+121.54 373.43 m 121.54 379.37 l S=0A=
+129.56 323.76 m 135.50 323.76 l S=0A=
+132.53 320.79 m 132.53 326.73 l S=0A=
+159.99 368.07 m=0A=
+162.82 372.97 l=0A=
+157.16 372.97 l=0A=
+159.99 368.07 l=0A=
+S=0A=
+83.09 326.89 m=0A=
+85.92 331.79 l=0A=
+80.27 331.79 l=0A=
+83.09 326.89 l=0A=
+S=0A=
+124.07 368.30 m=0A=
+127.04 371.27 l=0A=
+130.01 368.30 l=0A=
+127.04 365.33 l=0A=
+124.07 368.30 l=0A=
+S=0A=
+129.56 323.34 m=0A=
+132.53 326.31 l=0A=
+135.50 323.34 l=0A=
+132.53 320.37 l=0A=
+129.56 323.34 l=0A=
+S=0A=
+46.02 300.96 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 46.02 398.68 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 398.68 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 84.56 401.57 Tm (Population one) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 398.68 156.54 14.40 re S=0A=
+Q q 46.02 398.68 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+46.02 413.08 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 101.62 415.97 Tm (Group C) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+46.02 413.08 156.54 14.40 re S=0A=
+Q q 46.02 398.68 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+223.16 427.48 m 223.16 433.15 l S=0A=
+250.62 427.48 m 250.62 433.15 l S=0A=
+278.08 427.48 m 278.08 433.15 l S=0A=
+305.55 427.48 m 305.55 433.15 l S=0A=
+333.01 427.48 m 333.01 433.15 l S=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 216.21 438.82 Tm (1.5) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 243.67 438.82 Tm (2.0) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 271.13 438.82 Tm (2.5) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 298.60 438.82 Tm (3.0) Tj=0A=
+/F2 1 Tf 10.00 0.00 0.00 10.00 326.06 438.82 Tm (3.5) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 300.96 156.54 97.72 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+237.54 322.30 4.20 4.20 re S=0A=
+291.59 324.27 m 297.53 324.27 l S=0A=
+294.56 321.30 m 294.56 327.24 l S=0A=
+344.00 372.93 m=0A=
+346.82 377.83 l=0A=
+341.17 377.83 l=0A=
+344.00 372.93 l=0A=
+S=0A=
+234.14 323.54 m=0A=
+236.97 328.44 l=0A=
+231.31 328.44 l=0A=
+234.14 323.54 l=0A=
+S=0A=
+280.61 371.09 m=0A=
+283.58 374.06 l=0A=
+286.55 371.09 l=0A=
+283.58 368.12 l=0A=
+280.61 371.09 l=0A=
+S=0A=
+286.10 323.49 m=0A=
+289.07 326.46 l=0A=
+292.04 323.49 l=0A=
+289.07 320.52 l=0A=
+286.10 323.49 l=0A=
+S=0A=
+202.56 300.96 156.54 97.72 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q 202.56 398.68 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 398.68 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 241.84 401.57 Tm (Population two) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 398.68 156.54 14.40 re S=0A=
+Q q 202.56 398.68 156.54 28.80 re W n=0A=
+0.949 0.949 0.949 rg=0A=
+0.949 0.949 0.949 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+202.56 413.08 156.54 14.40 re B=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 258.16 415.97 Tm (Group C) Tj=0A=
+ET=0A=
+0.000 0.000 0.000 RG=0A=
+202.56 413.08 156.54 14.40 re S=0A=
+Q q 202.56 398.68 156.54 28.80 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 88.16 468.38 Tm (GS in front) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 88.16 456.89 Tm (GS at the back) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 218.91 468.38 Tm (MS in front) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+BT=0A=
+0.000 0.000 0.000 rg=0A=
+/F2 1 Tf 12.00 0.00 0.00 12.00 218.91 456.89 Tm (MS at the back) Tj=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+BT=0A=
+/F1 1 Tf 1 Tr 5.82 0 0 5.82 180.91 470.67 Tm (l) Tj 0 Tr=0A=
+ET=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+180.24 461.20 m 186.18 461.20 l S=0A=
+183.21 458.23 m 183.21 464.17 l S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+314.63 469.43 m=0A=
+317.46 474.32 l=0A=
+311.80 474.32 l=0A=
+314.63 469.43 l=0A=
+S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+0.000 0.000 0.000 RG=0A=
+0.75 w=0A=
+[] 0 d=0A=
+1 J=0A=
+1 j=0A=
+10.00 M=0A=
+312.53 459.10 4.20 4.20 re S=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q q -189.00 -243.00 756.00 972.00 re W n=0A=
+Q=0A=
+endstream=0A=
+endobj=0A=
+8 0 obj=0A=
+12337=0A=
+endobj=0A=
+3 0 obj=0A=
+<<=0A=
+/Type /Pages=0A=
+/Kids [=0A=
+6 0 R=0A=
+]=0A=
+/Count 1=0A=
+/MediaBox [0 0 378 486]=0A=
+>>=0A=
+endobj=0A=
+4 0 obj=0A=
+<<=0A=
+/ProcSet [/PDF /Text]=0A=
+/Font << /F1 5 0 R /F2 10 0 R >>=0A=
+/ExtGState << >>=0A=
+>>=0A=
+endobj=0A=
+9 0 obj=0A=
+<<=0A=
+/Type /Encoding=0A=
+/BaseEncoding /WinAnsiEncoding=0A=
+/Differences [ 45/minus 96/quoteleft=0A=
+144/dotlessi /grave /acute /circumflex /tilde /macron /breve /dotaccent=0A=
+/dieresis /.notdef /ring /cedilla /.notdef /hungarumlaut /ogonek /caron =
+/space]=0A=
+>>=0A=
+endobj=0A=
+10 0 obj <<=0A=
+/Type /Font=0A=
+/Subtype /Type1=0A=
+/Name /F2=0A=
+/BaseFont /Helvetica=0A=
+/Encoding 9 0 R=0A=
+>> endobj=0A=
+xref=0A=
+0 11=0A=
+0000000000 65535 f =0A=
+0000000021 00000 n =0A=
+0000000163 00000 n =0A=
+0000012786 00000 n =0A=
+0000012869 00000 n =0A=
+0000000212 00000 n =0A=
+0000000295 00000 n =0A=
+0000000375 00000 n =0A=
+0000012765 00000 n =0A=
+0000012962 00000 n =0A=
+0000013219 00000 n =0A=
+trailer=0A=
+<<=0A=
+/Size 11=0A=
+/Info 1 0 R=0A=
+/Root 2 0 R=0A=
+>>=0A=
+startxref=0A=
+13316=0A=
+%%EOF=0A=
+
+------=_NextPart_000_001E_01C720F3.ACC7DE70
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+------=_NextPart_000_001E_01C720F3.ACC7DE70--
+
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: Prof Brian Ripley <ripley@stats.ox.ac.uk>
+Subject: Re: how to adjust link function in logistic regression to
+ predict the proportion of correct responses in 2AFC task?
+Date: Sat, 16 Dec 2006 06:01:15 +0000 (GMT)
+Lines: 42
+Message-ID: <Pine.LNX.4.64.0612160543320.30570@gannet.stats.ox.ac.uk>
+References: <6.2.3.4.0.20061216001441.03746570@mail.hsr.it>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 07:02:26 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvScp-00057K-6H
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 07:02:23 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG61Rw9020155;
+	Sat, 16 Dec 2006 07:02:10 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=5.0 tests=AWL, BAYES_50,
+	FORGED_RCVD_HELO autolearn=no version=3.1.7
+Received: from markov.stats.ox.ac.uk (markov.stats.ox.ac.uk [163.1.210.1])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG61GNA020125
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 07:01:17 +0100
+Received: from gannet.stats.ox.ac.uk (gannet.stats [163.1.211.17])
+	by markov.stats.ox.ac.uk (8.13.6/8.13.6) with ESMTP id kBG61Ffd012044; 
+	Sat, 16 Dec 2006 06:01:15 GMT
+To: baud-bovy.gabriel@hsr.it
+In-Reply-To: <6.2.3.4.0.20061216001441.03746570@mail.hsr.it>
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75856>
+
+On Sat, 16 Dec 2006, baud-bovy.gabriel@hsr.it wrote:
+
+> I have would like to use logistic regression to analyze the
+> percentage of correct responses in a 2 alternative forced
+> choice task. The question is whether one needs to take into
+> account the fact expected probabilities for the percentage of
+> correct responses ranges between 0.5 and 1 in this case.
+
+Yes.
+
+> Second, how can one implement a link function of the
+> type f(x) = (1+exp(x)/(1+exp(x)))/2 in R?
+
+Looking at make.link() should give you enough to go on.
+
+> Third, can it be also done with gee and/or glmm?
+
+For gee, you need to change the C-level internals. (I've done this in the 
+far past for S-PLUS but not for R.)  It would be easier to use yags (but I 
+think you still need to dive into the internals).
+
+What 'glmm' did you have in mind?  Looks like e.g. glmmML and glmmPQL will 
+work with the new link.
+
+[...]
+
+Someone may have been here already: e.g.
+http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=1434755
+
+-- 
+Brian D. Ripley,                  ripley@stats.ox.ac.uk
+Professor of Applied Statistics,  http://www.stats.ox.ac.uk/~ripley/
+University of Oxford,             Tel:  +44 1865 272861 (self)
+1 South Parks Road,                     +44 1865 272866 (PA)
+Oxford OX1 3TG, UK                Fax:  +44 1865 272595
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: Prof Brian D Ripley <ripley@stats.ox.ac.uk>
+Subject: Re: Seeking advice on lattice package in R2.4.0 concerning
+ stripplot
+Date: Sat, 16 Dec 2006 06:24:22 +0000 (GMT Standard Time)
+Lines: 67
+Message-ID: <Pine.WNT.4.64.0612160613280.2684@Petrel>
+References: <002101c720b0$9f27ff40$104efea9@yourgk68c57jh8>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Cc: r-help@stat.math.ethz.ch
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 07:25:39 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvSzI-0006zE-ID
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 07:25:36 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG6OaI6026211;
+	Sat, 16 Dec 2006 07:24:53 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=5.0 tests=AWL,
+	BAYES_50 autolearn=no version=3.1.7
+Received: from markov.stats.ox.ac.uk (markov.stats.ox.ac.uk [163.1.210.1])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG6OVpB026184
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 07:24:31 +0100
+Received: from Petrel (cpc3-oxfd4-0-0-cust250.oxfd.cable.ntl.com
+	[86.2.112.251])
+	by markov.stats.ox.ac.uk (8.13.6/8.13.6) with ESMTP id kBG6ORpE014105; 
+	Sat, 16 Dec 2006 06:24:27 GMT
+To: "Dr L. Y Hin" <lyhin@netvigator.com>
+In-Reply-To: <002101c720b0$9f27ff40$104efea9@yourgk68c57jh8>
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75857>
+
+The problem looks to be that you are specifying the types of symbols in two 
+ways:
+
+> pch=c(0,3,6,5),
+
+> points = Rows(trellis.par.get("superpose.symbol"),1:4),
+
+The simplest thing to do is to run your code directly on the pdf() device,
+but you could experiment with other ways of setting the key.
+
+(We don't have the data, so cannot test these ideas.)
+
+On Sat, 16 Dec 2006, Dr L. Y Hin wrote:
+
+> Dear all,
+>
+> I am using the R 2.4.0 environment on Windows XP SP2 machine and trying to 
+> use the lattice package version 0.14-9 which you have kindly written to share 
+> with the R community.
+>
+> I have a question concerning the stripplot which I'd be very
+> grateful if you can kindly advise me on:
+>
+> I used the dataset called trydata to plot a graph using
+> stripplot (dataset attached), and the scripts used to procude the plot is as 
+> follows:
+>
+> trydata<-dget("trydata")
+> stripplot(Position~Count|y*Grouping,jitter=T,group=subtype,
+> data=trydata,xlab="Count rate (%)",
+> pch=c(0,3,6,5),
+> key=list(text=list(c("GS in front", "GS at the back",
+> "MS in front","MS at the back")),
+> points = Rows(trellis.par.get("superpose.symbol"),1:4),
+> columns=2))
+>
+> When I plotted the graph and viewed it on
+> R, the legend and the datapoint shapes are
+> correct. However, when I export it into .pdf
+> form using the pulldown menu in R, the legend for "GS in front" is incorrect. 
+> Instead if being a prism, it became
+> a circle. How can I get around this?
+> I've attached the figure thus generated in pdf form
+> for your kind consideration.
+>
+> Specifically, how can I modify the specifications in the
+> command to produce the correct pch type in the legend as in the chart itself?
+>
+> Thank you very much in advance for your kind advice.
+>
+> Best
+> Lin
+>
+
+-- 
+Brian D. Ripley,                  ripley@stats.ox.ac.uk
+Professor of Applied Statistics,  http://www.stats.ox.ac.uk/~ripley/
+University of Oxford,             Tel:  +44 1865 272861 (self)
+1 South Parks Road,                     +44 1865 272866 (PA)
+Oxford OX1 3TG, UK                Fax:  +44 1865 272595
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+
+
+From news@gmane.org Tue Mar 04 03:33:20 2003
+From: Ken Knoblauch <kknoblauch@free.fr>
+Subject: how to adjust link function in logistic regression to predict
+	the proportion of correct responses in 2AFC task?
+Date: Sat, 16 Dec 2006 08:36:04 +0100
+Lines: 103
+Message-ID: <CD173E62-269D-41A0-9317-C442D4678138@free.fr>
+Mime-Version: 1.0 (Apple Message framework v752.2)
+Content-Type: multipart/mixed; boundary="===============0666346490=="
+Cc: ripley@stats.ox.ac.uk
+X-From: r-help-bounces@stat.math.ethz.ch Sat Dec 16 08:38:30 2006
+Return-path: <r-help-bounces@stat.math.ethz.ch>
+Envelope-to: gclrg-r-help@gmane.org
+Received: from hypatia.math.ethz.ch ([129.132.145.15])
+	by dough.gmane.org with esmtp (Exim 4.50)
+	id 1GvU7m-0002lQ-BQ
+	for gclrg-r-help@gmane.org; Sat, 16 Dec 2006 08:38:26 +0100
+Received: from hypatia.math.ethz.ch (hypatia [129.132.145.15])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG7aKCx010318;
+	Sat, 16 Dec 2006 08:36:43 +0100
+X-Spam-Checker-Version: SpamAssassin 3.1.7 (2006-10-05) on hypatia.math.ethz.ch
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.3 required=5.0 tests=AWL, BAYES_50, HTML_80_90,
+	HTML_MESSAGE autolearn=no version=3.1.7
+Received: from smtp5-g19.free.fr (smtp5-g19.free.fr [212.27.42.35])
+	by hypatia.math.ethz.ch (8.13.6/8.13.6) with ESMTP id kBG7a8Y1010289
+	for <r-help@stat.math.ethz.ch>; Sat, 16 Dec 2006 08:36:08 +0100
+Received: from [192.168.0.1] (mne69-6-82-231-93-240.fbx.proxad.net
+	[82.231.93.240])
+	by smtp5-g19.free.fr (Postfix) with ESMTP id AAFC3279D1;
+	Sat, 16 Dec 2006 08:36:07 +0100 (CET)
+To: r-help@stat.math.ethz.ch
+X-Mailer: Apple Mail (2.752.2)
+X-Virus-Scanned: by amavisd-new at stat.math.ethz.ch
+X-BeenThere: r-help@stat.math.ethz.ch
+X-Mailman-Version: 2.1.9
+Precedence: list
+List-Id: "Main R Mailing List: Primary help" <r-help.stat.math.ethz.ch>
+List-Unsubscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=unsubscribe>
+List-Archive: <https://stat.ethz.ch/pipermail/r-help>
+List-Post: <mailto:r-help@stat.math.ethz.ch>
+List-Help: <mailto:r-help-request@stat.math.ethz.ch?subject=help>
+List-Subscribe: <https://stat.ethz.ch/mailman/listinfo/r-help>,
+	<mailto:r-help-request@stat.math.ethz.ch?subject=subscribe>
+Sender: r-help-bounces@stat.math.ethz.ch
+Errors-To: r-help-bounces@stat.math.ethz.ch
+Archived-At: <http://permalink.gmane.org/gmane.comp.lang.r.general/75858>
+
+--===============0666346490==
+Content-Disposition: inline
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Content-length: 2523
+
+In theory, the probability of correct responses ranges between 0.5=20=20
+and 1 here,
+but in practice it is frequent to find cases where the observed=20=20
+proportion of correct
+responses is a little less.  The number of trials is limited, after=20=20
+all.  The inverse
+of this link function generates a Nan when this occurs.  Is that a=20=20
+problem?
+and if so, how can it be dealt with here?
+
+Thank you.
+
+I have used the gnlr function in Lindsey's gnlm package for this=20=20
+problem in
+the past, but glm would be simpler, it seems to me.
+
+@Article{pmid16817511,
+    Author=3D"Yssaad-Fesselier, Rosa and Knoblauch, Kenneth",
+    Title=3D"{{M}odeling psychometric functions in {R}}",
+    Journal=3D"Behav Res Methods",
+    Year=3D"2006",
+    Volume=3D"38",
+    Number=3D"1",
+    Pages=3D"28--41",
+    Month=3D"Feb"
+}
+
+
+
+> On Sat, 16 Dec 2006, baud-bovy.gabriel at hsr.it wrote:
+>
+> > I have would like to use logistic regression to analyze the
+> > percentage of correct responses in a 2 alternative forced
+> > choice task. The question is whether one needs to take into
+> > account the fact expected probabilities for the percentage of
+> > correct responses ranges between 0.5 and 1 in this case.
+>
+> Yes.
+>
+> > Second, how can one implement a link function of the
+> > type f(x) =3D (1+exp(x)/(1+exp(x)))/2 in R?
+>
+> Looking at make.link() should give you enough to go on.
+>
+> > Third, can it be also done with gee and/or glmm?
+>
+> For gee, you need to change the C-level internals. (I've done this=20=20
+> in the
+> far past for S-PLUS but not for R.)  It would be easier to use yags=20=20
+> (but I
+> think you still need to dive into the internals).
+>
+> What 'glmm' did you have in mind?  Looks like e.g. glmmML and=20=20
+> glmmPQL will
+> work with the new link.
+>
+> [...]
+>
+> Someone may have been here already: e.g.
+> http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=3D1434755
+>
+> --=20
+> Brian D. Ripley,                  ripley at stats.ox.ac.uk
+> Professor of Applied Statistics,  http://www.stats.ox.ac.uk/~ripley/
+> University of Oxford,             Tel:  +44 1865 272861 (self)
+> 1 South Parks Road,                     +44 1865 272866 (PA)
+> Oxford OX1 3TG, UK                Fax:  +44 1865 272595
+
+--
+Ken Knoblauch
+Inserm U371
+Institut Cellule Souche et Cerveau
+D=E9partement Neurosciences Int=E9gratives
+18 avenue du Doyen L=E9pine
+69500 Bron
+France
+tel: +33 (0)4 72 91 34 77
+fax: +33 (0)4 72 91 34 61
+portable: +33 (0)6 84 10 64 10
+http://www.lyon.inserm.fr/371/
+	[[alternative HTML version deleted]]
+
+
+--===============0666346490==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+______________________________________________
+R-help@stat.math.ethz.ch mailing list
+https://stat.ethz.ch/mailman/listinfo/r-help
+PLEASE do read the posting guide http://www.R-project.org/posting-guide.html
+and provide commented, minimal, self-contained, reproducible code.
+
+--===============0666346490==--
+
+
+

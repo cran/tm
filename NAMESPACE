@@ -1,0 +1,107 @@
+import(cba)
+import(methods)
+import(XML)
+
+export(
+       "readPlain",
+       "readReut21578XML",
+       "readRCV1",
+       "readNewsgroup",
+       "readGmane",
+       "convertReut21578XMLPlain",
+       "convertRCV1Plain",
+       "convertMboxEml",
+       "sFilter",
+       "preprocessReut21578XML"
+       )
+
+exportMethods(
+              # Constructors
+              "TextDocCol",
+              "TextRepository",
+              "TermDocMatrix",
+              "DirSource",
+              "CSVSource",
+              "ReutersSource",
+              "GmaneSource",
+
+              # TextDocument
+              "Corpus",
+              "Corpus<-",
+              "Author",
+              "Author<-",
+              "DateTimeStamp",
+              "DateTimeStamp<-",
+              "Description",
+              "Description<-",
+              "ID",
+              "ID<-",
+              "Origin",
+              "Origin<-",
+              "Heading",
+              "Heading<-",
+              "LocalMetaData",
+
+              "Cached",
+              "Cached<-",
+              "URI",
+
+              # TextDocCol
+              "DMetaData",
+              "CMetaData",
+
+              # TextRepository
+              "RepoMetaData",
+
+              # TermDocMatrix
+              "Weighting",
+              "Weighting<-",
+
+              # Sources
+              "stepNext",
+              "getElem",
+              "eoi",
+
+              # Functions
+              "loadDoc",
+              "tmUpdate",
+              "tmMap",
+              "asPlain",
+              "stripWhitespace",
+              "tmTolower",
+              "stemDoc",
+              "removeWords",
+              "tmFilter",
+              "tmIndex",
+              "searchFullText",
+              "findFreqTerms",
+              "findAssocs",
+              "appendElem",
+              "appendMeta",
+              "prescindMeta",
+              "removeMeta",
+              "[",
+              "[<-",
+              "[[",
+              "[[<-",
+              "c",
+              "length",
+              "show",
+              "summary",
+              "inspect",
+              "%IN%",
+              "dissimilarity")
+
+exportClasses("TextDocument",
+              "PlainTextDocument",
+              "XMLTextDocument",
+              "NewsgroupDocument",
+              "TextDocCol",
+              "MetaDataNode",
+              "TextRepository",
+              "TermDocMatrix",
+              "Source",
+              "DirSource",
+              "CSVSource",
+              "ReutersSource",
+              "GmaneSource")

@@ -1,0 +1,242 @@
+# Author: Ingo Feinerer
+# S4 class and accessor definitions
+# Assignment and accessor functions are implemented as described in "S4 Classes in 15 pages, more or less"
+
+.onLoad <- function(lib, pkg) require(methods)
+
+# Text document
+setClass("TextDocument",
+         representation(Author = "character",
+                        DateTimeStamp = "POSIXct",
+                        Description = "character",
+                        ID = "character",
+                        Origin = "character",
+                        Heading = "character",
+                        LocalMetaData = "list",
+                        "VIRTUAL"))
+
+if (!isGeneric("Author")) {
+    if (is.function("Author"))
+        fun <- Author
+    else
+        fun <- function(object) standardGeneric("Author")
+    setGeneric("Author", fun)
+}
+setMethod("Author", "TextDocument", function(object) object@Author)
+setGeneric("Author<-", function(x, value) standardGeneric("Author<-"))
+setReplaceMethod("Author", "TextDocument", function(x, value) {
+  x@Author <- value
+  x
+})
+
+if (!isGeneric("DateTimeStamp")) {
+    if (is.function("DateTimeStamp"))
+        fun <- DateTimeStamp
+    else
+        fun <- function(object) standardGeneric("DateTimeStamp")
+    setGeneric("DateTimeStamp", fun)
+}
+setMethod("DateTimeStamp", "TextDocument", function(object) object@DateTimeStamp)
+setGeneric("DateTimeStamp<-", function(x, value) standardGeneric("DateTimeStamp<-"))
+setReplaceMethod("DateTimeStamp", "TextDocument", function(x, value) {
+  x@DateTimeStamp <- value
+  x
+})
+
+if (!isGeneric("Description")) {
+    if (is.function("Description"))
+        fun <- Description
+    else fun <- function(object) standardGeneric("Description")
+    setGeneric("Description", fun)
+}
+setMethod("Description", "TextDocument", function(object) object@Description)
+setGeneric("Description<-", function(x, value) standardGeneric("Description<-"))
+setReplaceMethod("Description", "TextDocument", function(x, value) {
+  x@Description <- value
+  x
+})
+
+if (!isGeneric("ID")) {
+    if (is.function("ID"))
+        fun <- ID
+    else fun <- function(object) standardGeneric("ID")
+    setGeneric("ID", fun)
+}
+setMethod("ID", "TextDocument", function(object) object@ID)
+setGeneric("ID<-", function(x, value) standardGeneric("ID<-"))
+setReplaceMethod("ID", "TextDocument", function(x, value) {
+  x@ID <- value
+  x
+})
+
+if (!isGeneric("Origin")) {
+    if (is.function("Origin"))
+        fun <- Origin
+    else fun <- function(object) standardGeneric("Origin")
+    setGeneric("Origin", fun)
+}
+setMethod("Origin", "TextDocument", function(object) object@Origin)
+setGeneric("Origin<-", function(x, value) standardGeneric("Origin<-"))
+setReplaceMethod("Origin", "TextDocument", function(x, value) {
+  x@Origin <- value
+  x
+})
+
+if (!isGeneric("Heading")) {
+    if (is.function("Heading"))
+        fun <- Heading
+    else fun <- function(object) standardGeneric("Heading")
+    setGeneric("Heading", fun)
+}
+setMethod("Heading", "TextDocument", function(object) object@Heading)
+setGeneric("Heading<-", function(x, value) standardGeneric("Heading<-"))
+setReplaceMethod("Heading", "TextDocument", function(x, value) {
+  x@Heading <- value
+  x
+})
+
+if (!isGeneric("LocalMetaData")) {
+    if (is.function("LocalMetaData"))
+        fun <- LocalMetaData
+    else fun <- function(object) standardGeneric("LocalMetaData")
+    setGeneric("LocalMetaData", fun)
+}
+setMethod("LocalMetaData", "TextDocument", function(object) object@LocalMetaData)
+
+# Inherited text documents
+# Plain text documents
+setClass("PlainTextDocument",
+         representation(URI = "ANY", Cached = "logical"),
+         contains = c("character", "TextDocument"))
+
+if (!isGeneric("Corpus")) {
+    if (is.function("Corpus"))
+        fun <- Corpus
+    else
+        fun <- function(object) standardGeneric("Corpus")
+    setGeneric("Corpus", fun)
+}
+setMethod("Corpus", "PlainTextDocument", function(object) object@.Data)
+setGeneric("Corpus<-", function(x, value) standardGeneric("Corpus<-"))
+setReplaceMethod("Corpus", "PlainTextDocument", function(x, value) {
+  x@.Data <- value
+  x
+})
+
+if (!isGeneric("URI")) {
+    if (is.function("URI"))
+        fun <- URI
+    else fun <- function(object) standardGeneric("URI")
+    setGeneric("URI", fun)
+}
+setMethod("URI", "PlainTextDocument", function(object) object@URI)
+
+if (!isGeneric("Cached")) {
+    if (is.function("Cached"))
+        fun <- Cached
+    else fun <- function(object) standardGeneric("Cached")
+    setGeneric("Cached", fun)
+}
+setMethod("Cached", "PlainTextDocument", function(object) object@Cached)
+setGeneric("Cached<-", function(x, value) standardGeneric("Cached<-"))
+setReplaceMethod("Cached", "PlainTextDocument", function(x, value) {
+  x@Cached <- value
+  x
+})
+
+# XML text document
+# If XMLDocument would be a S4 class, we could directly inherit from it
+# Instead we have to do a work-around with a list
+setClass("XMLTextDocument",
+         representation(URI = "ANY", Cached = "logical"),
+         contains = c("list", "TextDocument"))
+
+setMethod("Corpus", "XMLTextDocument", function(object) object@.Data)
+setReplaceMethod("Corpus", "XMLTextDocument", function(x, value) {
+    x@.Data <- value
+    x
+})
+setMethod("URI", "XMLTextDocument", function(object) object@URI)
+setMethod("Cached", "XMLTextDocument", function(object) object@Cached)
+setReplaceMethod("Cached", "XMLTextDocument", function(x, value) {
+    x@Cached <- value
+    x
+})
+
+# Newsgroup document as found in the Newsgroup dataset of the UCI KDD archive
+setClass("NewsgroupDocument",
+         representation(Newsgroup = "character", URI = "ANY", Cached = "logical"),
+         contains = c("character", "TextDocument"))
+
+setMethod("Corpus", "NewsgroupDocument", function(object) object@.Data)
+setReplaceMethod("Corpus", "NewsgroupDocument", function(x, value) {
+    x@.Data <- value
+    x
+})
+setMethod("URI", "NewsgroupDocument", function(object) object@URI)
+setMethod("Cached", "NewsgroupDocument", function(object) object@Cached)
+setReplaceMethod("Cached", "NewsgroupDocument", function(x, value) {
+  x@Cached <- value
+  x
+})
+
+# A node in the metadata tree of a text document collection
+setClass("MetaDataNode",
+         representation(NodeID = "numeric",
+                        MetaData = "list",
+                        children = "list"))
+
+# Text document collection
+setClass("TextDocCol",
+         representation(DMetaData = "data.frame", CMetaData = "MetaDataNode"),
+         contains = c("list"))
+
+# DMetaData = *MetaData* available for all *D*ocuments
+if (!isGeneric("DMetaData")) {
+    if (is.function("DMetaData"))
+        fun <- DMetaData
+    else fun <- function(object) standardGeneric("DMetaData")
+    setGeneric("DMetaData", fun)
+}
+setMethod("DMetaData", "TextDocCol", function(object) object@DMetaData)
+
+# CMetaData = *MetaData* describing only the Document *C*ollection itself
+if (!isGeneric("CMetaData")) {
+    if (is.function("CMetaData"))
+        fun <- CMetaData
+    else fun <- function(object) standardGeneric("CMetaData")
+    setGeneric("CMetaData", fun)
+}
+setMethod("CMetaData", "TextDocCol", function(object) object@CMetaData)
+
+# Repository for text document collections
+setClass("TextRepository",
+         representation(RepoMetaData = "list"),
+         contains = c("list"))
+
+if (!isGeneric("RepoMetaData")) {
+    if (is.function("RepoMetaData"))
+        fun <- RepoMetaData
+    else fun <- function(object) standardGeneric("RepoMetaData")
+    setGeneric("RepoMetaData", fun)
+}
+setMethod("RepoMetaData", "TextRepository", function(object) object@RepoMetaData)
+
+# Term-document matrix
+setClass("TermDocMatrix",
+         representation(Weighting = "character"),
+         contains = c("matrix"))
+
+if (!isGeneric("Weighting")) {
+    if (is.function("Weighting"))
+        fun <- Weighting
+    else
+        fun <- function(object) standardGeneric("Weighting")
+    setGeneric("Weighting", fun)
+}
+setMethod("Weighting", "TermDocMatrix", function(object) object@Weighting)
+setGeneric("Weighting<-", function(x, value) standardGeneric("Weighting<-"))
+setReplaceMethod("Weighting", "TermDocMatrix", function(x, value) {
+  x@Weighting <- value
+  x
+})
