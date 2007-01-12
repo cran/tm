@@ -1,3 +1,7 @@
+2007-01-12  Ingo Feinerer  <h0125130@wu-wien.ac.at>
+
+	* DESCRIPTION: Update to version 0.1-1.
+
 2007-01-09  Ingo Feinerer  <h0125130@wu-wien.ac.at>
 
 	* R/textdoccol.R (stemDoc): Use Rstem::wordStem instead of

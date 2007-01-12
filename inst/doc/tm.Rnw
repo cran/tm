@@ -192,7 +192,8 @@ reut21578.tdc <- tmMap(reut21578.tdc, removeWords, stopwords_en)
 \subsection*{Stemming}
 Stemming is done by:
 <<>>=
-tmMap(reut21578.tdc, stemDoc)
+if (require("Rstem"))
+    tmMap(reut21578.tdc, stemDoc)
 @
 
 \section*{Filters}
