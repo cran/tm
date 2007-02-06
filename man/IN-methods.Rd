@@ -2,14 +2,14 @@
 \alias{\%IN\%}
 \docType{methods}
 \alias{\%IN\%-methods}
-\alias{\%IN\%,TextDocument,TextDocCol-method}
+\alias{\%IN\%,TextDocument,Corpus-method}
 \title{Methods for Function \%IN\% in Package `tm'}
 \description{
   Methods for function \code{\%IN\%} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{x = "TextDocument", y = "TextDocCol"}{Returns \code{TRUE} if
+    \item{x = "TextDocument", y = "Corpus"}{Returns \code{TRUE} if
       \code{x} occurs in \code{y}.}
   }
 }

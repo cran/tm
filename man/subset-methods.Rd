@@ -4,18 +4,18 @@
 \alias{[<--methods}
 \alias{[[-methods}
 \alias{[[<--methods}
-\alias{[,TextDocCol,ANY,ANY,ANY-method}
+\alias{[,Corpus,ANY,ANY,ANY-method}
 \alias{[,TermDocMatrix,ANY,ANY,ANY-method}
-\alias{[<-,TextDocCol,ANY,ANY,ANY-method}
-\alias{[[,TextDocCol,ANY,ANY-method}
-\alias{[[<-,TextDocCol,ANY,ANY-method}
+\alias{[<-,Corpus,ANY,ANY,ANY-method}
+\alias{[[,Corpus,ANY,ANY-method}
+\alias{[[<-,Corpus,ANY,ANY-method}
 \title{Methods for Subset Functions in Package `tm'}
 \description{
   Methods for subset functions \code{[}, \code{[<-}, \code{[[} and
   \code{[[<-} in package \pkg{tm}..
 }
 \arguments{
-  \item{x = "TextDocCol"}{the text document collection to be subsetted
+  \item{x = "Corpus"}{the text document collection to be subsetted
     or modified.}
   \item{x = "TermDocMatrix"}{the term-document matrix to be subsetted.}
 }

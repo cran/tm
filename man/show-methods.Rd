@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{show-methods}
 \alias{show,PlainTextDocument-method}
-\alias{show,TextDocCol-method}
+\alias{show,Corpus-method}
 \alias{show,TextRepository-method}
 \title{Methods for Function show in Package `tm'}
 \description{
@@ -12,7 +12,7 @@
   \describe{
     \item{object = "PlainTextDocument"}{Prints the text of a plain text
       document without all slots.}
-    \item{object = "TextDocCol"}{Prints some short information on a text
+    \item{object = "Corpus"}{Prints some short information on a text
       document collection.}
     \item{object = "TextRepository"}{Prints some short information on a text
       repository.}

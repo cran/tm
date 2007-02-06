@@ -16,6 +16,8 @@ Objects can be created by calls of the form \code{new("Source", ...)}.
       where this source supports load on demand}
     \item{\code{Position}:}{Object of class \code{numeric} indicating
       the position in the source}
+    \item{\code{Encoding}:}{Object of class \code{character} holding the
+      encoding of the texts delivered by the source.}
   }
 }
 \author{Ingo Feinerer}

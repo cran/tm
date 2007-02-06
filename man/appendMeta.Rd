@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{appendMeta}
 \alias{appendMeta-methods}
-\alias{appendMeta,TextDocCol-method}
+\alias{appendMeta,Corpus-method}
 \alias{appendMeta,TextRepository-method}
 \title{Methods for Function appendMeta in Package `tm'}
 \description{
@@ -10,7 +10,7 @@ Methods for function \code{appendMeta} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "TextDocCol", cmeta = NULL, dmeta = NULL}{Returns a text
+    \item{object = "Corpus", cmeta = NULL, dmeta = NULL}{Returns a text
       document collection where the \code{cmeta} is added to the
       \code{CMetaData} and \code{dmeta} is added to the \code{DMetaData}.}  
     \item{object = "TextRepository", cmeta = NULL, dmeta = NULL}{Returns a text

@@ -17,7 +17,7 @@ Methods for function \code{removeSignature} in package \pkg{tm}.
 }
 \examples{
 newsgroup <- system.file("texts", "newsgroup", package = "tm")
-news <- TextDocCol(DirSource(newsgroup), readerControl = list(reader = readNewsgroup, language = "en_US", load = TRUE))
+news <- Corpus(DirSource(newsgroup), readerControl = list(reader = readNewsgroup, language = "en_US", load = TRUE))
 asPlain(news[[4]])
 removeSignature(asPlain(news[[4]]))
 asPlain(news[[5]])

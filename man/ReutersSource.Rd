@@ -8,11 +8,12 @@
   Constructs a source for a Reuters XML document.
 }
 \usage{
-\S4method{ReutersSource}{character}(object)
+\S4method{ReutersSource}{character}(object, encoding = "UTF-8")
 }
 \arguments{
   \item{object}{either a character identifying the file or a call which
     results in a connection.}
+  \item{encoding}{a character giving the encoding of the file.}
 }
 \value{
   An S4 object of class \code{ReutersSource} which extends the class

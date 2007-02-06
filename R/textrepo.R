@@ -2,13 +2,13 @@
 
 setGeneric("TextRepository", function(object, meta = list(created = Sys.time())) standardGeneric("TextRepository"))
 setMethod("TextRepository",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object, meta) {
               return(new("TextRepository", .Data = list(object), RepoMetaData = meta))
           })
 
 setMethod("appendElem",
-          signature(object = "TextRepository", data = "TextDocCol"),
+          signature(object = "TextRepository", data = "Corpus"),
           function(object, data, meta = NULL) {
               object[[length(object)+1]] <- data
               object@RepoMetaData <- c(object@RepoMetaData, meta)

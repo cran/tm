@@ -123,16 +123,16 @@ setClass("PlainTextDocument",
          representation(URI = "ANY", Cached = "logical"),
          contains = c("character", "TextDocument"))
 
-if (!isGeneric("Corpus")) {
-    if (is.function("Corpus"))
-        fun <- Corpus
+if (!isGeneric("Content")) {
+    if (is.function("Content"))
+        fun <- Content
     else
-        fun <- function(object) standardGeneric("Corpus")
-    setGeneric("Corpus", fun)
+        fun <- function(object) standardGeneric("Content")
+    setGeneric("Content", fun)
 }
-setMethod("Corpus", "PlainTextDocument", function(object) object@.Data)
-setGeneric("Corpus<-", function(x, value) standardGeneric("Corpus<-"))
-setReplaceMethod("Corpus", "PlainTextDocument", function(x, value) {
+setMethod("Content", "PlainTextDocument", function(object) object@.Data)
+setGeneric("Content<-", function(x, value) standardGeneric("Content<-"))
+setReplaceMethod("Content", "PlainTextDocument", function(x, value) {
   x@.Data <- value
   x
 })
@@ -165,8 +165,8 @@ setClass("XMLTextDocument",
          representation(URI = "ANY", Cached = "logical"),
          contains = c("list", "TextDocument"))
 
-setMethod("Corpus", "XMLTextDocument", function(object) object@.Data)
-setReplaceMethod("Corpus", "XMLTextDocument", function(x, value) {
+setMethod("Content", "XMLTextDocument", function(object) object@.Data)
+setReplaceMethod("Content", "XMLTextDocument", function(x, value) {
     x@.Data <- value
     x
 })
@@ -190,8 +190,8 @@ setClass("NewsgroupDocument",
          representation(Newsgroup = "character", URI = "ANY", Cached = "logical"),
          contains = c("character", "TextDocument"))
 
-setMethod("Corpus", "NewsgroupDocument", function(object) object@.Data)
-setReplaceMethod("Corpus", "NewsgroupDocument", function(x, value) {
+setMethod("Content", "NewsgroupDocument", function(object) object@.Data)
+setReplaceMethod("Content", "NewsgroupDocument", function(x, value) {
     x@.Data <- value
     x
 })
@@ -207,8 +207,8 @@ setClass("StructuredTextDocument",
          representation(URI = "ANY", Cached = "logical"),
          contains = c("list", "TextDocument"))
 
-setMethod("Corpus", "StructuredTextDocument", function(object) object@.Data)
-setReplaceMethod("Corpus", "StructuredTextDocument", function(x, value) {
+setMethod("Content", "StructuredTextDocument", function(object) object@.Data)
+setReplaceMethod("Content", "StructuredTextDocument", function(x, value) {
     x@.Data <- value
     x
 })
@@ -226,7 +226,7 @@ setClass("MetaDataNode",
                         children = "list"))
 
 # Text document collection
-setClass("TextDocCol",
+setClass("Corpus",
          representation(DMetaData = "data.frame", CMetaData = "MetaDataNode", DBControl = "list"),
          contains = c("list"))
 
@@ -237,7 +237,7 @@ if (!isGeneric("DMetaData")) {
     else fun <- function(object) standardGeneric("DMetaData")
     setGeneric("DMetaData", fun)
 }
-setMethod("DMetaData", "TextDocCol",
+setMethod("DMetaData", "Corpus",
           function(object) {
               if (DBControl(object)[["useDb"]]) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
@@ -251,7 +251,7 @@ setMethod("DMetaData", "TextDocCol",
                   return(object@DMetaData)
           })
 setGeneric("DMetaData<-", function(x, value) standardGeneric("DMetaData<-"))
-setReplaceMethod("DMetaData", "TextDocCol",
+setReplaceMethod("DMetaData", "Corpus",
                  function(x, value) {
                      if (DBControl(x)[["useDb"]]) {
                          db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
@@ -272,7 +272,7 @@ if (!isGeneric("CMetaData")) {
     else fun <- function(object) standardGeneric("CMetaData")
     setGeneric("CMetaData", fun)
 }
-setMethod("CMetaData", "TextDocCol", function(object) object@CMetaData)
+setMethod("CMetaData", "Corpus", function(object) object@CMetaData)
 
 if (!isGeneric("DBControl")) {
     if (is.function("DBControl"))
@@ -280,7 +280,7 @@ if (!isGeneric("DBControl")) {
     else fun <- function(object) standardGeneric("DBControl")
     setGeneric("DBControl", fun)
 }
-setMethod("DBControl", "TextDocCol", function(object) object@DBControl)
+setMethod("DBControl", "Corpus", function(object) object@DBControl)
 
 # Repository for text document collections
 setClass("TextRepository",

@@ -1,63 +1,36 @@
 # Author: Ingo Feinerer
 
-# Input matrix has to be in term-frequency format
-weightMatrix <- function(m, weighting = "tf") {
-    type <- match.arg(weighting, c("tf", "tf-idf", "bin", "logical"))
-    switch(type,
-           "tf" = {
-               return(m)
-           },
-           "tf-idf" = {
-               df <- colSums(as(m > 0, "dgCMatrix"))
-               return(t(t(m) * log2(nrow(m) / df)))
-           },
-           "bin" = {
-               return(as(m > 0, "dgCMatrix"))
-           },
-           "logical" = {
-               return(m > 0)
-           })
-}
-
 setGeneric("TermDocMatrix",
-           function(object, weighting = "tf", stemming = FALSE, minWordLength = 3,
-                    minDocFreq = 1, stopwords = NULL, dictionary = NULL) standardGeneric("TermDocMatrix"))
+           function(object, control = list()) standardGeneric("TermDocMatrix"))
 # Kudos to Christian Buchta for significantly improving TermDocMatrix's efficiency
 setMethod("TermDocMatrix",
-          signature(object = "TextDocCol"),
-          function(object, weighting = "tf", stemming = FALSE, minWordLength = 3,
-                   minDocFreq = 1, stopwords = NULL, dictionary = NULL) {
+          signature(object = "Corpus"),
+          function(object, control = list()) {
 
-              control <- list(stemming = stemming, stopwords = stopwords, dictionary = dictionary,
-                              minDocFreq = minDocFreq, minWordLength = minWordLength)
-              # Rewritten textvector function supports modules for each processing step
-              # E.g., we can use the tokenizer from the openNLP package:
-              # > model <- system.file("opennlp.models", "english", "tokenize", "EnglishTok.bin.gz", package = "openNLPmodels")
-              # > tok <- function(x) tokenize(x, model)
-              # > textvector(doc, control = list(tokenize = tok))
-              tvlist <- lapply(object, textvector, control)
-              terms <- lapply(tvlist, "[[", "terms")
-              allTerms <- unique(unlist(terms, use.names = FALSE))
+              weight <- control$weighting
+              if (is.null(weight))
+                  weight <- weightTf
 
-              i <- lapply(terms, match, allTerms)
-              rm(terms)
+              tflist <- lapply(object, termFreq, control)
+              allTerms <- unique(unlist(lapply(tflist, names), use.names = FALSE))
+
+              i <- lapply(tflist, function(x) match(names(x), allTerms)[x > 0])
               p <- cumsum(sapply(i, length))
               i <- unlist(i) - 1L
 
-              x <- lapply(tvlist, "[[", "freqs")
-              rm(tvlist)
-              x <- as.numeric(unlist(x, use.names = FALSE))
+              x <- as.numeric(unlist(tflist, use.names = FALSE))
+              rm(tflist)
 
-              tdm <- new("dgCMatrix", p = c(0L, p), i = i, x = x,
-                         Dim = c(length(allTerms), length(p)),
-                         Dimnames = list(Terms = allTerms, Docs = sapply(object, ID)))
-              tdm <- weightMatrix(t(tdm), weighting)
+              tdm <- new("dgCMatrix", p = c(0L, p), i = i, x = x[x > 0],
+                         Dim = c(length(allTerms), length(p)))
+              tdm <- weight(t(tdm))
+              tdm@Dimnames <- list(Docs = sapply(object, ID), Terms = allTerms)
 
-              new("TermDocMatrix", Data = tdm, Weighting = weighting)
+              new("TermDocMatrix", Data = tdm, Weighting = weight@Name)
           })
 
-textvector <- function(doc, control = list()) {
-    txt <- Corpus(doc)
+termFreq <- function(doc, control = list()) {
+    txt <- Content(doc)
 
     # Conversion to lower characters
     tolower <- control$tolower
@@ -69,6 +42,10 @@ textvector <- function(doc, control = list()) {
     if (is.null(tokenize))
         tokenize <- function(x) unlist(strsplit(gsub("[^[:alnum:]]+", " ", x), " ", fixed = TRUE))
     txt <- tokenize(txt)
+
+    removeNumbers <- control$removeNumbers
+    if (is.logical(removeNumbers) && removeNumbers)
+        txt <- gsub("[[:digit:]]+", "", txt)
 
     # Stemming
     stemming <- control$stemming
@@ -85,6 +62,10 @@ textvector <- function(doc, control = list()) {
         txt <- txt[!txt %in% stopwords(Language(doc))]
     else if (is.character(stopwords))
         txt <- txt[!txt %in% stopwords]
+
+    # Check if the document content is NULL
+    if (is.null(txt))
+        return(structure(integer(0), names = character(0)))
 
     # If dictionary is set tabulate against it
     dictionary <- control$dictionary
@@ -104,17 +85,8 @@ textvector <- function(doc, control = list()) {
         minWordLength <- 3
     tab <- tab[nchar(names(tab), type = "chars") >= minWordLength]
 
-    # Handle empty vectors
-    if (length(names(tab)) <= 0) {
-        terms <- ""
-        freqs <- 0
-    }
-    else {
-        terms <- names(tab)
-        freqs <- tab
-    }
-
-    data.frame(docs = ID(doc), terms, freqs, row.names = NULL, stringsAsFactors = FALSE)
+    # Return named integer
+    structure(as.integer(tab), names = names(tab))
 }
 
 setMethod("[",
@@ -142,6 +114,24 @@ setMethod("nrow",
           signature(x = "TermDocMatrix"),
           function(x) {
               nrow(Data(x))
+          })
+
+setMethod("dimnames",
+          signature(x = "TermDocMatrix"),
+          function(x) {
+              dimnames(Data(x))
+          })
+
+setMethod("colnames",
+          signature(x = "TermDocMatrix"),
+          function(x, do.NULL = TRUE, prefix = "col") {
+              colnames(Data(x), do.NULL, prefix)
+          })
+
+setMethod("rownames",
+          signature(x = "TermDocMatrix"),
+          function(x, do.NULL = TRUE, prefix = "row") {
+              rownames(Data(x), do.NULL, prefix)
           })
 
 setGeneric("findFreqTerms", function(object, lowfreq, highfreq) standardGeneric("findFreqTerms"))

@@ -1,8 +1,8 @@
 \name{XMLTextDocument-class}
 \docType{class}
 \alias{XMLTextDocument-class}
-\alias{Corpus,XMLTextDocument-method}
-\alias{Corpus<-,XMLTextDocument-method}
+\alias{Content,XMLTextDocument-method}
+\alias{Content<-,XMLTextDocument-method}
 \alias{URI,XMLTextDocument-method}
 \alias{Cached,XMLTextDocument-method}
 \alias{Cached<-,XMLTextDocument-method}
@@ -29,9 +29,9 @@ Class \code{list} and \code{TextDocument}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{Corpus}{\code{signature(object = "XMLTextDocument")}: returns the
+    \item{Content}{\code{signature(object = "XMLTextDocument")}: returns the
       text corpus, i.e., the actual XMLDocument in the data slot}
-    \item{Corpus<-}{\code{signature(object = "XMLTextDocument")}: sets the
+    \item{Content<-}{\code{signature(object = "XMLTextDocument")}: sets the
       text corpus, i.e., the actual XMLDocument in data slot}
     \item{URI}{\code{signature(object = "XMLTextDocument")}: returns the
       filename on disk}

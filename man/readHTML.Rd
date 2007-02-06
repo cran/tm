@@ -39,7 +39,7 @@ readHTML(...)
 }
 \examples{
 html <- system.file("texts", "html", package = "tm")
-\dontrun{(TextDocCol(DirSource(html), readerControl = list(reader = readHTML, load = TRUE)))}
+\dontrun{(Corpus(DirSource(html), readerControl = list(reader = readHTML, load = TRUE)))}
 }
 \author{Ingo Feinerer}
 \keyword{file}

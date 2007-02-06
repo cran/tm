@@ -1,22 +1,23 @@
-\name{TextDocCol-class}
+\name{Corpus-class}
 \docType{class}
-\alias{TextDocCol-class}
+\alias{Corpus-class}
 \alias{CMetaData}
 \alias{DBControl}
 \alias{DMetaData}
 \alias{DMetaData<-}
-\alias{CMetaData,TextDocCol-method}
-\alias{DBControl,TextDocCol-method}
-\alias{DMetaData,TextDocCol-method}
-\alias{DMetaData<-,TextDocCol-method}
+\alias{CMetaData,Corpus-method}
+\alias{DBControl,Corpus-method}
+\alias{DMetaData,Corpus-method}
+\alias{DMetaData<-,Corpus-method}
 \title{Text document collection}
 \description{
-  A class representing a collection of text documents.
+  A class representing a collection of text documents (denoted as corpus
+  in linguistics).
 }
 \section{Objects from the Class}{
   Objects can be created by calls of the form
-  \code{new("TextDocCol",...)} or by calling the function
-  \code{TextDocCol}.
+  \code{new("Corpus",...)} or by calling the function
+  \code{Corpus}.
 }
 \section{Slots}{
   \describe{
@@ -41,18 +42,18 @@ Class \code{list}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{CMetaData}{\code{signature(object = "TextDocCol")}: returns the
+    \item{CMetaData}{\code{signature(object = "Corpus")}: returns the
       document collection specific metadata in form of a tag-value
       paired list.}
-    \item{DMetaData}{\code{signature(object = "TextDocCol")}: returns the
+    \item{DMetaData}{\code{signature(object = "Corpus")}: returns the
       document specific metadata in form of a data frame.}
-    \item{DBControl}{\code{signature(object = "TextDocCol")}: returns
+    \item{DBControl}{\code{signature(object = "Corpus")}: returns
       the database configuration settings.}
   }
 }
 \author{Ingo Feinerer}
 \seealso{
   \code{\link{MetaDataNode-class}}
-  \code{\link{TextDocCol}}
+  \code{\link{Corpus}}
 }
 \keyword{classes}

@@ -1,13 +1,13 @@
 \name{TextRepository}
 \docType{methods}
 \alias{TextRepository}
-\alias{TextRepository,TextDocCol-method}
+\alias{TextRepository,Corpus-method}
 \title{Text repository}
 \description{
   Constructs a text document collection from various sources.
 }
 \usage{
-\S4method{TextRepository}{TextDocCol}(object, meta = list(created = Sys.time()))
+\S4method{TextRepository}{Corpus}(object, meta = list(created = Sys.time()))
 }
 \arguments{
   \item{object}{a directory containing the documents.}

@@ -1,6 +1,9 @@
 # Author: Ingo Feinerer
-
 # Reader
+
+getReaders <- function() {
+    c("readDOC", "readGmane", "readHTML", "readNewsgroup", "readPDF", "readReut21578XML", "readPlain", "readRCV1")
+}
 
 readPlain <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
@@ -144,6 +147,20 @@ readGmane <- FunctionGenerator(function(...) {
         }
 
         return(doc)
+    }
+})
+
+# readDOC needs antiword installed to be able to extract the text
+readDOC <- FunctionGenerator(function(...) {
+    function(elem, load, language, id) {
+        if (!load)
+            warning("load on demand not supported for DOC documents")
+
+        corpus <- paste(system(paste("antiword", shQuote(as.character(elem$uri[2]))), intern = TRUE), sep = "\n", collapse = "")
+
+        new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
+            Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id,
+            Origin = "", Heading = "", Language = language)
     }
 })
 

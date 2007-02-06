@@ -1,14 +1,14 @@
-\name{TextDocCol}
+\name{Corpus}
 \docType{methods}
-\alias{TextDocCol}
-\alias{TextDocCol,Source-method}
+\alias{Corpus}
+\alias{Corpus,Source-method}
 \title{Text document collection}
 \description{
-  Constructs a text document collection.
+  Constructs a text document collection (corpus).
 }
 \usage{
-\S4method{TextDocCol}{Source}(object, readerControl = list(reader = object@DefaultReader,
-language = "en_US", load = FALSE), dbControl = list(useDb = FALSE, dbName = "",
+\S4method{Corpus}{Source}(object, readerControl = list(reader = object@DefaultReader,
+language = "en_US", load = TRUE), dbControl = list(useDb = FALSE, dbName = "",
 dbType = "DB1"), ...)
 }
 \arguments{
@@ -32,16 +32,16 @@ dbType = "DB1"), ...)
   \item{...}{optional arguments for the \code{reader}.}
 }
 \value{
-  An S4 object of class \code{TextDocCol} which extends the class
+  An S4 object of class \code{Corpus} which extends the class
   \code{list} containing a collection of text documents.
 }
 \examples{
 txt <- system.file("texts", "txt", package = "tm")
-\dontrun{(TextDocCol(DirSource(txt), readerControl = list(reader
+\dontrun{(Corpus(DirSource(txt), readerControl = list(reader
 = readPlain, language = "en_US", load = TRUE), dbControl = list(useDb =
 TRUE, dbName = "oviddb", dbType = "DB1")))}
 reut21578 <- system.file("texts", "reut21578", package = "tm")
-TextDocCol(DirSource(reut21578), readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
+Corpus(DirSource(reut21578), readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
 }
 \author{Ingo Feinerer}
 \keyword{methods}

@@ -1,8 +1,8 @@
 \name{NewsgroupDocument-class}
 \docType{class}
 \alias{NewsgroupDocument-class}
-\alias{Corpus,NewsgroupDocument-method}
-\alias{Corpus<-,NewsgroupDocument-method}
+\alias{Content,NewsgroupDocument-method}
+\alias{Content<-,NewsgroupDocument-method}
 \alias{URI,NewsgroupDocument-method}
 \alias{Cached,NewsgroupDocument-method}
 \alias{Cached<-,NewsgroupDocument-method}
@@ -31,9 +31,9 @@ Class \code{character} and \code{TextDocument}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{Corpus}{\code{signature(object = "NewsgroupDocument")}: returns the
+    \item{Content}{\code{signature(object = "NewsgroupDocument")}: returns the
       text corpus, i.e., the actual character data slot}
-    \item{Corpus<-}{\code{signature(object = "NewsgroupDocument")}: sets the
+    \item{Content<-}{\code{signature(object = "NewsgroupDocument")}: sets the
       text corpus, i.e., the actual character data slot}
     \item{URI}{\code{signature(object = "NewsgroupDocument")}: returns the
       filename on disk}

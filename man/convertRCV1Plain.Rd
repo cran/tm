@@ -19,7 +19,7 @@ convertRCV1Plain(node, ...)
 \seealso{\code{\link{asPlain}}}
 \examples{
 rcv1 <- system.file("texts", "rcv1", package = "tm")
-rcv1TDC <- TextDocCol(DirSource(rcv1), readerControl = list(reader = readRCV1, language = "en_US", load = TRUE))
+rcv1TDC <- Corpus(DirSource(rcv1), readerControl = list(reader = readRCV1, language = "en_US", load = TRUE))
 rcv1TDC[[1]]
 asPlain(rcv1TDC[[1]], convertRCV1Plain)
 }

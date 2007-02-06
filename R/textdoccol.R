@@ -1,18 +1,24 @@
 # Author: Ingo Feinerer
 
 # The "..." are additional arguments for the FunctionGenerator reader
-setGeneric("TextDocCol", function(object,
-                                  readerControl = list(reader = object@DefaultReader, language = "en_US", load = FALSE),
+setGeneric("Corpus", function(object,
+                                  readerControl = list(reader = object@DefaultReader, language = "en_US", load = TRUE),
                                   dbControl = list(useDb = FALSE, dbName = "", dbType = "DB1"),
-                                  ...) standardGeneric("TextDocCol"))
-setMethod("TextDocCol",
+                                  ...) standardGeneric("Corpus"))
+setMethod("Corpus",
           signature(object = "Source"),
           function(object,
-                   readerControl = list(reader = object@DefaultReader, language = "en_US", load = FALSE),
+                   readerControl = list(reader = object@DefaultReader, language = "en_US", load = TRUE),
                    dbControl = list(useDb = FALSE, dbName = "", dbType = "DB1"),
                    ...) {
+              if (is.null(readerControl$reader))
+                  readerControl$reader <- object@DefaultReader
               if (is(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
+              if (is.null(readerControl$language))
+                  readerControl$language = "en_US"
+              if (is.null(readerControl$load))
+                  readerControl$load = TRUE
 
               if (dbControl$useDb) {
                   if (!dbCreate(dbControl$dbName, dbControl$dbType))
@@ -52,7 +58,7 @@ setMethod("TextDocCol",
                             MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
                             children = list())
 
-              return(new("TextDocCol", .Data = tdl, DMetaData = dmeta.df, CMetaData = cmeta.node, DBControl = dbControl))
+              return(new("Corpus", .Data = tdl, DMetaData = dmeta.df, CMetaData = cmeta.node, DBControl = dbControl))
           })
 
 setGeneric("loadDoc", function(object, ...) standardGeneric("loadDoc"))
@@ -63,7 +69,7 @@ setMethod("loadDoc",
                   con <- eval(URI(object))
                   corpus <- readLines(con)
                   close(con)
-                  Corpus(object) <- corpus
+                  Content(object) <- corpus
                   Cached(object) <- TRUE
                   return(object)
               } else {
@@ -79,7 +85,7 @@ setMethod("loadDoc",
                   close(con)
                   doc <- xmlTreeParse(corpus, asText = TRUE)
                   class(doc) <- "list"
-                  Corpus(object) <- doc
+                  Content(object) <- doc
                   Cached(object) <- TRUE
                   return(object)
               } else {
@@ -98,7 +104,7 @@ setMethod("loadDoc",
                       if (mail[index] == "")
                           break
                   }
-                  Corpus(object) <- mail[(index + 1):length(mail)]
+                  Content(object) <- mail[(index + 1):length(mail)]
                   return(object)
               } else {
                   return(object)
@@ -116,24 +122,31 @@ setMethod("loadDoc",
 
 setGeneric("tmUpdate", function(object,
                                 origin,
-                                readerControl = list(reader = origin@DefaultReader, language = "en_US", load = FALSE),
+                                readerControl = list(reader = origin@DefaultReader, language = "en_US", load = TRUE),
                                 ...) standardGeneric("tmUpdate"))
 # Update is only supported for directories
 # At the moment no other LoD devices are available anyway
 setMethod("tmUpdate",
-          signature(object = "TextDocCol", origin = "DirSource"),
+          signature(object = "Corpus", origin = "DirSource"),
           function(object, origin,
-                   readerControl = list(reader = origin@DefaultReader, language = "en_US", load = FALSE),
+                   readerControl = list(reader = origin@DefaultReader, language = "en_US", load = TRUE),
                    ...) {
+              if (is.null(readerControl$reader))
+                  readerControl$reader <- origin@DefaultReader
               if (is(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
+              if (is.null(readerControl$language))
+                  readerControl$language = "en_US"
+              if (is.null(readerControl$load))
+                  readerControl$load = TRUE
 
               object.filelist <- unlist(lapply(object, function(x) {as.character(URI(x))[2]}))
               new.files <- setdiff(origin@FileList, object.filelist)
 
               for (filename in new.files) {
-                  elem <- list(content = readLines(filename),
-                               uri = substitute(file(filename)))
+                  encoding <- origin@Encoding
+                  elem <- list(content = readLines(filename, encoding = encoding),
+                               uri = substitute(file(filename, encoding = encoding)))
                   object <- appendElem(object, readerControl$reader(elem, readerControl$load, readerControl$language, filename))
               }
 
@@ -142,7 +155,7 @@ setMethod("tmUpdate",
 
 setGeneric("tmMap", function(object, FUN, ...) standardGeneric("tmMap"))
 setMethod("tmMap",
-          signature(object = "TextDocCol", FUN = "function"),
+          signature(object = "Corpus", FUN = "function"),
           function(object, FUN, ...) {
               result <- object
               # Note that text corpora are automatically loaded into memory via \code{[[}
@@ -168,7 +181,7 @@ setMethod("asPlain",
 setMethod("asPlain",
           signature(object = "XMLTextDocument", FUN = "function"),
           function(object, FUN, ...) {
-              corpus <- Corpus(object)
+              corpus <- Content(object)
 
               # As XMLDocument is no native S4 class, restore valid information
               class(corpus) <- "XMLDocument"
@@ -180,7 +193,7 @@ setMethod("asPlain",
           signature(object = "Reuters21578Document"),
           function(object, FUN, ...) {
               FUN <- convertReut21578XMLPlain
-              corpus <- Corpus(object)
+              corpus <- Content(object)
 
               # As XMLDocument is no native S4 class, restore valid information
               class(corpus) <- "XMLDocument"
@@ -192,7 +205,7 @@ setMethod("asPlain",
           signature(object = "RCV1Document"),
           function(object, FUN, ...) {
               FUN <- convertRCV1Plain
-              corpus <- Corpus(object)
+              corpus <- Content(object)
 
               # As XMLDocument is no native S4 class, restore valid information
               class(corpus) <- "XMLDocument"
@@ -203,14 +216,14 @@ setMethod("asPlain",
 setMethod("asPlain",
           signature(object = "NewsgroupDocument"),
           function(object, FUN, ...) {
-              new("PlainTextDocument", .Data = Corpus(object), Cached = TRUE, URI = "", Author = Author(object),
+              new("PlainTextDocument", .Data = Content(object), Cached = TRUE, URI = "", Author = Author(object),
                   DateTimeStamp = DateTimeStamp(object), Description = Description(object), ID = ID(object),
                   Origin = Origin(object), Heading = Heading(object), Language = Language(object))
           })
 setMethod("asPlain",
           signature(object = "StructuredTextDocument"),
           function(object, FUN, ...) {
-              new("PlainTextDocument", .Data = unlist(Corpus(object)), Cached = TRUE,
+              new("PlainTextDocument", .Data = unlist(Content(object)), Cached = TRUE,
                   URI = "", Author = Author(object), DateTimeStamp = DateTimeStamp(object),
                   Description = Description(object), ID = ID(object), Origin = Origin(object),
                   Heading = Heading(object), Language = Language(object))
@@ -218,7 +231,7 @@ setMethod("asPlain",
 
 setGeneric("tmFilter", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmFilter"))
 setMethod("tmFilter",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object, ..., FUN = sFilter, doclevel = FALSE) {
               if (doclevel)
                   return(object[sapply(object, FUN, ..., DMetaData = DMetaData(object))])
@@ -228,7 +241,7 @@ setMethod("tmFilter",
 
 setGeneric("tmIndex", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmIndex"))
 setMethod("tmIndex",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object, ..., FUN = sFilter, doclevel = FALSE) {
               if (doclevel)
                   return(sapply(object, FUN, ..., DMetaData = DMetaData(object)))
@@ -261,16 +274,9 @@ sFilter <- function(object, s, ...) {
     return(result)
 }
 
-setGeneric("searchFullText", function(object, pattern, ...) standardGeneric("searchFullText"))
-setMethod("searchFullText",
-          signature(object = "PlainTextDocument", pattern = "character"),
-          function(object, pattern, ...) {
-              return(any(grep(pattern, Corpus(object))))
-          })
-
 setGeneric("appendElem", function(object, data, meta = NULL) standardGeneric("appendElem"))
 setMethod("appendElem",
-          signature(object = "TextDocCol", data = "TextDocument"),
+          signature(object = "Corpus", data = "TextDocument"),
           function(object, data, meta = NULL) {
               if (DBControl(object)[["useDb"]]) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
@@ -287,7 +293,7 @@ setMethod("appendElem",
 
 setGeneric("appendMeta", function(object, cmeta = NULL, dmeta = NULL) standardGeneric("appendMeta"))
 setMethod("appendMeta",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object, cmeta = NULL, dmeta = NULL) {
               object@CMetaData@MetaData <- c(CMetaData(object)@MetaData, cmeta)
               if (!is.null(dmeta)) {
@@ -298,7 +304,7 @@ setMethod("appendMeta",
 
 setGeneric("removeMeta", function(object, cname = NULL, dname = NULL) standardGeneric("removeMeta"))
 setMethod("removeMeta",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object, cname = NULL, dname = NULL) {
               if (!is.null(cname))
                   object@CMetaData@MetaData <- CMetaData(object)@MetaData[names(CMetaData(object)@MetaData) != cname]
@@ -309,7 +315,7 @@ setMethod("removeMeta",
 
 setGeneric("prescindMeta", function(object, meta) standardGeneric("prescindMeta"))
 setMethod("prescindMeta",
-          signature(object = "TextDocCol", meta = "character"),
+          signature(object = "Corpus", meta = "character"),
           function(object, meta) {
               for (m in meta) {
                   if (m %in% c("Author", "DateTimeStamp", "Description", "ID", "Origin", "Heading", "Language")) {
@@ -335,7 +341,7 @@ setMethod("prescindMeta",
           })
 
 setMethod("[",
-          signature(x = "TextDocCol", i = "ANY", j = "ANY", drop = "ANY"),
+          signature(x = "Corpus", i = "ANY", j = "ANY", drop = "ANY"),
           function(x, i, j, ... , drop) {
               if(missing(i))
                   return(x)
@@ -355,7 +361,7 @@ setMethod("[",
           })
 
 setMethod("[<-",
-          signature(x = "TextDocCol", i = "ANY", j = "ANY", value = "ANY"),
+          signature(x = "Corpus", i = "ANY", j = "ANY", value = "ANY"),
           function(x, i, j, ... , value) {
               object <- x
               if (DBControl(object)[["useDb"]]) {
@@ -376,7 +382,7 @@ setMethod("[<-",
           })
 
 setMethod("[[",
-          signature(x = "TextDocCol", i = "ANY", j = "ANY"),
+          signature(x = "Corpus", i = "ANY", j = "ANY"),
           function(x, i, j, ...) {
               if (DBControl(x)[["useDb"]]) {
                   db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
@@ -388,7 +394,7 @@ setMethod("[[",
           })
 
 setMethod("[[<-",
-          signature(x = "TextDocCol", i = "ANY", j = "ANY", value = "ANY"),
+          signature(x = "Corpus", i = "ANY", j = "ANY", value = "ANY"),
           function(x, i, j, ..., value) {
               object <- x
               if (DBControl(object)[["useDb"]]) {
@@ -430,13 +436,13 @@ update_id <- function(object, id = 0, mapping = NULL, left.mapping = NULL, level
 }
 
 setMethod("c",
-          signature(x = "TextDocCol"),
+          signature(x = "Corpus"),
           function(x, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
               args <- list(...)
               if (length(args) == 0)
                   return(x)
 
-              if (!all(sapply(args, inherits, "TextDocCol")))
+              if (!all(sapply(args, inherits, "Corpus")))
                   stop("not all arguments are text document collections")
               if (DBControl(x)[["useDb"]] == TRUE || any(unlist(sapply(args, DBControl)["useDb", ])))
                   stop("concatenating text document collections with activated database is not supported")
@@ -450,7 +456,7 @@ setMethod("c",
 
 setGeneric("c2", function(x, y, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) standardGeneric("c2"))
 setMethod("c2",
-          signature(x = "TextDocCol", y = "TextDocCol"),
+          signature(x = "Corpus", y = "Corpus"),
           function(x, y, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
               object <- x
               # Concatenate data slots
@@ -517,7 +523,7 @@ setMethod("c",
                             MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
                             children = list())
 
-              return(new("TextDocCol",
+              return(new("Corpus",
                          .Data = list(x, ...),
                          DMetaData = dmeta.df,
                          CMetaData = cmeta.node,
@@ -525,13 +531,13 @@ setMethod("c",
           })
 
 setMethod("length",
-          signature(x = "TextDocCol"),
+          signature(x = "Corpus"),
           function(x){
               return(length(as(x, "list")))
     })
 
 setMethod("show",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object){
               cat(sprintf(ngettext(length(object),
                                    "A text document collection with %d text document\n",
@@ -540,7 +546,7 @@ setMethod("show",
     })
 
 setMethod("summary",
-          signature(object = "TextDocCol"),
+          signature(object = "Corpus"),
           function(object){
               show(object)
               if (length(DMetaData(object)) > 0) {
@@ -557,7 +563,7 @@ setMethod("summary",
 
 setGeneric("inspect", function(object) standardGeneric("inspect"))
 setMethod("inspect",
-          signature("TextDocCol"),
+          signature("Corpus"),
           function(object) {
               summary(object)
               cat("\n")
@@ -572,11 +578,11 @@ setMethod("inspect",
 # No metadata is checked
 setGeneric("%IN%", function(x, y) standardGeneric("%IN%"))
 setMethod("%IN%",
-          signature(x = "TextDocument", y = "TextDocCol"),
+          signature(x = "TextDocument", y = "Corpus"),
           function(x, y) {
               if (DBControl(y)[["useDb"]]) {
                   db <- dbInit(DBControl(y)[["dbName"]], DBControl(y)[["dbType"]])
-                  result <- any(sapply(y, function(x, z) {x %in% Corpus(z)}, x))
+                  result <- any(sapply(y, function(x, z) {x %in% Content(z)}, x))
               }
               else
                   result <- x %in% y
@@ -584,7 +590,7 @@ setMethod("%IN%",
           })
 
 setMethod("lapply",
-          signature(X = "TextDocCol"),
+          signature(X = "Corpus"),
           function(X, FUN, ...) {
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
@@ -596,7 +602,7 @@ setMethod("lapply",
           })
 
 setMethod("sapply",
-          signature(X = "TextDocCol"),
+          signature(X = "Corpus"),
           function(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
@@ -605,4 +611,18 @@ setMethod("sapply",
               else
                   result <- base::sapply(X, FUN, ...)
               return(result)
+          })
+
+setGeneric("writeCorpus", function(object, path = ".", filenames = NULL) standardGeneric("writeCorpus"))
+setMethod("writeCorpus",
+          signature(object = "Corpus"),
+          function(object, path = ".", filenames = NULL) {
+              filenames <- file.path(path,
+                                     if (is.null(filenames)) sapply(object, function(x) sprintf("%s.txt", ID(x)))
+                                     else filenames)
+              i <- 1
+              for (o in object) {
+                  writeLines(o, filenames[i])
+                  i <- i + 1
+              }
           })

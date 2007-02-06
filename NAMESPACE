@@ -6,6 +6,10 @@ import(Snowball)
 import(XML)
 
 export(
+       "stemCompletion",
+       "getFilters",
+       "getReaders",
+       "getTransformations",
        "readPlain",
        "readReut21578XML",
        "readRCV1",
@@ -13,16 +17,24 @@ export(
        "readGmane",
        "readPDF",
        "readHTML",
+       "readDOC",
        "convertReut21578XMLPlain",
        "convertRCV1Plain",
        "convertMboxEml",
        "sFilter",
        "preprocessReut21578XML",
-       "stopwords")
+       "stopwords",
+       "termFreq",
+       "weightTf",
+       "weightTfIdf",
+       "weightBin",
+       "weightLogical")
+
+S3method("plot", "TermDocMatrix")
 
 exportMethods(
               # Constructors
-              "TextDocCol",
+              "Corpus",
               "TextRepository",
               "TermDocMatrix",
               "Dictionary",
@@ -31,10 +43,11 @@ exportMethods(
               "ReutersSource",
               "GmaneSource",
               "FunctionGenerator",
+              "WeightFunction",
 
               # TextDocument
-              "Corpus",
-              "Corpus<-",
+              "Content",
+              "Content<-",
               "Author",
               "Author<-",
               "DateTimeStamp",
@@ -55,7 +68,10 @@ exportMethods(
               "Cached<-",
               "URI",
 
-              # TextDocCol
+              "meta",
+              "meta<-",
+
+              # Corpus
               "DMetaData",
               "DMetaData<-",
               "CMetaData",
@@ -87,6 +103,7 @@ exportMethods(
               "tmTolower",
               "stemDoc",
               "removeCitation",
+              "removeNumbers",
               "removeMultipart",
               "removeSignature",
               "removeWords",
@@ -95,9 +112,13 @@ exportMethods(
               "tmFilter",
               "tmIndex",
               "searchFullText",
+              "tmIntersect",
               "dim",
+              "dimnames",
               "ncol",
+              "colnames",
               "nrow",
+              "rownames",
               "findFreqTerms",
               "findAssocs",
               "removeSparseTerms",
@@ -114,6 +135,7 @@ exportMethods(
               "show",
               "summary",
               "inspect",
+              "writeCorpus",
               "%IN%",
               "dissimilarity")
 
@@ -124,7 +146,7 @@ exportClasses("TextDocument",
               "RCV1Document",
               "NewsgroupDocument",
               "StructuredTextDocument",
-              "TextDocCol",
+              "Corpus",
               "MetaDataNode",
               "TextRepository",
               "TermDocMatrix",
@@ -134,4 +156,5 @@ exportClasses("TextDocument",
               "CSVSource",
               "ReutersSource",
               "GmaneSource",
-              "FunctionGenerator")
+              "FunctionGenerator",
+              "WeightFunction")

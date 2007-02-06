@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{removeMeta}
 \alias{removeMeta-methods}
-\alias{removeMeta,TextDocCol-method}
+\alias{removeMeta,Corpus-method}
 \alias{removeMeta,TextRepository-method}
 \title{Methods for Function removeMeta in Package `tm'}
 \description{
@@ -10,7 +10,7 @@ Methods for function \code{removeMeta} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "TextDocCol", cname = NULL, dname = NULL}{Returns a text
+    \item{object = "Corpus", cname = NULL, dname = NULL}{Returns a text
       document collection where the \code{cname} is removed from the
       \code{CMetaData} and \code{dname} is removed from the \code{DMetaData}.}  
     \item{object = "TextRepository", cname = NULL, dname = NULL}{Returns a text

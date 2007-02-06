@@ -1,12 +1,18 @@
 # Author: Ingo Feinerer
 # Transformations
 
+getTransformations <- function() {
+    c("asPlain", "loadDoc", "removeCitation", "removeMultipart",
+      "removePunctuation", "removeSignature", "removeWords",
+      "replaceWords", "stemDoc", "stripWhitespace", "tmTolower")
+}
+
 setGeneric("removeMultipart",
            function(object, ...) standardGeneric("removeMultipart"))
 setMethod("removeMultipart",
           signature(object = "PlainTextDocument"),
           function(object, ...) {
-              c <- Corpus(object)
+              c <- Content(object)
 
               # http://en.wikipedia.org/wiki/Multipart_message#Multipart_Messages
               # We are only interested in text/plain parts
@@ -37,7 +43,7 @@ setMethod("removeMultipart",
                   k <- k + 1
               }
 
-              Corpus(object) <- if (length(r) == 0) c else r
+              Content(object) <- if (length(r) == 0) c else r
               return(object)
           })
 
@@ -47,9 +53,17 @@ setGeneric("removeCitation",
 setMethod("removeCitation",
           signature(object = "PlainTextDocument"),
           function(object, ...) {
-              citations <- grep("^[[:blank:]]*>", Corpus(object))
+              citations <- grep("^[[:blank:]]*>", Content(object))
               if (length(citations) > 0)
-                  Corpus(object) <- Corpus(object)[-citations]
+                  Content(object) <- Content(object)[-citations]
+              return(object)
+          })
+
+setGeneric("removeNumbers", function(object, ...) standardGeneric("removeNumbers"))
+setMethod("removeNumbers",
+          signature(object = "PlainTextDocument"),
+          function(object, ...) {
+              Content(object) <- gsub("[[:digit:]]+", "", object)
               return(object)
           })
 
@@ -57,7 +71,7 @@ setGeneric("removePunctuation", function(object, ...) standardGeneric("removePun
 setMethod("removePunctuation",
           signature(object = "PlainTextDocument"),
           function(object, ...) {
-              Corpus(object) <- gsub("[[:punct:]]+", "", Corpus(object))
+              Content(object) <- gsub("[[:punct:]]+", "", Content(object))
               return(object)
           })
 
@@ -66,7 +80,7 @@ setGeneric("removeSignature",
 setMethod("removeSignature",
           signature(object = "PlainTextDocument"),
           function(object, marks = character(0), ...) {
-              c <- Corpus(object)
+              c <- Content(object)
 
               # "---" is often added to Sourceforge mails
               # "___" and "***" are also common, i.e.,
@@ -82,7 +96,7 @@ setMethod("removeSignature",
               if (signatureStart <= length(c))
                   c <- c[-(signatureStart:length(c))]
 
-              Corpus(object) <- c
+              Content(object) <- c
               return(object)
           })
 
@@ -92,7 +106,7 @@ setMethod("removeWords",
           function(object, stopwords, ...) {
               splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
               noStopwordsCorpus <- splittedCorpus[!splittedCorpus %in% stopwords]
-              Corpus(object) <- paste(noStopwordsCorpus, collapse = " ")
+              Content(object) <- paste(noStopwordsCorpus, collapse = " ")
               return(object)
           })
 
@@ -101,7 +115,7 @@ setMethod("replaceWords",
           signature(object = "PlainTextDocument", words = "character", by = "character"),
           function(object, words, by, ...) {
               pattern <- paste(words, collapse = "|")
-              Corpus(object) <- gsub(pattern, by, Corpus(object))
+              Content(object) <- gsub(pattern, by, Content(object))
               return(object)
           })
 
@@ -114,7 +128,7 @@ setMethod("stemDoc",
                   Rstem::wordStem(splittedCorpus, language)
               else
                   SnowballStemmer(splittedCorpus, Weka_control(S = language))
-              Corpus(object) <- paste(stemmedCorpus, collapse = " ")
+              Content(object) <- paste(stemmedCorpus, collapse = " ")
               return(object)
           })
 
@@ -122,7 +136,7 @@ setGeneric("stripWhitespace", function(object, ...) standardGeneric("stripWhites
 setMethod("stripWhitespace",
           signature(object = "PlainTextDocument"),
           function(object, ...) {
-              Corpus(object) <- gsub("[[:space:]]+", " ", object)
+              Content(object) <- gsub("[[:space:]]+", " ", object)
               return(object)
           })
 
@@ -130,6 +144,6 @@ setGeneric("tmTolower", function(object, ...) standardGeneric("tmTolower"))
 setMethod("tmTolower",
           signature(object = "PlainTextDocument"),
           function(object, ...) {
-              Corpus(object) <- tolower(object)
+              Content(object) <- tolower(object)
               return(object)
           })

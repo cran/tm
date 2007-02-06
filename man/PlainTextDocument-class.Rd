@@ -1,13 +1,13 @@
 \name{PlainTextDocument-class}
 \docType{class}
 \alias{PlainTextDocument-class}
-\alias{Corpus}
-\alias{Corpus<-}
+\alias{Content}
+\alias{Content<-}
 \alias{URI}
 \alias{Cached}
 \alias{Cached<-}
-\alias{Corpus,PlainTextDocument-method}
-\alias{Corpus<-,PlainTextDocument-method}
+\alias{Content,PlainTextDocument-method}
+\alias{Content<-,PlainTextDocument-method}
 \alias{URI,PlainTextDocument-method}
 \alias{Cached,PlainTextDocument-method}
 \alias{Cached<-,PlainTextDocument-method}
@@ -32,9 +32,9 @@ Class \code{character} and \code{TextDocument}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{Corpus}{\code{signature(object = "PlainTextDocument")}: returns the
+    \item{Content}{\code{signature(object = "PlainTextDocument")}: returns the
       text corpus, i.e., the actual character data slot}
-    \item{Corpus<-}{\code{signature(object = "PlainTextDocument")}: sets the
+    \item{Content<-}{\code{signature(object = "PlainTextDocument")}: sets the
       text corpus, i.e., the actual character data slot}
     \item{URI}{\code{signature(object = "PlainTextDocument")}: returns the
       filename on disk}

@@ -6,6 +6,7 @@ setClass("Source",
          representation(LoDSupport = "logical",
                         Position = "numeric",
                         DefaultReader = "function",
+                        Encoding = "character",
                         "VIRTUAL"))
 
 # A directory with files
@@ -35,44 +36,42 @@ setClass("GmaneSource",
 
 # Methods for Source objects
 
-setGeneric("DirSource", function(directory, recursive = FALSE) standardGeneric("DirSource"))
+setGeneric("DirSource", function(directory, encoding = "UTF-8", recursive = FALSE) standardGeneric("DirSource"))
 setMethod("DirSource",
           signature(directory = "character"),
-          function(directory, recursive = FALSE) {
+          function(directory, encoding = "UTF-8", recursive = FALSE) {
               d <- dir(directory, full.names = TRUE, recursive = recursive)
               isdir <- sapply(d, file.info)["isdir",]
               files <- d[isdir == FALSE]
               new("DirSource", LoDSupport = TRUE, FileList = files,
-                  Position = 0, DefaultReader = readPlain)
+                  Position = 0, DefaultReader = readPlain, Encoding = encoding)
           })
 
-setGeneric("CSVSource", function(object) standardGeneric("CSVSource"))
+setGeneric("CSVSource", function(object, encoding = "UTF-8") standardGeneric("CSVSource"))
 setMethod("CSVSource",
           signature(object = "character"),
-          function(object) {
-              object <- substitute(file(object))
+          function(object, encoding = "UTF-8") {
+              object <- substitute(file(object, encoding = encoding))
               con <- eval(object)
-              content <- scan(con, what = "character")
-              close(con)
+              content <- apply(read.csv(con), 1, paste, collapse = " ")
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readPlain)
+                  Content = content, Position = 0, DefaultReader = readPlain, Encoding = encoding)
           })
 setMethod("CSVSource",
           signature(object = "ANY"),
-          function(object) {
+          function(object, encoding = "UTF-8") {
               object <- substitute(object)
               con <- eval(object)
-              content <- scan(con, what = "character")
-              close(con)
+              content <- apply(read.csv(con), 1, paste, collapse = " ")
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readPlain)
+                  Content = content, Position = 0, DefaultReader = readPlain, Encoding = encoding)
           })
 
-setGeneric("ReutersSource", function(object) standardGeneric("ReutersSource"))
+setGeneric("ReutersSource", function(object, encoding = "UTF-8") standardGeneric("ReutersSource"))
 setMethod("ReutersSource",
           signature(object = "character"),
-          function(object) {
-              object <- substitute(file(object))
+          function(object, encoding = "UTF-8") {
+              object <- substitute(file(object, encoding = encoding))
               con <- eval(object)
               corpus <- paste(readLines(con), "\n", collapse = "")
               close(con)
@@ -80,11 +79,11 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readReut21578XML)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML, Encoding = encoding)
           })
 setMethod("ReutersSource",
           signature(object = "ANY"),
-          function(object) {
+          function(object, encoding = "UTF-8") {
               object <- substitute(object)
               con <- eval(object)
               corpus <- paste(readLines(con), "\n", collapse = "")
@@ -93,14 +92,14 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readReut21578XML)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML, Encoding = encoding)
           })
 
-setGeneric("GmaneSource", function(object) standardGeneric("GmaneSource"))
+setGeneric("GmaneSource", function(object, encoding = "UTF-8") standardGeneric("GmaneSource"))
 setMethod("GmaneSource",
           signature(object = "character"),
-          function(object) {
-              object <- substitute(file(object))
+          function(object, encoding = "UTF-8") {
+              object <- substitute(file(object, encoding = encoding))
               con <- eval(object)
               corpus <- paste(readLines(con), "\n", collapse = "")
               close(con)
@@ -109,11 +108,11 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readGmane)
+                  Content = content, Position = 0, DefaultReader = readGmane, Encoding = encoding)
           })
 setMethod("GmaneSource",
           signature(object = "ANY"),
-          function(object) {
+          function(object, encoding = "UTF-8") {
               object <- substitute(object)
               con <- eval(object)
               corpus <- paste(readLines(con), "\n", collapse = "")
@@ -123,7 +122,7 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readGmane)
+                  Content = content, Position = 0, DefaultReader = readGmane, Encoding = encoding)
           })
 
 setGeneric("stepNext", function(object) standardGeneric("stepNext"))
@@ -157,8 +156,9 @@ setMethod("getElem",
           signature(object = "DirSource"),
           function(object) {
               filename <- object@FileList[object@Position]
-              list(content = readLines(filename),
-                   uri = substitute(file(filename)))
+              encoding <- object@Encoding
+              list(content = readLines(filename, encoding = encoding),
+                   uri = substitute(file(filename, encoding = encoding)))
           })
 setMethod("getElem",
           signature(object = "CSVSource"),

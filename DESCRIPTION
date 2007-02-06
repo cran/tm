@@ -1,12 +1,13 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.2-3.7
-Date: 2007-09-29
+Version: 0.3
+Date: 2007-02-06
 Author: Ingo Feinerer <h0125130@wu-wien.ac.at>
 Maintainer: Ingo Feinerer <h0125130@wu-wien.ac.at>
 Depends: R (>= 2.5.0), filehash, Matrix, methods, Snowball, XML
 Imports: proxy
-Suggests: Rstem (>= 0.3-1)
+Suggests: Rgraphviz, Rstem (>= 0.3-1)
 Description: A framework for text mining applications within R.
 License: GPL-2
-Packaged: Tue Oct  2 13:54:12 2007; hornik
+Encoding: UTF-8
+Packaged: Thu Feb  7 12:06:26 2008; hornik

@@ -1,8 +1,8 @@
 \name{StructuredTextDocument-class}
 \docType{class}
 \alias{StructuredTextDocument-class}
-\alias{Corpus,StructuredTextDocument-method}
-\alias{Corpus<-,StructuredTextDocument-method}
+\alias{Content,StructuredTextDocument-method}
+\alias{Content<-,StructuredTextDocument-method}
 \alias{URI,StructuredTextDocument-method}
 \alias{Cached,StructuredTextDocument-method}
 \alias{Cached<-,StructuredTextDocument-method}
@@ -28,9 +28,9 @@ Class \code{list} and \code{TextDocument}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{Corpus}{\code{signature(object = "StructuredTextDocument")}: returns the
+    \item{Content}{\code{signature(object = "StructuredTextDocument")}: returns the
       text corpus, i.e., the actual character data slot}
-    \item{Corpus<-}{\code{signature(object = "StructuredTextDocument")}: sets the
+    \item{Content<-}{\code{signature(object = "StructuredTextDocument")}: sets the
       text corpus, i.e., the actual character data slot}
     \item{URI}{\code{signature(object = "StructuredTextDocument")}: returns the
       filename on disk}

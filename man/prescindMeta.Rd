@@ -2,14 +2,14 @@
 \docType{methods}
 \alias{prescindMeta}
 \alias{prescindMeta-methods}
-\alias{prescindMeta,TextDocCol,character-method}
+\alias{prescindMeta,Corpus,character-method}
 \title{Methods for Function prescindMetadata in Package `tm'}
 \description{
 Methods for function \code{prescindMeta} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "TextDocCol", meta = "character"}{Copies the
+    \item{object = "Corpus", meta = "character"}{Copies the
       \code{meta} data from document slots or (local) document metadata
       of all documents in \code{object} to the (global) \code{DMetaData}
       data frame of \code{object} and returns the whole collection.}

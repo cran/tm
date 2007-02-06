@@ -7,10 +7,12 @@
   Constructs a directory source.
 }
 \usage{
-\S4method{DirSource}{character}(directory, recursive = FALSE)
+\S4method{DirSource}{character}(directory, encoding = "UTF-8", recursive = FALSE)
 }
 \arguments{
   \item{directory}{a directory.}
+    \item{encoding}{a character giving the encoding of the files in the
+      directory.}
   \item{recursive}{a logical value indicating whether the directory
     should be traversed recursively.}
 }

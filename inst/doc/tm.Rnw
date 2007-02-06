@@ -40,7 +40,8 @@ library("tm")
 
 \section*{Data Import}
 The main structure for managing documents is a so-called text document
-collection (\class{TextDocCol}). Its constructor takes following arguments:
+collection, denoted as corpus in linguistics (\class{Corpus}).
+Its constructor takes following arguments:
 \begin{itemize}
 \item \code{object}: a \class{Source} object which abstracts the input location.
 \item \code{readerControl}: a list with the named components
@@ -80,7 +81,8 @@ file path).
 
 This package ships with several readers (\code{readPlain()}
 (default), \code{readRCV1()}, \code{readReut21578XML()},
-\code{readGmane()}, \code{readNewsgroup()}, \code{readPDF()}, and \code{readHTML()}).
+\code{readGmane()}, \code{readNewsgroup()}, \code{readPDF()},
+\code{readDOC()} and \code{readHTML()}).
 Each source has a default reader which can be overridden. E.g., for \code{DirSource} the
 default just reads in the whole input files and interprets their
 content as text.
@@ -88,9 +90,9 @@ content as text.
 Plain text files in a directory:
 <<keep.source=TRUE>>=
 txt <- system.file("texts", "txt", package = "tm")
-(ovid <- TextDocCol(DirSource(txt),
+(ovid <- Corpus(DirSource(txt),
                     readerControl = list(reader = readPlain,
-                                         language = "en_US",
+                                         language = "la",
                                          load = TRUE)))
 @
 
@@ -98,7 +100,7 @@ A single comma separated values file:
 <<>>=
 # Comma separated values
 cars <- system.file("texts", "cars.csv", package = "tm")
-TextDocCol(CSVSource(cars))
+Corpus(CSVSource(cars))
 @
 
 Reuters21578 files either in directory (one document per file) or a single
@@ -110,15 +112,15 @@ reut21578 <- system.file("texts", "reut21578", package = "tm")
 reut21578XML <- system.file("texts", "reut21578.xml", package = "tm")
 reut21578XMLgz <- system.file("texts", "reut21578.xml.gz", package = "tm")
 
-(reut21578TDC <- TextDocCol(DirSource(reut21578),
+(reut21578TDC <- Corpus(DirSource(reut21578),
                             readerControl = list(reader = readReut21578XML,
                                                  language = "en_US",
                                                  load = FALSE)))
 
-TextDocCol(ReutersSource(reut21578XML),
+Corpus(ReutersSource(reut21578XML),
            readerControl = list(reader = readReut21578XML,
                                 language = "en_US", load = FALSE))
-TextDocCol(ReutersSource(gzfile(reut21578XMLgz)),
+Corpus(ReutersSource(gzfile(reut21578XMLgz)),
            readerControl = list(reader = readReut21578XML,
                                 language = "en_US", load = FALSE))
 @
@@ -135,9 +137,9 @@ Corpus Volume 1 format:
 rcv1 <- system.file("texts", "rcv1", package = "tm")
 rcv1XML <- system.file("texts", "rcv1.xml", package = "tm")
 
-TextDocCol(DirSource(rcv1),
+Corpus(DirSource(rcv1),
            readerControl = list(reader = readRCV1, language = "en_US", load = TRUE))
-TextDocCol(ReutersSource(rcv1XML),
+Corpus(ReutersSource(rcv1XML),
            readerControl = list(reader = readRCV1, language = "en_US", load = FALSE))
 @
 
@@ -146,7 +148,7 @@ Or mails from newsgroups (as found in the \acronym{Uci} \acronym{Kdd} newsgroup 
 # UCI KDD Newsgroup Mails
 newsgroup <- system.file("texts", "newsgroup", package = "tm")
 
-TextDocCol(DirSource(newsgroup),
+Corpus(DirSource(newsgroup),
            readerControl = list(reader = readNewsgroup, language = "en_US", load = TRUE))
 @
 
@@ -154,7 +156,7 @@ TextDocCol(DirSource(newsgroup),
 <<>>=
 rss <- system.file("texts", "gmane.comp.lang.r.gr.rdf", package = "tm")
 
-TextDocCol(GmaneSource(rss),
+Corpus(GmaneSource(rss),
            readerControl = list(reader = readGmane, language = "en_US", load = FALSE))
 @
 
@@ -162,7 +164,7 @@ For very simple \acronym{Html} documents:
 <<>>=
 html <- system.file("texts", "html", package = "tm")
 
-TextDocCol(DirSource(html),
+Corpus(DirSource(html),
            readerControl = list(reader = readHTML, load = TRUE))
 @
 
@@ -170,12 +172,28 @@ And for \acronym{Pdf} documents:
 <<>>=
 pdf <- system.file("texts", "pdf", package = "tm")
 
-TextDocCol(DirSource(pdf),
+Corpus(DirSource(pdf),
            readerControl = list(reader = readPDF, language = "en_US", load = TRUE))
 @
 Note that \code{readPDF()} needs \code{pdftotext} and \code{pdfinfo}
 installed on your system to be able to extract the text and meta
 information from your \acronym{Pdf}s.
+
+Finally, for \acronym{Ms} Word documents there is the reader function
+\code{readDOC()}. You need \code{antiword} installed on your system to
+be able to extract the text from your Word documents.
+
+\section*{Data Export}
+For the case you have created a text collection via manipulating other
+objects in \proglang{R}, thus do not have the texts already stored,
+and want to save the text documents to disk, you can simply use
+standard \proglang{R} routines for writing out plain text
+documents. E.g.,
+<<eval=false>>=
+lapply(ovid, function(x) writeLines(x, paste(ID(x), ".txt", sep = "")))
+@
+Alternatively there is the function \code{writeCorpus()} which
+encapsulates this functionality.
 
 \section*{Inspecting the Text Document Collection}
 Custom \code{show} and \code{summary} methods are available, which
@@ -386,7 +404,7 @@ terms from the dictionary appear in the matrix. This allows to
 restrict the dimension of the matrix a priori and to focus on specific
 terms for distinct text mining contexts, e.g.,
 <<>>=
-tdmD <- TermDocMatrix(reut21578TDC, dictionary = d)
+tdmD <- TermDocMatrix(reut21578TDC, list(dictionary = d))
 Data(tdmD)
 @
 You can also create a dictionary from a term-document matrix via

@@ -8,7 +8,7 @@
 sFilter(object, s, ...)
 }
 \arguments{
-  \item{object}{a \code{TextDocCol} to be the filter applied to.}
+  \item{object}{a \code{Corpus} to be the filter applied to.}
   \item{s}{a statement of format \code{"tag1 == 'expr1' & tag2 ==
       'expr2' & ..."}.}
   \item{...}{arguments passed over by calling functions.}
