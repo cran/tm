@@ -6,17 +6,17 @@
   encoding and copying each text document into a separate file.
 }
 \usage{
-preprocessReut21578XML(reuters.dir, reuters.oapf.dir, fix.enc = TRUE)
+preprocessReut21578XML(ReutersDir, ReutersOapfDir, fixEnc = TRUE)
 }
 \arguments{
-  \item{reuters.dir}{a character describing the input directory.}
-  \item{reuters.oapf.dir}{a character describing the output directory.}
-  \item{fix.enc}{a logical value indicating whether the invalid UTF8
+  \item{ReutersDir}{a character describing the input directory.}
+  \item{ReutersOapfDir}{a character describing the output directory.}
+  \item{fixEnc}{a logical value indicating whether the invalid UTF8
     encoding in the Reuters21578 XML dataset should be corrected.}
 }
 \value{
   No explicit return value. As a side product the directory
-  \code{reuters.oapf.dir} contains the corrected dataset.
+  \code{ReutersOapfDir} contains the corrected dataset.
 }
 \references{
   Lewis, David (1997) \emph{Reuters-21578 Text Categorization

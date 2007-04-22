@@ -1,5 +1,8 @@
 import(cba)
+import(filehash)
+import(Matrix)
 import(methods)
+import(Snowball)
 import(XML)
 
 export(
@@ -12,8 +15,8 @@ export(
        "convertRCV1Plain",
        "convertMboxEml",
        "sFilter",
-       "preprocessReut21578XML"
-       )
+       "preprocessReut21578XML",
+       "stopwords")
 
 exportMethods(
               # Constructors
@@ -40,6 +43,8 @@ exportMethods(
               "Origin<-",
               "Heading",
               "Heading<-",
+              "Language",
+              "Language<-",
               "LocalMetaData",
 
               "Cached",
@@ -48,12 +53,16 @@ exportMethods(
 
               # TextDocCol
               "DMetaData",
+              "DMetaData<-",
               "CMetaData",
+              "DBControl",
 
               # TextRepository
               "RepoMetaData",
 
               # TermDocMatrix
+              "Data",
+              "Data<-",
               "Weighting",
               "Weighting<-",
 
@@ -96,6 +105,7 @@ exportClasses("TextDocument",
               "PlainTextDocument",
               "XMLTextDocument",
               "NewsgroupDocument",
+              "StructuredTextDocument",
               "TextDocCol",
               "MetaDataNode",
               "TextRepository",

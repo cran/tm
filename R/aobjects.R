@@ -12,6 +12,7 @@ setClass("TextDocument",
                         ID = "character",
                         Origin = "character",
                         Heading = "character",
+                        Language = "character",
                         LocalMetaData = "list",
                         "VIRTUAL"))
 
@@ -92,6 +93,19 @@ setMethod("Heading", "TextDocument", function(object) object@Heading)
 setGeneric("Heading<-", function(x, value) standardGeneric("Heading<-"))
 setReplaceMethod("Heading", "TextDocument", function(x, value) {
   x@Heading <- value
+  x
+})
+
+if (!isGeneric("Language")) {
+    if (is.function("Language"))
+        fun <- Language
+    else fun <- function(object) standardGeneric("Language")
+    setGeneric("Language", fun)
+}
+setMethod("Language", "TextDocument", function(object) object@Language)
+setGeneric("Language<-", function(x, value) standardGeneric("Language<-"))
+setReplaceMethod("Language", "TextDocument", function(x, value) {
+  x@Language <- value
   x
 })
 
@@ -180,6 +194,23 @@ setReplaceMethod("Cached", "NewsgroupDocument", function(x, value) {
   x
 })
 
+# Structured text document for sectioned or structured text corpora
+setClass("StructuredTextDocument",
+         representation(URI = "ANY", Cached = "logical"),
+         contains = c("list"))
+
+setMethod("Corpus", "StructuredTextDocument", function(object) object@.Data)
+setReplaceMethod("Corpus", "StructuredTextDocument", function(x, value) {
+    x@.Data <- value
+    x
+})
+setMethod("URI", "StructuredTextDocument", function(object) object@URI)
+setMethod("Cached", "StructuredTextDocument", function(object) object@Cached)
+setReplaceMethod("Cached", "StructuredTextDocument", function(x, value) {
+    x@Cached <- value
+    x
+})
+
 # A node in the metadata tree of a text document collection
 setClass("MetaDataNode",
          representation(NodeID = "numeric",
@@ -188,7 +219,7 @@ setClass("MetaDataNode",
 
 # Text document collection
 setClass("TextDocCol",
-         representation(DMetaData = "data.frame", CMetaData = "MetaDataNode"),
+         representation(DMetaData = "data.frame", CMetaData = "MetaDataNode", DBControl = "list"),
          contains = c("list"))
 
 # DMetaData = *MetaData* available for all *D*ocuments
@@ -198,7 +229,35 @@ if (!isGeneric("DMetaData")) {
     else fun <- function(object) standardGeneric("DMetaData")
     setGeneric("DMetaData", fun)
 }
-setMethod("DMetaData", "TextDocCol", function(object) object@DMetaData)
+setMethod("DMetaData", "TextDocCol",
+          function(object) {
+              if (DBControl(object)[["useDb"]]) {
+                  db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
+                  result <- dbFetch(db, "DMetaData")
+                  dbDisconnect(db)
+                  index <- object@DMetaData[[1, "subset"]]
+                  if (!any(is.na(index)))
+                      result <- result[index, , drop = FALSE]
+                  return(result)
+              }
+              else
+                  return(object@DMetaData)
+          })
+setGeneric("DMetaData<-", function(x, value) standardGeneric("DMetaData<-"))
+setReplaceMethod("DMetaData", "TextDocCol",
+                 function(x, value) {
+                     if (DBControl(x)[["useDb"]]) {
+                         db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
+                         db[["DMetaData"]] <- value
+                         dbDisconnect(db)
+                         x@DMetaData[[1, "subset"]] <- NA
+                         return(x)
+                     }
+                     else {
+                         x@DMetaData <- value
+                         return(x)
+                     }
+                 })
 
 # CMetaData = *MetaData* describing only the Document *C*ollection itself
 if (!isGeneric("CMetaData")) {
@@ -208,6 +267,14 @@ if (!isGeneric("CMetaData")) {
     setGeneric("CMetaData", fun)
 }
 setMethod("CMetaData", "TextDocCol", function(object) object@CMetaData)
+
+if (!isGeneric("DBControl")) {
+    if (is.function("DBControl"))
+        fun <- DBControl
+    else fun <- function(object) standardGeneric("DBControl")
+    setGeneric("DBControl", fun)
+}
+setMethod("DBControl", "TextDocCol", function(object) object@DBControl)
 
 # Repository for text document collections
 setClass("TextRepository",
@@ -224,8 +291,21 @@ setMethod("RepoMetaData", "TextRepository", function(object) object@RepoMetaData
 
 # Term-document matrix
 setClass("TermDocMatrix",
-         representation(Weighting = "character"),
-         contains = c("matrix"))
+         representation(Data = "Matrix", Weighting = "character"))
+
+if (!isGeneric("Data")) {
+    if (is.function("Data"))
+        fun <- Data
+    else
+        fun <- function(object) standardGeneric("Data")
+    setGeneric("Data", fun)
+}
+setMethod("Data", "TermDocMatrix", function(object) object@Data)
+setGeneric("Data<-", function(x, value) standardGeneric("Data<-"))
+setReplaceMethod("Data", "TermDocMatrix", function(x, value) {
+  x@Data <- value
+  x
+})
 
 if (!isGeneric("Weighting")) {
     if (is.function("Weighting"))

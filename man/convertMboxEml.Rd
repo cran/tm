@@ -6,15 +6,19 @@
   to eml (i.e., every mail in a single file) format.
 }
 \usage{
-convertMboxEml(mbox, eml.dir)
+convertMboxEml(mbox, EmlDir)
 }
 \arguments{
   \item{mbox}{a character describing the mbox location.}
-  \item{eml.dir}{a character describing the output directory.}
+  \item{EmlDir}{a character describing the output directory.}
 }
 \value{
   No explicit return value. As a side product the directory
-  \code{eml.dir} contains the e-mails.
+  \code{EmlDir} contains the e-mails.
 }
 \author{Ingo Feinerer}
+\examples{
+mbox <- system.file("texts", "gmane.comp.lang.r.general.mbox", package = "tm")
+\dontrun{convertMboxEml(mbox, "emldir/")}
+}
 \keyword{file}

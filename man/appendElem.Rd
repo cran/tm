@@ -4,9 +4,9 @@
 \alias{appendElem-methods}
 \alias{appendElem,TextDocCol,TextDocument-method}
 \alias{appendElem,TextRepository,TextDocCol-method}
-\title{Methods for Function appendElem in Package `textmin'}
+\title{Methods for Function appendElem in Package `tm'}
 \description{
-Methods for function \code{appendElem} in Package `textmin'
+Methods for function \code{appendElem} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
@@ -23,7 +23,18 @@ Methods for function \code{appendElem} in Package `textmin'
   }
 }
 \seealso{
-\code{\link{DMetaData}}
-\code{\link{RepoMetaData}}
+  \code{\link{DMetaData}}
+  \code{\link{RepoMetaData}}
+}
+\examples{
+data("acq")
+data("crude")
+summary(crude)
+tdcl <- appendMeta(crude, dmeta = list("number" = 1:20, "letter" = rep(letters[1:10],2)))
+summary(tdcl)
+DMetaData(tdcl)
+tdcl <- appendElem(tdcl, acq[[1]], c(21, letters[1]))
+summary(tdcl)
+DMetaData(tdcl)
 }
 \keyword{methods}

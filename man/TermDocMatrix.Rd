@@ -8,8 +8,7 @@
 }
 \usage{
 \S4method{TermDocMatrix}{TextDocCol}(object, weighting = "tf", stemming
-= FALSE, language = "english", minWordLength = 3, minDocFreq = 1,
-stopwords = NULL)
+= FALSE, minWordLength = 3, minDocFreq = 1, stopwords = NULL)
 }
 \arguments{
   \item{object}{a text document collection}
@@ -23,12 +22,13 @@ stopwords = NULL)
     }
   }
   \item{stemming}{if set, stems words before making the term-document matrix.}
-  \item{language}{the language determines the stemming rules}
   \item{minWordLength}{words smaller than this number are discarded for
     the term-document matrix.}
   \item{minDocFreq}{words that appear less often in documents than this
     number are discarded for the term-document matrix.}
-  \item{stopwords}{a plain text file with all stopwords}
+  \item{stopwords}{either a plain text file with all stopwords or a
+    Boolean value. In the latter case the default stopwords in
+    accordance with the documents' language are used.}
 }
 \value{
   An S4 object of class \code{TermDocMatrix} which extends the class
@@ -36,6 +36,10 @@ stopwords = NULL)
   contain useful information:
 
   \item{Weighting}{The weighting mode applied to the term-document matrix}
+}
+\examples{
+data("crude")
+TermDocMatrix(crude, weighting = "tf-idf", stopwords = TRUE)
 }
 \author{Ingo Feinerer}
 \keyword{methods}

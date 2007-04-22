@@ -4,9 +4,9 @@
 \alias{appendMeta-methods}
 \alias{appendMeta,TextDocCol-method}
 \alias{appendMeta,TextRepository-method}
-\title{Methods for Function appendMeta in Package `textmin'}
+\title{Methods for Function appendMeta in Package `tm'}
 \description{
-Methods for function \code{appendMeta} in Package `textmin'
+Methods for function \code{appendMeta} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
@@ -22,5 +22,15 @@ Methods for function \code{appendMeta} in Package `textmin'
   \code{\link{DMetaData}}
   \code{\link{CMetaData}}
   \code{\link{RepoMetaData}}
+}
+\examples{
+data("crude")
+summary(crude)
+CMetaData(crude)
+DMetaData(crude)
+tdcl <- appendMeta(crude, cmeta = list("changed" = date()), dmeta = list("number" = 1:20))
+summary(tdcl)
+CMetaData(tdcl)
+DMetaData(tdcl)
 }
 \keyword{methods}

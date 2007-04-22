@@ -5,6 +5,7 @@
 setClass("Source",
          representation(LoDSupport = "logical",
                         Position = "numeric",
+                        DefaultReader = "function",
                         "VIRTUAL"))
 
 # A directory with files
@@ -42,7 +43,7 @@ setMethod("DirSource",
               isdir <- sapply(d, file.info)["isdir",]
               files <- d[isdir == FALSE]
               new("DirSource", LoDSupport = TRUE, FileList = files,
-                  Position = 0)
+                  Position = 0, DefaultReader = readPlain)
           })
 
 setGeneric("CSVSource", function(object) standardGeneric("CSVSource"))
@@ -54,7 +55,7 @@ setMethod("CSVSource",
               content <- scan(con, what = "character")
               close(con)
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readPlain)
           })
 setMethod("CSVSource",
           signature(object = "ANY"),
@@ -64,7 +65,7 @@ setMethod("CSVSource",
               content <- scan(con, what = "character")
               close(con)
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readPlain)
           })
 
 setGeneric("ReutersSource", function(object) standardGeneric("ReutersSource"))
@@ -79,7 +80,7 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML)
           })
 setMethod("ReutersSource",
           signature(object = "ANY"),
@@ -92,7 +93,7 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML)
           })
 
 setGeneric("GmaneSource", function(object) standardGeneric("GmaneSource"))
@@ -108,7 +109,7 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readGmane)
           })
 setMethod("GmaneSource",
           signature(object = "ANY"),
@@ -122,7 +123,7 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0)
+                  Content = content, Position = 0, DefaultReader = readGmane)
           })
 
 setGeneric("stepNext", function(object) standardGeneric("stepNext"))

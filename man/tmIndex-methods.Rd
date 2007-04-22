@@ -3,9 +3,9 @@
 \alias{tmIndex}
 \alias{tmIndex-methods}
 \alias{tmIndex,TextDocCol-method}
-\title{Methods for Function tmIndex in Package `textmin'}
+\title{Methods for Function tmIndex in Package `tm'}
 \description{
-Methods for function \code{tmIndex} in Package `textmin'
+Methods for function \code{tmIndex} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
@@ -20,5 +20,9 @@ Methods for function \code{tmIndex} in Package `textmin'
 \seealso{
   \code{\link{sFilter}}
   \code{\link{tmFilter}}
+}
+\examples{
+data("crude")
+tmIndex(crude, FUN = searchFullText, "company", doclevel = TRUE)
 }
 \keyword{methods}

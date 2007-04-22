@@ -10,7 +10,7 @@
 \description{
   A class representing an XML text document with additional
   information. The XML document itself is represented by an
-  \code{XMLDocument} from the \code{XML} library.
+  \code{XMLDocument} from the \pkg{XML} package.
 }
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("XMLTextDocument", ...)}.

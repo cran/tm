@@ -3,9 +3,9 @@
 \alias{c-methods}
 \alias{c,TextDocCol-method}
 \alias{c,TextDocument-method}
-\title{Methods for Function c in Package `textmin'}
+\title{Methods for Function c in Package `tm'}
 \description{
-Methods for function \code{c} in Package `textmin'
+Methods for function \code{c} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
@@ -14,5 +14,11 @@ Methods for function \code{c} in Package `textmin'
     \item{x = "TextDocument"}{concatenates several text documents
       to a single text document collection.}
   }
+}
+\examples{
+data("acq")
+data("crude")
+summary(c(acq,crude))
+summary(c(acq[[30]],crude[[10]]))
 }
 \keyword{methods}

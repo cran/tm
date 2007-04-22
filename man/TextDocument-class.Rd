@@ -11,6 +11,8 @@
 \alias{ID<-}
 \alias{Origin}
 \alias{Origin<-}
+\alias{Language}
+\alias{Language<-}
 \alias{Heading}
 \alias{Heading<-}
 \alias{LocalMetaData}
@@ -26,6 +28,8 @@
 \alias{Origin<-,TextDocument-method}
 \alias{Heading,TextDocument-method}
 \alias{Heading<-,TextDocument-method}
+\alias{Language,TextDocument-method}
+\alias{Language<-,TextDocument-method}
 \alias{LocalMetaData,TextDocument-method}
 \title{Text document}
 \description{
@@ -48,6 +52,8 @@ Objects can be created by calls of the form \code{new("TextDocument", ...)}.
       information on the source and origin of the text}
     \item{\code{Heading}:}{Object of class \code{character} containing
       the title or a short heading}
+    \item{\code{Language}:}{Object of class \code{character} containing
+      the language of the text}
     \item{\code{LocalMetaData}:}{Object of class \code{list} containing
       the local metadata in form of tag-value pairs}
   }
@@ -78,6 +84,10 @@ Objects can be created by calls of the form \code{new("TextDocument", ...)}.
       the title or a short heading}
     \item{Heading<-}{\code{signature(object = "TextDocument")}: sets
       the title or a short heading}
+    \item{Language}{\code{signature(object = "TextDocument")}: returns
+      the text language}
+    \item{Language<-}{\code{signature(object = "TextDocument")}: sets
+      the text language}
     \item{LocalMetaData}{\code{signature(object = "TextDocument")}: returns
       the local metadata in form of a tag-value paired list}
   }

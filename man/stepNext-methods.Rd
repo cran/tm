@@ -6,9 +6,9 @@
 \alias{stepNext,CSVSource-method}
 \alias{stepNext,ReutersSource-method}
 \alias{stepNext,GmaneSource-method}
-\title{Methods for Function stepNext in Package `textmin'}
+\title{Methods for Function stepNext in Package `tm'}
 \description{
-  Methods for function \code{stepNext} in Package `textmin'.
+  Methods for function \code{stepNext} in package \pkg{tm}..
 }
 \section{Methods}{
   \describe{

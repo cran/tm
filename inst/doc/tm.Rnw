@@ -1,7 +1,8 @@
 \documentclass[a4paper]{article}
 
 \usepackage[utf8]{inputenc}
-\usepackage{courier}
+\DeclareUnicodeCharacter{201C}{"}
+\DeclareUnicodeCharacter{201D}{"}
 
 \newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\class}[1]{\mbox{\textsf{#1}}}
@@ -11,8 +12,9 @@
 \newcommand{\samp}[1]{`\mbox{\texttt{#1}}'}
 \newcommand{\proglang}[1]{\textsf{#1}}
 \newcommand{\set}[1]{\mathcal{#1}}
+\newcommand{\acronym}[1]{\textsc{#1}}
 
-%% \VignetteIndexEntry{Introduction to tm}
+%% \VignetteIndexEntry{Introduction to the tm Package}
 
 \begin{document}
 <<echo=FALSE>>=
@@ -20,7 +22,7 @@ options(width = 75)
 ### for sampling
 set.seed <- 1234
 @
-\title{Introduction to \pkg{tm} --- Text Mining in \proglang{R}}
+\title{Introduction to the \pkg{tm} Package\\Text Mining in \proglang{R}}
 \author{Ingo Feinerer}
 \maketitle
 \sloppy
@@ -37,52 +39,64 @@ library("tm")
 @
 
 \section*{Data Import}
-The main structure for managing documents is a socalled text document
+The main structure for managing documents is a so-called text document
 collection (\class{TextDocCol}). Its constructor takes following arguments:
 \begin{itemize}
-\item \code{object}: a \class{Source} object which abstracts the input location
-\item \code{parser}: a parser which constructs a text document from a single element
-  delivered by a source. A parser must have the argument signature \code{(elem,
-    load, id)}. The first argument is the element provided
-  from the source, the second indicates whether the user wants to load
-  the documents immediately into memory, and the third is a unique
-  identification string.
-\item \code{...}: formally if the passed over \code{parser} function is of
-  class \code{FunctionGenerator}, it is assumed to be a function
-  generating a parser. This way custom parsers taking various
+\item \code{object}: a \class{Source} object which abstracts the input location.
+\item \code{readerControl}: a list with the named components
+  \code{reader}, \code{language}, and \code{load}.
+  A reader constructs a text document from a single element
+  delivered by a source. A reader must have the argument signature \code{(elem,
+    load, language, id)}. The first argument is the element provided
+  from the source, the second gives the text's language, the third
+  indicates whether the user wants to load the documents immediately
+  into memory, and the fourth is a unique identification string.
+  If the passed over \code{reader} function
+  has the attribute~\code{FunctionGenerator}, it is assumed to be a function
+  generating a reader. This way custom readers taking various
   parameters (specified in \code{...}) can be built, which in fact
-  must produce a valid parser signature but can access additional
+  must produce a valid reader signature but can access additional
   parameters via lexical scoping (i.e., by the including
   environment).
+\item \code{dbControl}: a list with the named components \code{useDb}
+  indicating that database support should be activated, \code{dbName} giving the
+  filename holding the sourced out objects (i.e., the database), and
+  \code{dbType} holding a valid database type as supported by
+  \code{filehash}. Under activated database
+  support the \code{tm} packages tries to keep as few as possible
+  resources in memory under usage of the database.
+\item \code{...}: Further arguments to the reader.
 \end{itemize}
 
 Available sources are \class{DirSource}, \class{CSVSource},
 \class{GmaneSource} and
 \class{ReutersSource} which handle a directory, a mixed CSV, a Gmane
-mailing list archive RSS feed or a
+mailing list archive \acronym{Rss} feed or a
 mixed Reuters file (mixed means several documents are in a single
 file). Except \class{DirSource}, which is designated
 solely for directories on a file system, all other implemented sources
 can take connections as input (a character string is interpreted as
-filename).
+file path).
 
 This package ships with several readers (\code{readPlain()}
 (default), \code{readRCV1()}, \code{readReut21578XML()},
-\code{readGmane()} and \code{readNewsgroup()}). The default just
-reads in the whole input file and interprets the content as text.
+\code{readGmane()} and \code{readNewsgroup()}). Each source has a
+default reader which can be overriden. E.g., for \code{Dirsource} the
+default just reads in the whole input files and interprets their
+content as text.
 
 Plain text files in a directory:
 <<>>=
-# Plain text
 txt <- system.file("texts", "txt", package = "tm")
-(Ovid.tdc <- TextDocCol(DirSource(txt), load = TRUE))
+(ovid <- TextDocCol(DirSource(txt),
+                       readerControl = list(reader = readPlain, language = "en_US", load = TRUE)))
 @
 
 A single comma separated values file:
 <<>>=
 # Comma separated values
-cars.csv <- system.file("texts", "cars.csv", package = "tm")
-TextDocCol(CSVSource(cars.csv))
+cars <- system.file("texts", "cars.csv", package = "tm")
+TextDocCol(CSVSource(cars))
 @
 
 Reuters21578 files either in directory (one document per file) or a single
@@ -91,38 +105,45 @@ as input:
 <<>>=
 # Reuters21578 XML
 reut21578 <- system.file("texts", "reut21578", package = "tm")
-reut21578.xml <- system.file("texts", "reut21578.xml", package = "tm")
-reut21578.xml.gz <- system.file("texts", "reut21578.xml.gz", package = "tm")
+reut21578XML <- system.file("texts", "reut21578.xml", package = "tm")
+reut21578XMLgz <- system.file("texts", "reut21578.xml.gz", package = "tm")
 
-(reut21578.tdc <- TextDocCol(DirSource(reut21578), readReut21578XML))
+(reut21578TDC <- TextDocCol(DirSource(reut21578),
+                            readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE)))
 
-TextDocCol(ReutersSource(reut21578.xml), readReut21578XML)
-TextDocCol(ReutersSource(gzfile(reut21578.xml.gz)), readReut21578XML)
+TextDocCol(ReutersSource(reut21578XML),
+           readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
+TextDocCol(ReutersSource(gzfile(reut21578XMLgz)),
+           readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
 @
 
 Analogously for files in the Reuters Corpus Volume 1 format:
 <<>>=
 # Reuters Corpus Volume 1
 rcv1 <- system.file("texts", "rcv1", package = "tm")
-rcv1.xml <- system.file("texts", "rcv1.xml", package = "tm")
+rcv1XML <- system.file("texts", "rcv1.xml", package = "tm")
 
-TextDocCol(DirSource(rcv1), readRCV1, load = TRUE)
-TextDocCol(ReutersSource(rcv1.xml), readRCV1)
+TextDocCol(DirSource(rcv1),
+           readerControl = list(reader = readRCV1, language = "en_US", load = TRUE))
+TextDocCol(ReutersSource(rcv1XML),
+           readerControl = list(reader = readRCV1, language = "en_US", load = FALSE))
 @
 
-Or mails from newsgroups (as found in the UCI KDD newsgroup dataset):
+Or mails from newsgroups (as found in the \acronym{Uci} \acronym{Kdd} newsgroup data set):
 <<>>=
 # UCI KDD Newsgroup Mails
 newsgroup <- system.file("texts", "newsgroup", package = "tm")
 
-TextDocCol(DirSource(newsgroup), readNewsgroup, load = TRUE)
+TextDocCol(DirSource(newsgroup),
+           readerControl = list(reader = readNewsgroup, language = "en_US", load = TRUE))
 @
 
-RSS feed as delivered by Gmane for the R mailing list archive:
+\acronym{Rss} feed as delivered by Gmane for the \proglang{R} mailing list archive:
 <<>>=
 rss <- system.file("texts", "gmane.comp.lang.r.gr.rdf", package = "tm")
 
-TextDocCol(GmaneSource(rss), readGmane)
+TextDocCol(GmaneSource(rss),
+           readerControl = list(reader = readGmane, language = "en_US", load = FALSE))
 @
 
 \section*{Inspecting the Text Document Collection}
@@ -133,20 +154,20 @@ database). \code{summary} gives more details on metadata than
 \code{show}, whereas in order to actually see the content of text
 documents use the command \code{inspect} on a collection.
 <<>>=
-show(Ovid.tdc)
-summary(Ovid.tdc)
-inspect(Ovid.tdc[1:2])
+show(ovid)
+summary(ovid)
+inspect(ovid[1:2])
 @
 
 \section*{Transformations}
 Once we have a text document collection one typically wants to modify
-the documents in it, e.g., stemming, stopword removal, et cetera. All
-this functionality is subsumed by the concept of
-\emph{transformation}s in \pkg{tm}. Transformations are done via
-the \code{tmMap} function which applies a function to all elements
-of the collection. Basically, all transformations work on single text
-documents and \code{tmMap} just applies them to all documents in a
-document collection.
+the documents in it, e.g., stemming, stopword removal, et cetera.  In
+\pkg{tm}, all this functionality is subsumed into the concept of
+\emph{transformation}s. Transformations are done via the \code{tmMap}
+function which applies a function to all elements of the
+collection. Basically, all transformations work on single text documents
+and \code{tmMap} just applies them to all documents in a document
+collection.
 
 \subsection*{Loading Documents into Memory}
 If the source objects supports load on demand, but the user has not
@@ -156,44 +177,42 @@ necessary to call this explicitly, as other functions working on text
 corpora trigger this function for not-loaded documents (the corpus is
 automatically loaded if accessed via \code{[[}).
 <<>>=
-reut21578.tdc <- tmMap(reut21578.tdc, loadDoc)
+reut21578TDC <- tmMap(reut21578TDC, loadDoc)
 @
 
 \subsection*{Converting to Plaintext Documents}
-The text document collection \code{reut21578.tdc} contains documents
+The text document collection \code{reut21578TDC} contains documents
 in XML format. We have no further use for the XML interna and just
 want to work with the text content. This can be done by converting the
 documents to plaintext documents. It is done by the generic
 \code{asPlain} in assistance by a converter function
 \code{convertReut21578XMLPlain} which knows how to actually do it.
 <<>>=
-reut21578.tdc <- tmMap(reut21578.tdc, asPlain, convertReut21578XMLPlain)
+reut21578TDC <- tmMap(reut21578TDC, asPlain, convertReut21578XMLPlain)
 @
 
 \subsection*{Eliminating Extra Whitespace}
 Extra whitespace is eliminated by:
 <<>>=
-reut21578.tdc <- tmMap(reut21578.tdc, stripWhitespace)
+reut21578TDC <- tmMap(reut21578TDC, stripWhitespace)
 @
 
 \subsection*{Convert to Lower Case}
 Conversion to lower case by:
 <<>>=
-reut21578.tdc <- tmMap(reut21578.tdc, tmTolower)
+reut21578TDC <- tmMap(reut21578TDC, tmTolower)
 @
 
 \subsection*{Remove Stopwords}
 Removal of stopwords by:
 <<>>=
-data(stopwords_en)
-reut21578.tdc <- tmMap(reut21578.tdc, removeWords, stopwords_en)
+reut21578TDC <- tmMap(reut21578TDC, removeWords, stopwords("english"))
 @
 
 \subsection*{Stemming}
 Stemming is done by:
 <<>>=
-if (require("Rstem"))
-    tmMap(reut21578.tdc, stemDoc)
+tmMap(reut21578TDC, stemDoc)
 @
 
 \section*{Filters}
@@ -210,31 +229,31 @@ heading and an \code{ID} equal to 10 (both are metadata slot
 variables of the text document).
 <<>>=
 query <- "identifier == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
-tmFilter(reut21578.tdc, query)
+tmFilter(reut21578TDC, query)
 @
 
 There is also a full text search filter available which accepts regular
 expressions:
 <<>>=
-tmFilter(reut21578.tdc, FUN = searchFullText, "partnership", doclevel = TRUE)
+tmFilter(reut21578TDC, FUN = searchFullText, "partnership", doclevel = TRUE)
 @
 
 \section*{Adding Data or Metadata}
+
 Text documents or metadata can be added to text document collections
-with \code{appendElem} and \code{appendMeta}, respectively. The
-text document collection has two types of metadata: one is the
-metadata on the document collection level (\code{cmeta}), the other
-is the metadata related to the documents (e.g., clusterings)
-(\code{dmeta}) in form of a dataframe. For the method
-\code{appendElem} it is possible to give a row of values in the
-dataframe for the added data element.
+with \code{appendElem} and \code{appendMeta}, respectively. The text
+document collection has two types of metadata: one is the metadata on
+the document collection level (\code{cmeta}), the other is the metadata
+related to the individual documents (e.g., clusterings) (\code{dmeta})
+in form of a dataframe. For the method \code{appendElem} it is possible
+to give a row of values in the dataframe for the added data element.
 <<>>=
 data(crude)
-reut21578.tdc <- appendElem(reut21578.tdc, crude[[1]], 0)
-reut21578.tdc <- appendMeta(reut21578.tdc, cmeta = list(test = c(1,2,3)), dmeta = list(cl1 = 1:11))
-summary(reut21578.tdc)
-CMetaData(reut21578.tdc)
-DMetaData(reut21578.tdc)
+reut21578TDC <- appendElem(reut21578TDC, crude[[1]], 0)
+reut21578TDC <- appendMeta(reut21578TDC, cmeta = list(test = c(1,2,3)), dmeta = list(cl1 = 1:11))
+summary(reut21578TDC)
+CMetaData(reut21578TDC)
+DMetaData(reut21578TDC)
 @
 
 \section*{Removing Metadata}
@@ -242,17 +261,17 @@ The metadata of text document collections can be easily modified or
 removed:
 <<>>=
 data(crude)
-reut21578.tdc <- removeMeta(reut21578.tdc, cname = "test", dname = "cl1")
-CMetaData(reut21578.tdc)
-DMetaData(reut21578.tdc)
+reut21578TDC <- removeMeta(reut21578TDC, cname = "test", dname = "cl1")
+CMetaData(reut21578TDC)
+DMetaData(reut21578TDC)
 @
 
 \section*{Operators}
-Most standard operators (\code{[}, \code{[<-}, \code{[[}, \code{[[<-},
-  \code{c}, \code{length}) are available for text document
+Many standard operators and functions (\code{[}, \code{[<-}, \code{[[}, \code{[[<-},
+  \code{c}, \code{length}, \code{lapply}, \code{sapply}) are available for text document
 collections with semantics similar to standard \proglang{R}
 routines.
-E.g. \code{c} concatenates two (or more) text document
+E.g., \code{c} concatenates two (or more) text document
 collections. Applied to several text documents it returns a text
 document collection. The metadata is automatically updated, if text
 document collections are concatenated (i.e., merged).
@@ -261,8 +280,8 @@ Note also the custom element-of operator---it checks whether a text
 document is already in a text document collection (metadata is not
 checked, only the corpus):
 <<>>=
-crude[[1]] %IN% reut21578.tdc
-crude[[2]] %IN% reut21578.tdc
+crude[[1]] %IN% reut21578TDC
+crude[[2]] %IN% reut21578TDC
 @
 
 \section*{Keeping Track of Text Document Collections}
@@ -274,7 +293,7 @@ repository has metadata in list format which can be either set with
 element is added), or directly with \code{appendMeta}.
 <<>>=
 data(acq)
-repo <- TextRepository(reut21578.tdc)
+repo <- TextRepository(reut21578TDC)
 repo <- appendElem(repo, acq, list(modified = date()))
 repo <- appendMeta(repo, list(moremeta = 5:10))
 summary(repo)
@@ -286,14 +305,14 @@ summary(repo[[2]])
 \section*{Creating Term-Document Matrices}
 A common approach in text mining is to create a term-document matrix
 for given texts. In this package the class \class{TermDocMatrix}
-handles this for text document collections.
+handles sparse matrices for text document collections.
 <<>>=
-tdm <- TermDocMatrix(reut21578.tdc)
-tdm[1:8,50:55]
+tdm <- TermDocMatrix(reut21578TDC)
+Data(tdm)[1:8,50:55]
 @
 
 \section*{Operations on Term-Document Matrices}
-Besides the fact that on this matrix a huge amount of \proglang{R}
+Besides the fact that on the \code{Data} part of this matrix a huge amount of \proglang{R}
 functions (like clustering, classifications, etc.) is possible, this
 package brings some shortcuts. Consider we
 want to find those terms that occur at least 5 times:

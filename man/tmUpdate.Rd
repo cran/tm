@@ -3,9 +3,9 @@
 \alias{tmUpdate}
 \alias{tmUpdate-methods}
 \alias{tmUpdate,TextDocCol,DirSource-method}
-\title{Methods for Function tmUpdate in Package `textmin'}
+\title{Methods for Function tmUpdate in Package `tm'}
 \description{
-Methods for function \code{tmUpdate} in Package `textmin'
+Methods for function \code{tmUpdate} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{

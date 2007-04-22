@@ -3,23 +3,23 @@
 # Reader
 
 readPlain <- function(...) {
-    function(elem, load, id) {
+    function(elem, load, language, id) {
         doc <- if (load) {
             new("PlainTextDocument", .Data = elem$content, URI = elem$uri, Cached = TRUE,
-                Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id, Origin = "", Heading = "")
+                Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id, Origin = "", Heading = "", Language = language)
         }
         else {
             new("PlainTextDocument", URI = elem$uri, Cached = FALSE,
-                Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id, Origin = "", Heading = "")
+                Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id, Origin = "", Heading = "", Language = language)
         }
 
         return(doc)
     }
 }
-class(readPlain) <- "FunctionGenerator"
+attr(readPlain, "FunctionGenerator") <- TRUE
 
 readReut21578XML <- function(...) {
-    function(elem, load, id) {
+    function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         tree <- xmlTreeParse(corpus, asText = TRUE)
         node <- xmlRoot(tree)
@@ -47,20 +47,20 @@ readReut21578XML <- function(...) {
         doc <- if (load) {
             new("XMLTextDocument", .Data = tree, URI = elem$uri, Cached = TRUE, Author = author,
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters-21578 XML",
-                Heading = heading, LocalMetaData = list(Topics = topics))
+                Heading = heading, Language = language, LocalMetaData = list(Topics = topics))
         } else {
             new("XMLTextDocument", URI = elem$uri, Cached = FALSE, Author = author,
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters-21578 XML",
-                Heading = heading, LocalMetaData = list(Topics = topics))
+                Heading = heading, Language = language, LocalMetaData = list(Topics = topics))
         }
 
         return(doc)
     }
 }
-class(readReut21578XML) <- "FunctionGenerator"
+attr(readReut21578XML, "FunctionGenerator") <- TRUE
 
 readRCV1 <- function(...) {
-    function(elem, load, id) {
+    function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         tree <- xmlTreeParse(corpus, asText = TRUE)
         node <- xmlRoot(tree)
@@ -75,20 +75,20 @@ readRCV1 <- function(...) {
         doc <- if (load) {
             new("XMLTextDocument", .Data = tree, URI = elem$uri, Cached = TRUE, Author = "",
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML",
-                Heading = heading)
+                Heading = heading, Language = language)
         } else {
             new("XMLTextDocument", URI = elem$uri, Cached = FALSE, Author = "",
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML",
-                Heading = heading)
+                Heading = heading, Language = language)
         }
 
         return(doc)
     }
 }
-class(readRCV1) <- "FunctionGenerator"
+attr(readRCV1, "FunctionGenerator") <- TRUE
 
 readNewsgroup <- function(...) {
-    function(elem, load, id) {
+    function(elem, load, language, id) {
         mail <- elem$content
         author <- gsub("From: ", "", grep("^From:", mail, value = TRUE))
         datetimestamp <- as.POSIXct(strptime(gsub("Date: ", "", grep("^Date:", mail, value = TRUE)), format = "%d %B %Y %H:%M:%S"))
@@ -99,7 +99,7 @@ readNewsgroup <- function(...) {
         doc <- if (load) {
             # The header is separated from the body by a blank line.
             # Reference: \url{http://en.wikipedia.org/wiki/E-mail#Internet_e-mail_format}
-            for (index in seq(along = mail)) {
+            for (index in seq_along(mail)) {
                 if (mail[index] == "")
                     break
             }
@@ -108,19 +108,19 @@ readNewsgroup <- function(...) {
             new("NewsgroupDocument", .Data = content, URI = elem$uri, Cached = TRUE,
                 Author = author, DateTimeStamp = datetimestamp,
                 Description = "", ID = id, Origin = origin,
-                Heading = heading, Newsgroup = newsgroup)
+                Heading = heading, Language = language, Newsgroup = newsgroup)
         } else {
             new("NewsgroupDocument", URI = elem$uri, Cached = FALSE, Author = author, DateTimeStamp = datetimestamp,
-                Description = "", ID = id, Origin = origin, Heading = heading, Newsgroup = newsgroup)
+                Description = "", ID = id, Origin = origin, Heading = heading, Language = language, Newsgroup = newsgroup)
         }
 
         return(doc)
     }
 }
-class(readNewsgroup) <- "FunctionGenerator"
+attr(readNewsgroup, "FunctionGenerator") <- TRUE
 
 readGmane <- function(...) {
-    function(elem, load, id) {
+    function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         # Remove namespaces
         corpus <- gsub("dc:date", "date", corpus)
@@ -141,16 +141,16 @@ readGmane <- function(...) {
             new("NewsgroupDocument", .Data = content, URI = elem$uri, Cached = TRUE,
                 Author = author, DateTimeStamp = datetimestamp,
                 Description = "", ID = id, Origin = origin,
-                Heading = heading, Newsgroup = newsgroup)
+                Heading = heading, Language = language, Newsgroup = newsgroup)
         } else {
             new("NewsgroupDocument", URI = elem$uri, Cached = FALSE, Author = author, DateTimeStamp = datetimestamp,
-                Description = "", ID = id, Origin = origin, Heading = heading, Newsgroup = newsgroup)
+                Description = "", ID = id, Origin = origin, Heading = heading, Language = language, Newsgroup = newsgroup)
         }
 
         return(doc)
     }
 }
-class(readGmane) <- "FunctionGenerator"
+attr(readGmane, "FunctionGenerator") <- TRUE
 
 # Converter
 
@@ -162,7 +162,7 @@ convertRCV1Plain <- function(node, ...) {
     heading <- xmlValue(node[["title"]])
 
     new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = "", Author = "", DateTimeStamp = datetimestamp,
-        Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML", Heading = heading)
+        Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML", Heading = heading, Language = "en_US")
 }
 
 # Parse a <REUTERS></REUTERS> element from a well-formed Reuters-21578 XML file
@@ -192,5 +192,6 @@ convertReut21578XMLPlain <- function(node, ...) {
     topics <- unlist(xmlApply(node[["TOPICS"]], function(x) xmlValue(x)), use.names = FALSE)
 
     new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = "", Author = author, DateTimeStamp = datetimestamp,
-        Description = description, ID = id, Origin = "Reuters-21578 XML", Heading = heading, LocalMetaData = list(Topics = topics))
+        Description = description, ID = id, Origin = "Reuters-21578 XML", Heading = heading, Language = "en_US",
+        LocalMetaData = list(Topics = topics))
 }

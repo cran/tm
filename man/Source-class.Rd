@@ -10,6 +10,8 @@ Objects can be created by calls of the form \code{new("Source", ...)}.
 }
 \section{Slots}{
   \describe{
+    \item{\code{DefaultReader}:}{Object of class \code{function}
+      describing a default reader}
     \item{\code{LoDSupport}:}{Object of class \code{logical} indicating
       where this source supports load on demand}
     \item{\code{Position}:}{Object of class \code{numeric} indicating

@@ -6,12 +6,12 @@ setMethod("dissimilarity",
           function(x, y = NULL, method) {
               # Until factored out in a seperate package
               # use the \code{dists} function from the \pkg{cba} package
-              dists(x, y, method)
+              dists(as(Data(x), "matrix"), y, method)
           })
 setMethod("dissimilarity",
           signature(x = "TextDocument", y = "TextDocument", method = "character"),
           function(x, y = NULL, method) {
-              tdm <- TermDocMatrix(as(list(x,y), "TextDocCol"))
+              tdm <- TermDocMatrix(c(x, y))
               dissim <- dissimilarity(tdm, method = method)
               return(dissim)
           })

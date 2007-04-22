@@ -6,9 +6,9 @@
 \alias{getElem,CSVSource-method}
 \alias{getElem,ReutersSource-method}
 \alias{getElem,GmaneSource-method}
-\title{Methods for Function getElem in Package `textmin'}
+\title{Methods for Function getElem in Package `tm'}
 \description{
-  Methods for function \code{getElem} in Package `textmin'.
+  Methods for function \code{getElem} in package \pkg{tm}..
 }
 \section{Methods}{
   \describe{

@@ -6,9 +6,9 @@
 \alias{eoi,CSVSource-method}
 \alias{eoi,ReutersSource-method}
 \alias{eoi,GmaneSource-method}
-\title{Methods for Function eoi in Package `textmin'}
+\title{Methods for Function eoi in Package `tm'}
 \description{
-  Methods for function \code{eoi} in Package `textmin'.
+  Methods for function \code{eoi} in package \pkg{tm}..
 }
 \section{Methods}{
   \describe{

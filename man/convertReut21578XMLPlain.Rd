@@ -17,5 +17,11 @@ convertReut21578XMLPlain(node, ...)
   A \code{PlainTextDocument} representing \code{node}.
 }
 \seealso{\code{\link{asPlain}}}
+\examples{
+reut21578 <- system.file("texts", "reut21578", package = "tm")
+reut21578TDC <- TextDocCol(DirSource(reut21578), readerControl = list(reader = readReut21578XML, language = "en_US", load = TRUE))
+reut21578TDC[[1]]
+asPlain(reut21578TDC[[1]], convertReut21578XMLPlain)
+}
 \author{Ingo Feinerer}
 \keyword{file}

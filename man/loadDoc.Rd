@@ -5,9 +5,9 @@
 \alias{loadDoc,PlainTextDocument-method}
 \alias{loadDoc,XMLTextDocument-method}
 \alias{loadDoc,NewsgroupDocument-method}
-\title{Methods for Function loadDoc in Package `textmin'}
+\title{Methods for Function loadDoc in Package `tm'}
 \description{
-Methods for function \code{loadDoc} in Package `textmin'
+Methods for function \code{loadDoc} in package \pkg{tm}.
 }
 \section{Methods}{
 \describe{

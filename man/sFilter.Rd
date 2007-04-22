@@ -31,7 +31,7 @@ sFilter(object, s, ...)
 }
 \examples{
 ## Load example dataset
-data(crude)
+data("crude")
 
 ## Statement Filter returning TRUE for document with ID 127 and heading DIAMOND ...
 sFilter(crude, "identifier == '127' & heading == 'DIAMOND SHAMROCK (DIA) CUTS CRUDE PRICES'")

@@ -12,11 +12,11 @@
 }
 \section{Slots}{
   \describe{
-    \item{\code{NodeID}:}{Object of class \code{"numeric"} containing
+    \item{\code{NodeID}:}{Object of class \code{numeric} containing
       a unique identification number for the node.}
-    \item{\code{MetaData}:}{Object of class \code{"list"} containing
+    \item{\code{MetaData}:}{Object of class \code{list} containing
       meta data at node level.}
-    \item{\code{children}:}{Object of class \code{"list"} containing
+    \item{\code{children}:}{Object of class \code{list} containing
       either zero, one or two \code{MetaDataNode}s resulting in a binary
       tree.}
   }
