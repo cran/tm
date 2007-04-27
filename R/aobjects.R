@@ -234,7 +234,6 @@ setMethod("DMetaData", "TextDocCol",
               if (DBControl(object)[["useDb"]]) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   result <- dbFetch(db, "DMetaData")
-                  dbDisconnect(db)
                   index <- object@DMetaData[[1, "subset"]]
                   if (!any(is.na(index)))
                       result <- result[index, , drop = FALSE]
@@ -249,7 +248,6 @@ setReplaceMethod("DMetaData", "TextDocCol",
                      if (DBControl(x)[["useDb"]]) {
                          db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
                          db[["DMetaData"]] <- value
-                         dbDisconnect(db)
                          x@DMetaData[[1, "subset"]] <- NA
                          return(x)
                      }

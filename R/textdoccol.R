@@ -43,7 +43,6 @@ setMethod("TextDocCol",
               if (dbControl$useDb) {
                   dbInsert(db, "DMetaData", df)
                   dmeta.df <- data.frame(key = "DMetaData", subset = I(list(NA)))
-                  dbDisconnect(db)
               }
               else
                   dmeta.df <- df
@@ -145,7 +144,6 @@ setMethod("tmMap",
                       db[[id]] <- FUN(object[[i]], ..., DMetaData = DMetaData(object))
                       i <- i + 1
                   }
-                  dbDisconnect(db)
               }
               else
                   result@.Data <- lapply(object, FUN, ..., DMetaData = DMetaData(object))
@@ -285,7 +283,6 @@ setMethod("appendElem",
                   if (dbExists(db, ID(data)))
                       warning("document with identical ID already exists")
                   dbInsert(db, ID(data), data)
-                  dbDisconnect(db)
                   object@.Data[[length(object)+1]] <- ID(data)
               }
               else
@@ -378,7 +375,6 @@ setMethod("[<-",
                       }
                       counter <- counter + 1
                   }
-                  dbDisconnect(db)
               }
               else
                   object@.Data[i, ...] <- value
@@ -391,7 +387,6 @@ setMethod("[[",
               if (DBControl(x)[["useDb"]]) {
                   db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
                   result <- dbFetch(db, x@.Data[[i]])
-                  dbDisconnect(db)
                   return(loadDoc(result))
               }
               else
@@ -406,7 +401,6 @@ setMethod("[[<-",
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   index <- object@.Data[[i]]
                   db[[index]] <- value
-                  dbDisconnect(db)
               }
               else
                   object@.Data[[i, ...]] <- value
@@ -576,7 +570,6 @@ setMethod("inspect",
               if (DBControl(object)[["useDb"]]) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   show(dbMultiFetch(db, unlist(object)))
-                  dbDisconnect(db)
               }
               else
                   show(object@.Data)
@@ -590,7 +583,6 @@ setMethod("%IN%",
               if (DBControl(y)[["useDb"]]) {
                   db <- dbInit(DBControl(y)[["dbName"]], DBControl(y)[["dbType"]])
                   result <- any(sapply(y, function(x, z) {x %in% Corpus(z)}, x))
-                  dbDisconnect(db)
               }
               else
                   result <- x %in% y
@@ -603,7 +595,6 @@ setMethod("lapply",
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- lapply(dbMultiFetch(db, unlist(X)), FUN, ...)
-                  dbDisconnect(db)
               }
               else
                   result <- base::lapply(X, FUN, ...)
@@ -616,7 +607,6 @@ setMethod("sapply",
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- sapply(dbMultiFetch(db, unlist(X)), FUN, ...)
-                  dbDisconnect(db)
               }
               else
                   result <- base::sapply(X, FUN, ...)
