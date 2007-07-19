@@ -12,7 +12,9 @@ Methods for function \code{findFreqTerms} in package \pkg{tm}.
     \item{object = "TermDocMatrix", lowfreq = "numeric", highfreq =
       "numeric"}{Return those terms from \code{object} which occur more or
       equal often than \code{lowfreq} times and less or equal often than
-      \code{highfreq} times.
+      \code{highfreq} times. This method works for all numeric
+      weightings but is probably most meaningful for the standard term
+      frequency (\code{tf}) weighting of \code{object}.
     }
   }
 }

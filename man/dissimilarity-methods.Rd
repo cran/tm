@@ -13,7 +13,7 @@ Methods for function \code{dissimilarity} in package \pkg{tm}.
     \item{x = "TermDocMatrix", y = "ANY", method = "character"}{Computes the
       dissimilarity between the documents in \code{x}
       with the distance measure \code{method}. Any method accepted by
-      \code{dists} from package \pkg{cba} can be passed over.
+      \code{dist} from package \pkg{proxy} can be passed over.
 
       Formally the dissimilarity is returned in form of a \code{dist}
       object.
@@ -22,13 +22,13 @@ Methods for function \code{dissimilarity} in package \pkg{tm}.
     \item{x = "TextDocument", y = "TextDocument", method =
       "character"}{Computes the dissimilarity between \code{x} and \code{y}
       with the distance measure \code{method}. Any method accepted by
-      \code{dists} from package \pkg{cba} can be passed over.}
+      \code{dist} from package \pkg{proxy} can be passed over.}
   }
 }
 \examples{
 data("crude")
 tdm <- TermDocMatrix(crude)
-dissimilarity(tdm, method = "angular")
-dissimilarity(crude[[1]], crude[[2]], method = "ebinary")
+dissimilarity(tdm, method = "cosine")
+dissimilarity(crude[[1]], crude[[2]], method = "eJaccard")
 }
 \keyword{methods}

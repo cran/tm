@@ -177,6 +177,14 @@ setReplaceMethod("Cached", "XMLTextDocument", function(x, value) {
     x
 })
 
+# Reuters21578 XML document
+setClass("Reuters21578Document",
+         contains = "XMLTextDocument")
+
+# Reuters RCV1 document
+setClass("RCV1Document",
+         contains = "XMLTextDocument")
+
 # Newsgroup document as found in the Newsgroup dataset of the UCI KDD archive
 setClass("NewsgroupDocument",
          representation(Newsgroup = "character", URI = "ANY", Cached = "logical"),
@@ -197,7 +205,7 @@ setReplaceMethod("Cached", "NewsgroupDocument", function(x, value) {
 # Structured text document for sectioned or structured text corpora
 setClass("StructuredTextDocument",
          representation(URI = "ANY", Cached = "logical"),
-         contains = c("list"))
+         contains = c("list", "TextDocument"))
 
 setMethod("Corpus", "StructuredTextDocument", function(object) object@.Data)
 setReplaceMethod("Corpus", "StructuredTextDocument", function(x, value) {

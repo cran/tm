@@ -9,7 +9,7 @@
 convertMboxEml(mbox, EmlDir)
 }
 \arguments{
-  \item{mbox}{a character describing the mbox location.}
+  \item{mbox}{a character or connection describing the mbox location.}
   \item{EmlDir}{a character describing the output directory.}
 }
 \value{
@@ -20,5 +20,7 @@ convertMboxEml(mbox, EmlDir)
 \examples{
 mbox <- system.file("texts", "gmane.comp.lang.r.general.mbox", package = "tm")
 \dontrun{convertMboxEml(mbox, "emldir/")}
+mbox.gz <- gzfile(system.file("texts", "gmane.comp.lang.r.general.mbox.gz", package = "tm"))
+\dontrun{convertMboxEml(mbox.gz, "emldir/")}
 }
 \keyword{file}

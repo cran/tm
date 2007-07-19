@@ -80,16 +80,18 @@ file path).
 
 This package ships with several readers (\code{readPlain()}
 (default), \code{readRCV1()}, \code{readReut21578XML()},
-\code{readGmane()} and \code{readNewsgroup()}). Each source has a
-default reader which can be overriden. E.g., for \code{Dirsource} the
+\code{readGmane()}, \code{readNewsgroup()}, \code{readPDF()}, and \code{readHTML()}).
+Each source has a default reader which can be overridden. E.g., for \code{DirSource} the
 default just reads in the whole input files and interprets their
 content as text.
 
 Plain text files in a directory:
-<<>>=
+<<keep.source=TRUE>>=
 txt <- system.file("texts", "txt", package = "tm")
 (ovid <- TextDocCol(DirSource(txt),
-                       readerControl = list(reader = readPlain, language = "en_US", load = TRUE)))
+                    readerControl = list(reader = readPlain,
+                                         language = "en_US",
+                                         load = TRUE)))
 @
 
 A single comma separated values file:
@@ -102,22 +104,32 @@ TextDocCol(CSVSource(cars))
 Reuters21578 files either in directory (one document per file) or a single
 file (several documents per file). Note that connections can be used
 as input:
-<<>>=
+<<keep.source=TRUE>>=
 # Reuters21578 XML
 reut21578 <- system.file("texts", "reut21578", package = "tm")
 reut21578XML <- system.file("texts", "reut21578.xml", package = "tm")
 reut21578XMLgz <- system.file("texts", "reut21578.xml.gz", package = "tm")
 
 (reut21578TDC <- TextDocCol(DirSource(reut21578),
-                            readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE)))
+                            readerControl = list(reader = readReut21578XML,
+                                                 language = "en_US",
+                                                 load = FALSE)))
 
 TextDocCol(ReutersSource(reut21578XML),
-           readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
+           readerControl = list(reader = readReut21578XML,
+                                language = "en_US", load = FALSE))
 TextDocCol(ReutersSource(gzfile(reut21578XMLgz)),
-           readerControl = list(reader = readReut21578XML, language = "en_US", load = FALSE))
+           readerControl = list(reader = readReut21578XML,
+                                language = "en_US", load = FALSE))
 @
+Depending on your exact input format you might find
+\code{preprocessReut21578XML()} useful. For the original downloadable
+archive this function can correct invalid \acronym{Utf8} encodings and
+can copy each text document into a separate file to enable load on
+demand.
 
-Analogously for files in the Reuters Corpus Volume 1 format:
+Analogously we can construct collections for files in the Reuters
+Corpus Volume 1 format:
 <<>>=
 # Reuters Corpus Volume 1
 rcv1 <- system.file("texts", "rcv1", package = "tm")
@@ -145,6 +157,25 @@ rss <- system.file("texts", "gmane.comp.lang.r.gr.rdf", package = "tm")
 TextDocCol(GmaneSource(rss),
            readerControl = list(reader = readGmane, language = "en_US", load = FALSE))
 @
+
+For very simple \acronym{Html} documents:
+<<>>=
+html <- system.file("texts", "html", package = "tm")
+
+TextDocCol(DirSource(html),
+           readerControl = list(reader = readHTML, load = TRUE))
+@
+
+And for \acronym{Pdf} documents:
+<<>>=
+pdf <- system.file("texts", "pdf", package = "tm")
+
+TextDocCol(DirSource(pdf),
+           readerControl = list(reader = readPDF, language = "en_US", load = TRUE))
+@
+Note that \code{readPDF()} needs \code{pdftotext} and \code{pdfinfo}
+installed on your system to be able to extract the text and meta
+information from your \acronym{Pdf}s.
 
 \section*{Inspecting the Text Document Collection}
 Custom \code{show} and \code{summary} methods are available, which
@@ -185,10 +216,9 @@ The text document collection \code{reut21578TDC} contains documents
 in XML format. We have no further use for the XML interna and just
 want to work with the text content. This can be done by converting the
 documents to plaintext documents. It is done by the generic
-\code{asPlain} in assistance by a converter function
-\code{convertReut21578XMLPlain} which knows how to actually do it.
+\code{asPlain}.
 <<>>=
-reut21578TDC <- tmMap(reut21578TDC, asPlain, convertReut21578XMLPlain)
+reut21578TDC <- tmMap(reut21578TDC, asPlain)
 @
 
 \subsection*{Eliminating Extra Whitespace}
@@ -227,8 +257,9 @@ E.g., the following statement filters out those documents having
 \code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE} as their
 heading and an \code{ID} equal to 10 (both are metadata slot
 variables of the text document).
-<<>>=
-query <- "identifier == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
+<<keep.source=TRUE>>=
+query <- "identifier == '10' &
+          heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
 tmFilter(reut21578TDC, query)
 @
 
@@ -308,7 +339,7 @@ for given texts. In this package the class \class{TermDocMatrix}
 handles sparse matrices for text document collections.
 <<>>=
 tdm <- TermDocMatrix(reut21578TDC)
-Data(tdm)[1:8,50:55]
+Data(tdm)[1:8,150:155]
 @
 
 \section*{Operations on Term-Document Matrices}
@@ -328,4 +359,39 @@ The function also accepts a matrix as first argument (which does not
 inherit from a term-document matrix). This matrix is then interpreted
 as a correlation matrix and directly used. With this approach
 different correlation measures can be employed.
+
+Term-document matrices tend to get very big already for normal sized
+datasets. Therefore we provide a method to remove \emph{sparse} terms,
+i.e., terms occurring only in very few documents. Normally, this
+reduces the matrix dramatically without losing significant relations
+inherent to the matrix:
+<<>>=
+removeSparseTerms(tdm, 0.4)
+@
+This function call removes those terms which have at least a 40
+percentage of sparse (i.e., terms occurring 0 times in a document)
+elements.
+
+\section*{Dictionary}
+A dictionary is a (multi-)set of strings. It is often used to represent
+relevant terms in text mining. We provide a class \class{Dictionary}
+implementing such a dictionary concept. It can be created via the
+\code{Dictionary} constructor, e.g.,
+<<>>=
+(d <- Dictionary(c("dlrs", "crude", "oil")))
+@
+and may be passed over to the \code{TermDocMatrix} constructor. Then
+the created matrix is tabulated against the dictionary, i.e., only
+terms from the dictionary appear in the matrix. This allows to
+restrict the dimension of the matrix a priori and to focus on specific
+terms for distinct text mining contexts, e.g.,
+<<>>=
+tdmD <- TermDocMatrix(reut21578TDC, dictionary = d)
+Data(tdmD)
+@
+You can also create a dictionary from a term-document matrix via
+\code{createDictionary} holding all terms from the matrix e.g.,
+<<>>=
+createDictionary(tdm)[100:110]
+@
 \end{document}

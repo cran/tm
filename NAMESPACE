@@ -1,7 +1,7 @@
-import(cba)
 import(filehash)
 import(Matrix)
 import(methods)
+import(proxy)
 import(Snowball)
 import(XML)
 
@@ -11,6 +11,8 @@ export(
        "readRCV1",
        "readNewsgroup",
        "readGmane",
+       "readPDF",
+       "readHTML",
        "convertReut21578XMLPlain",
        "convertRCV1Plain",
        "convertMboxEml",
@@ -23,6 +25,7 @@ exportMethods(
               "TextDocCol",
               "TextRepository",
               "TermDocMatrix",
+              "Dictionary",
               "DirSource",
               "CSVSource",
               "ReutersSource",
@@ -66,6 +69,9 @@ exportMethods(
               "Weighting",
               "Weighting<-",
 
+              # Dictionary
+              "createDictionary",
+
               # Sources
               "stepNext",
               "getElem",
@@ -80,11 +86,14 @@ exportMethods(
               "tmTolower",
               "stemDoc",
               "removeWords",
+              "replaceWords",
               "tmFilter",
               "tmIndex",
               "searchFullText",
+              "dim",
               "findFreqTerms",
               "findAssocs",
+              "removeSparseTerms",
               "appendElem",
               "appendMeta",
               "prescindMeta",
@@ -104,12 +113,15 @@ exportMethods(
 exportClasses("TextDocument",
               "PlainTextDocument",
               "XMLTextDocument",
+              "Reuters21578Document",
+              "RCV1Document",
               "NewsgroupDocument",
               "StructuredTextDocument",
               "TextDocCol",
               "MetaDataNode",
               "TextRepository",
               "TermDocMatrix",
+              "Dictionary",
               "Source",
               "DirSource",
               "CSVSource",

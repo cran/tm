@@ -16,6 +16,13 @@ Methods for function \code{tmMap} in package \pkg{tm}.
       function which returns a \code{TextDocument}.}
   }
 }
+\seealso{
+  \code{\link{asPlain}}
+  \code{\link{removeWords}}
+  \code{\link{stemDoc}}
+  \code{\link{stripWhitespace}}
+  \code{\link{tmTolower}}
+}
 \examples{
 data("crude")
 tmMap(crude, stemDoc)

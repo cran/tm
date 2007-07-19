@@ -45,11 +45,11 @@ readReut21578XML <- function(...) {
         topics <- unlist(xmlApply(node[["TOPICS"]], function(x) xmlValue(x)), use.names = FALSE)
 
         doc <- if (load) {
-            new("XMLTextDocument", .Data = tree, URI = elem$uri, Cached = TRUE, Author = author,
+            new("Reuters21578Document", .Data = tree, URI = elem$uri, Cached = TRUE, Author = author,
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters-21578 XML",
                 Heading = heading, Language = language, LocalMetaData = list(Topics = topics))
         } else {
-            new("XMLTextDocument", URI = elem$uri, Cached = FALSE, Author = author,
+            new("Reuters21578Document", URI = elem$uri, Cached = FALSE, Author = author,
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters-21578 XML",
                 Heading = heading, Language = language, LocalMetaData = list(Topics = topics))
         }
@@ -73,11 +73,11 @@ readRCV1 <- function(...) {
         heading <- xmlValue(node[["title"]])
 
         doc <- if (load) {
-            new("XMLTextDocument", .Data = tree, URI = elem$uri, Cached = TRUE, Author = "",
+            new("RCV1Document", .Data = tree, URI = elem$uri, Cached = TRUE, Author = "",
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML",
                 Heading = heading, Language = language)
         } else {
-            new("XMLTextDocument", URI = elem$uri, Cached = FALSE, Author = "",
+            new("RCV1Document", URI = elem$uri, Cached = FALSE, Author = "",
                 DateTimeStamp = datetimestamp, Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML",
                 Heading = heading, Language = language)
         }
@@ -151,6 +151,76 @@ readGmane <- function(...) {
     }
 }
 attr(readGmane, "FunctionGenerator") <- TRUE
+
+readPDF <- function(...) {
+    function(elem, load, language, id) {
+        # pdftotext and pdfinfo give error code 99 when printing version
+        if (system("pdftotext -v 1>&2", ignore.stderr = TRUE) / 256 != 99)
+            stop("pdftotext not found")
+        if (system("pdfinfo -v 1>&2", ignore.stderr = TRUE) / 256 != 99)
+            stop("pdfinfo not found")
+
+        meta <- system(paste("pdfinfo", as.character(elem$uri[2])), intern = TRUE)
+        heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
+        author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
+        datetimestamp <- as.POSIXct(strptime(gsub("CreationDate:[[:space:]]*", "",
+                                                  grep("CreationDate:", meta, value = TRUE)),
+                                             format = "%a %b %d %H:%M:%S %Y"))
+        description <- gsub("Subject:[[:space:]]*", "", grep("Subject:", meta, value = TRUE))
+        origin <- gsub("Creator:[[:space:]]*", "", grep("Creator:", meta, value = TRUE))
+
+        if (!load)
+            warning("load on demand not supported for PDF documents")
+
+        corpus <- paste(system(paste("pdftotext", as.character(elem$uri[2]), "-"), intern = TRUE), sep = "\n", collapse = "")
+        new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
+            Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
+            Origin = origin, Heading = heading, Language = language)
+    }
+}
+attr(readPDF, "FunctionGenerator") <- TRUE
+
+readHTML <- function(...) {
+    function(elem, load, language, id) {
+        tree <- xmlTreeParse(elem$content, asText = TRUE)
+        root <- xmlRoot(tree)
+
+        head <- root[["head"]]
+        heading <- xmlValue(head[["title"]])
+
+        meta <- lapply(xmlChildren(head)[names(xmlChildren(head)) == "meta"], xmlAttrs)
+        metaNames <- sapply(meta, "[[", "name")
+        metaContents <- sapply(meta, "[[", "content")
+
+        # See http://dublincore.org/documents/dcmi-terms/ and http://dublincore.org/documents/dcq-html/
+        author <- paste(metaContents[metaNames == "DC.creator"])
+        description <- paste(metaContents[metaNames == "DC.description"])
+        datetimestamp <- as.POSIXct(paste(metaContents[metaNames == "DC.date"]))
+        origin <- paste(metaContents[metaNames == "DC.publisher"])
+        language <- paste(metaContents[metaNames == "DC.language"])
+
+        if (!load)
+            warning("load on demand not supported for StructuredTextDocuments using HTML")
+
+        content <- list("Prologue" = NULL)
+        i <- 1
+        for (child in xmlChildren(root[["body"]])) {
+            if (tolower(xmlName(child)) == "h1") {
+                content <- c(content, structure(list(NULL), names = xmlValue(child)))
+                i <- i + 1
+            }
+            else {
+                # We remove remaining HTML tags
+                content[[i]] <- c(content[[i]], toString(xmlApply(child, xmlValue)))
+            }
+        }
+
+        new("StructuredTextDocument", .Data = content, URI = elem$uri, Cached = TRUE,
+            Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
+            Origin = origin, Heading = heading, Language = language)
+    }
+}
+attr(readHTML, "FunctionGenerator") <- TRUE
 
 # Converter
 

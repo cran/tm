@@ -104,6 +104,15 @@ setMethod("loadDoc",
                   return(object)
               }
           })
+setMethod("loadDoc",
+          signature(object = "StructuredTextDocument"),
+          function(object, ...) {
+              if (!Cached(object)) {
+                  warning("load on demand not (yet) supported for StructuredTextDocuments")
+                  return(object)
+              } else
+                  return(object)
+          })
 
 setGeneric("tmUpdate", function(object,
                                 origin,
@@ -116,7 +125,7 @@ setMethod("tmUpdate",
           function(object, origin,
                    readerControl = list(reader = origin@DefaultReader, language = "en_US", load = FALSE),
                    ...) {
-              if (inherits(readerControl$reader, "FunctionGenerator"))
+              if (attr(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
 
               object.filelist <- unlist(lapply(object, function(x) {as.character(URI(x))[2]}))
@@ -168,6 +177,30 @@ setMethod("asPlain",
               return(FUN(xmlRoot(corpus), ...))
           })
 setMethod("asPlain",
+          signature(object = "Reuters21578Document"),
+          function(object, FUN, ...) {
+              FUN <- convertReut21578XMLPlain
+              corpus <- Corpus(object)
+
+              # As XMLDocument is no native S4 class, restore valid information
+              class(corpus) <- "XMLDocument"
+              names(corpus) <- c("doc","dtd")
+
+              return(FUN(xmlRoot(corpus), ...))
+          })
+setMethod("asPlain",
+          signature(object = "RCV1Document"),
+          function(object, FUN, ...) {
+              FUN <- convertRCV1Plain
+              corpus <- Corpus(object)
+
+              # As XMLDocument is no native S4 class, restore valid information
+              class(corpus) <- "XMLDocument"
+              names(corpus) <- c("doc","dtd")
+
+              return(FUN(xmlRoot(corpus), ...))
+          })
+setMethod("asPlain",
           signature(object = "NewsgroupDocument"),
           function(object, FUN, ...) {
               new("PlainTextDocument", .Data = Corpus(object), Cached = TRUE, URI = "", Author = Author(object),
@@ -196,7 +229,7 @@ setMethod("stemDoc",
           signature(object = "PlainTextDocument"),
           function(object, language = "english", ...) {
               splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
-              stemmedCorpus <- if (require("Rstem"))
+              stemmedCorpus <- if (require("Rstem", quietly = TRUE))
                   Rstem::wordStem(splittedCorpus, language)
               else
                   SnowballStemmer(splittedCorpus, Weka_control(S = language))
@@ -219,6 +252,15 @@ setMethod("removeWords",
               splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
               noStopwordsCorpus <- splittedCorpus[!splittedCorpus %in% stopwords]
               Corpus(object) <- paste(noStopwordsCorpus, collapse = " ")
+              return(object)
+          })
+
+setGeneric("replaceWords", function(object, words, by, ...) standardGeneric("replaceWords"))
+setMethod("replaceWords",
+          signature(object = "PlainTextDocument", words = "character", by = "character"),
+          function(object, words, by, ...) {
+              pattern <- paste(words, collapse = "|")
+              Corpus(object) <- gsub(pattern, by, Corpus(object))
               return(object)
           })
 

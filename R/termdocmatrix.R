@@ -1,7 +1,4 @@
 # Author: Ingo Feinerer
-#
-# Copyright notice:
-# Parts of the preprocessing code were adapted from the \pkg{lsa} package. Special thanks to Fridolin Wild.
 
 # Input matrix has to be in term-frequency format
 weightMatrix <- function(m, weighting = "tf") {
@@ -12,7 +9,7 @@ weightMatrix <- function(m, weighting = "tf") {
            },
            "tf-idf" = {
                df <- colSums(as(m > 0, "dgCMatrix"))
-               return(m * log2(nrow(m) / df))
+               return(t(t(m) * log2(nrow(m) / df)))
            },
            "bin" = {
                return(as(m > 0, "dgCMatrix"))
@@ -22,39 +19,46 @@ weightMatrix <- function(m, weighting = "tf") {
            })
 }
 
-setGeneric("TermDocMatrix", function(object, weighting = "tf", stemming = FALSE, minWordLength = 3, minDocFreq = 1, stopwords = NULL) standardGeneric("TermDocMatrix"))
+setGeneric("TermDocMatrix",
+           function(object, weighting = "tf", stemming = FALSE, minWordLength = 3,
+                    minDocFreq = 1, stopwords = NULL, dictionary = NULL) standardGeneric("TermDocMatrix"))
+# Kudos to Christian Buchta for significantly improving TermDocMatrix's efficiency
 setMethod("TermDocMatrix",
           signature(object = "TextDocCol"),
-          function(object, weighting = "tf", stemming = FALSE,
-                   minWordLength = 3, minDocFreq = 1, stopwords = NULL) {
+          function(object, weighting = "tf", stemming = FALSE, minWordLength = 3,
+                   minDocFreq = 1, stopwords = NULL, dictionary = NULL) {
 
-              tvlist <- lapply(object, textvector, stemming, minWordLength, minDocFreq, stopwords)
-              allTerms <- unique(unlist(lapply(tvlist, "[[", "terms")))
+              tvlist <- lapply(object, textvector, stemming, minWordLength, minDocFreq, stopwords, dictionary)
+              terms <- lapply(tvlist, "[[", "terms")
+              allTerms <- unique(unlist(terms, use.names = FALSE))
 
-              tdm <- Matrix(0,
-                            nrow = length(object),
-                            ncol = length(allTerms),
-                            dimnames = list(sapply(object, ID), allTerms))
+              i <- lapply(terms, match, allTerms)
+              rm(terms)
+              p <- cumsum(sapply(i, length))
+              i <- unlist(i) - 1L
 
-              for(i in seq_along(object)) {
-                  df <- tvlist[[i]]
-                  j <- match(df$terms, allTerms)
-                  tdm[i, j] <- df$freqs
-              }
+              x <- lapply(tvlist, "[[", "freqs")
+              rm(tvlist)
+              x <- as.numeric(unlist(x, use.names = FALSE))
 
-              tdm <- weightMatrix(tdm, weighting)
+              tdm <- new("dgCMatrix", p = c(0L, p), i = i, x = x,
+                         Dim = c(length(allTerms), length(p)),
+                         Dimnames = list(Terms = allTerms, Docs = sapply(object, ID)))
+              tdm <- weightMatrix(t(tdm), weighting)
 
               new("TermDocMatrix", Data = tdm, Weighting = weighting)
           })
 
-textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1, stopwords = NULL) {
+# Parts of this preprocessing code were adapted from the \pkg{lsa} package. Special thanks to Fridolin Wild.
+textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
+                       stopwords = NULL, dictionary = NULL) {
     txt <- gsub("[^[:alnum:]]+", " ", doc)
     txt <- tolower(txt)
     txt <- unlist(strsplit(txt, " ", fixed = TRUE))
 
     # stemming
     if (stemming) {
-        txt <- if (require("Rstem"))
+        txt <- if (require("Rstem", quietly = TRUE))
             Rstem::wordStem(txt, language = resolveISOCode(Language(doc)))
         else
             SnowballStemmer(txt, Weka_control(S = resolveISOCode(Language(doc))))
@@ -66,8 +70,11 @@ textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
     else if (!is.logical(stopwords) && !is.null(stopwords))
         txt <- txt[!txt %in% stopwords]
 
-    # tabulate
-    tab <- sort(table(txt), decreasing = TRUE)
+    # if dictionary is set tabulate against it
+    tab <-  if (is.null(dictionary))
+        table(txt)
+    else
+        table(factor(txt, levels = dictionary))
 
     # with threshold minDocFreq
     tab <- tab[tab >= minDocFreq]
@@ -76,7 +83,7 @@ textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
     tab <- tab[nchar(names(tab), type = "chars") >= minWordLength]
 
     # Is the vector empty?
-    if (is.null(names(tab))) {
+    if (length(names(tab)) <= 0) {
         terms <- ""
         freqs <- 0
     }
@@ -88,12 +95,18 @@ textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
     data.frame(docs = ID(doc), terms, freqs, row.names = NULL, stringsAsFactors = FALSE)
 }
 
+setMethod("dim",
+          signature(x = "TermDocMatrix"),
+          function(x) {
+              dim(Data(x))
+          })
+
 setGeneric("findFreqTerms", function(object, lowfreq, highfreq) standardGeneric("findFreqTerms"))
 setMethod("findFreqTerms",
           signature(object = "TermDocMatrix", lowfreq = "numeric", highfreq = "numeric"),
           function(object, lowfreq, highfreq) {
-              object <- as(Data(object), "matrix")
-              unique(rownames(which(t(object) >= lowfreq & t(object) <= highfreq, arr.ind = TRUE)))
+              m <- as(Data(object), "TsparseMatrix")
+              colnames(m)[unique(m@j[m@x >= lowfreq & m@x <= highfreq]) + 1]
           })
 
 setGeneric("findAssocs", function(object, term, corlimit) standardGeneric("findAssocs"))
@@ -108,4 +121,25 @@ setMethod("findAssocs",
           signature(object = "matrix", term = "character"),
           function(object, term, corlimit) {
               sort(round(object[term, which(object[term,] > corlimit)], 2), decreasing = TRUE)
+          })
+
+setGeneric("removeSparseTerms", function(object, sparse) standardGeneric("removeSparseTerms"))
+setMethod("removeSparseTerms",
+          signature(object = "TermDocMatrix", sparse = "numeric"),
+          function(object, sparse) {
+              if ((sparse <= 0) || (sparse >= 1))
+                  warning("invalid sparse factor")
+              else {
+                  m <- as(Data(object), "TsparseMatrix")
+                  t <- table(m@j + 1) > nrow(m) * (1 - sparse)
+                  Data(object) <- m[, as.numeric(names(t[t]))]
+              }
+              return(object)
+          })
+
+setGeneric("createDictionary", function(object) standardGeneric("createDictionary"))
+setMethod("createDictionary",
+          signature(object = "TermDocMatrix"),
+          function(object) {
+              Dictionary(colnames(Data(object)))
           })
