@@ -51,8 +51,8 @@ collection (\class{TextDocCol}). Its constructor takes following arguments:
   from the source, the second gives the text's language, the third
   indicates whether the user wants to load the documents immediately
   into memory, and the fourth is a unique identification string.
-  If the passed over \code{reader} function
-  has the attribute~\code{FunctionGenerator}, it is assumed to be a function
+  If the passed over \code{reader} object is of
+  class~\class{FunctionGenerator}, it is assumed to be a function
   generating a reader. This way custom readers taking various
   parameters (specified in \code{...}) can be built, which in fact
   must produce a valid reader signature but can access additional

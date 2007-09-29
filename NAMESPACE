@@ -30,6 +30,7 @@ exportMethods(
               "CSVSource",
               "ReutersSource",
               "GmaneSource",
+              "FunctionGenerator",
 
               # TextDocument
               "Corpus",
@@ -85,12 +86,18 @@ exportMethods(
               "stripWhitespace",
               "tmTolower",
               "stemDoc",
+              "removeCitation",
+              "removeMultipart",
+              "removeSignature",
               "removeWords",
+              "removePunctuation",
               "replaceWords",
               "tmFilter",
               "tmIndex",
               "searchFullText",
               "dim",
+              "ncol",
+              "nrow",
               "findFreqTerms",
               "findAssocs",
               "removeSparseTerms",
@@ -126,4 +133,5 @@ exportClasses("TextDocument",
               "DirSource",
               "CSVSource",
               "ReutersSource",
-              "GmaneSource")
+              "GmaneSource",
+              "FunctionGenerator")

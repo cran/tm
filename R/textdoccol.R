@@ -11,7 +11,7 @@ setMethod("TextDocCol",
                    readerControl = list(reader = object@DefaultReader, language = "en_US", load = FALSE),
                    dbControl = list(useDb = FALSE, dbName = "", dbType = "DB1"),
                    ...) {
-              if (attr(readerControl$reader, "FunctionGenerator"))
+              if (is(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
 
               if (dbControl$useDb) {
@@ -125,7 +125,7 @@ setMethod("tmUpdate",
           function(object, origin,
                    readerControl = list(reader = origin@DefaultReader, language = "en_US", load = FALSE),
                    ...) {
-              if (attr(readerControl$reader, "FunctionGenerator"))
+              if (is(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
 
               object.filelist <- unlist(lapply(object, function(x) {as.character(URI(x))[2]}))
@@ -207,61 +207,13 @@ setMethod("asPlain",
                   DateTimeStamp = DateTimeStamp(object), Description = Description(object), ID = ID(object),
                   Origin = Origin(object), Heading = Heading(object), Language = Language(object))
           })
-
-setGeneric("tmTolower", function(object, ...) standardGeneric("tmTolower"))
-setMethod("tmTolower",
-          signature(object = "PlainTextDocument"),
-          function(object, ...) {
-              Corpus(object) <- tolower(object)
-              return(object)
-          })
-
-setGeneric("stripWhitespace", function(object, ...) standardGeneric("stripWhitespace"))
-setMethod("stripWhitespace",
-          signature(object = "PlainTextDocument"),
-          function(object, ...) {
-              Corpus(object) <- gsub("[[:space:]]+", " ", object)
-              return(object)
-          })
-
-setGeneric("stemDoc", function(object, language = "english", ...) standardGeneric("stemDoc"))
-setMethod("stemDoc",
-          signature(object = "PlainTextDocument"),
-          function(object, language = "english", ...) {
-              splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
-              stemmedCorpus <- if (require("Rstem", quietly = TRUE))
-                  Rstem::wordStem(splittedCorpus, language)
-              else
-                  SnowballStemmer(splittedCorpus, Weka_control(S = language))
-              Corpus(object) <- paste(stemmedCorpus, collapse = " ")
-              return(object)
-          })
-
-setGeneric("removePunctuation", function(object, ...) standardGeneric("removePunctuation"))
-setMethod("removePunctuation",
-          signature(object = "PlainTextDocument"),
-          function(object, ...) {
-              Corpus(object) <- gsub("[[:punct:]]+", "", Corpus(object))
-              return(object)
-          })
-
-setGeneric("removeWords", function(object, stopwords, ...) standardGeneric("removeWords"))
-setMethod("removeWords",
-          signature(object = "PlainTextDocument", stopwords = "character"),
-          function(object, stopwords, ...) {
-              splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
-              noStopwordsCorpus <- splittedCorpus[!splittedCorpus %in% stopwords]
-              Corpus(object) <- paste(noStopwordsCorpus, collapse = " ")
-              return(object)
-          })
-
-setGeneric("replaceWords", function(object, words, by, ...) standardGeneric("replaceWords"))
-setMethod("replaceWords",
-          signature(object = "PlainTextDocument", words = "character", by = "character"),
-          function(object, words, by, ...) {
-              pattern <- paste(words, collapse = "|")
-              Corpus(object) <- gsub(pattern, by, Corpus(object))
-              return(object)
+setMethod("asPlain",
+          signature(object = "StructuredTextDocument"),
+          function(object, FUN, ...) {
+              new("PlainTextDocument", .Data = unlist(Corpus(object)), Cached = TRUE,
+                  URI = "", Author = Author(object), DateTimeStamp = DateTimeStamp(object),
+                  Description = Description(object), ID = ID(object), Origin = Origin(object),
+                  Heading = Heading(object), Language = Language(object))
           })
 
 setGeneric("tmFilter", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmFilter"))
@@ -286,7 +238,7 @@ setMethod("tmIndex",
 
 sFilter <- function(object, s, ...) {
     con <- textConnection(s)
-    tokens <- scan(con, "character")
+    tokens <- scan(con, "character", quiet = TRUE)
     close(con)
     localMetaNames <- unique(names(sapply(object, LocalMetaData)))
     localMetaTokens <- localMetaNames[localMetaNames %in% tokens]

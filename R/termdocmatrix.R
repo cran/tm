@@ -28,7 +28,14 @@ setMethod("TermDocMatrix",
           function(object, weighting = "tf", stemming = FALSE, minWordLength = 3,
                    minDocFreq = 1, stopwords = NULL, dictionary = NULL) {
 
-              tvlist <- lapply(object, textvector, stemming, minWordLength, minDocFreq, stopwords, dictionary)
+              control <- list(stemming = stemming, stopwords = stopwords, dictionary = dictionary,
+                              minDocFreq = minDocFreq, minWordLength = minWordLength)
+              # Rewritten textvector function supports modules for each processing step
+              # E.g., we can use the tokenizer from the openNLP package:
+              # > model <- system.file("opennlp.models", "english", "tokenize", "EnglishTok.bin.gz", package = "openNLPmodels")
+              # > tok <- function(x) tokenize(x, model)
+              # > textvector(doc, control = list(tokenize = tok))
+              tvlist <- lapply(object, textvector, control)
               terms <- lapply(tvlist, "[[", "terms")
               allTerms <- unique(unlist(terms, use.names = FALSE))
 
@@ -49,40 +56,55 @@ setMethod("TermDocMatrix",
               new("TermDocMatrix", Data = tdm, Weighting = weighting)
           })
 
-# Parts of this preprocessing code were adapted from the \pkg{lsa} package. Special thanks to Fridolin Wild.
-textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
-                       stopwords = NULL, dictionary = NULL) {
-    txt <- gsub("[^[:alnum:]]+", " ", doc)
-    txt <- tolower(txt)
-    txt <- unlist(strsplit(txt, " ", fixed = TRUE))
+textvector <- function(doc, control = list()) {
+    txt <- Corpus(doc)
 
-    # stemming
-    if (stemming) {
+    # Conversion to lower characters
+    tolower <- control$tolower
+    if (is.null(tolower) || tolower)
+        txt <- tolower(txt)
+
+    # Tokenize the corpus
+    tokenize <- control$tokenize
+    if (is.null(tokenize))
+        tokenize <- function(x) unlist(strsplit(gsub("[^[:alnum:]]+", " ", x), " ", fixed = TRUE))
+    txt <- tokenize(txt)
+
+    # Stemming
+    stemming <- control$stemming
+    if (is.logical(stemming) && stemming) {
         txt <- if (require("Rstem", quietly = TRUE))
             Rstem::wordStem(txt, language = resolveISOCode(Language(doc)))
         else
             SnowballStemmer(txt, Weka_control(S = resolveISOCode(Language(doc))))
     }
 
-    # stopword filtering?
+    # Stopword filtering
+    stopwords <- control$stopwords
     if (is.logical(stopwords) && stopwords)
         txt <- txt[!txt %in% stopwords(Language(doc))]
-    else if (!is.logical(stopwords) && !is.null(stopwords))
+    else if (is.character(stopwords))
         txt <- txt[!txt %in% stopwords]
 
-    # if dictionary is set tabulate against it
+    # If dictionary is set tabulate against it
+    dictionary <- control$dictionary
     tab <-  if (is.null(dictionary))
         table(txt)
     else
         table(factor(txt, levels = dictionary))
 
-    # with threshold minDocFreq
-    tab <- tab[tab >= minDocFreq]
+    # Ensure minimum document frequency threshold
+    minDocFreq <- control$minDocFreq
+    if (!is.null(minDocFreq))
+        tab <- tab[tab >= minDocFreq]
 
-    # wordLength filtering?
+    # Filter out too short terms
+    minWordLength <- control$minWordLength
+    if (is.null(minWordLength))
+        minWordLength <- 3
     tab <- tab[nchar(names(tab), type = "chars") >= minWordLength]
 
-    # Is the vector empty?
+    # Handle empty vectors
     if (length(names(tab)) <= 0) {
         terms <- ""
         freqs <- 0
@@ -95,10 +117,31 @@ textvector <- function(doc, stemming = FALSE, minWordLength = 3, minDocFreq = 1,
     data.frame(docs = ID(doc), terms, freqs, row.names = NULL, stringsAsFactors = FALSE)
 }
 
+setMethod("[",
+          signature(x = "TermDocMatrix", i = "ANY", j = "ANY", drop = "ANY"),
+          function(x, i, j, ..., drop) {
+              # Unfortunately Data(x)[i, j, ..., drop] alone does not work when j is missing
+              if (missing(i)) return(Data(x))
+              if (missing(j)) return(Data(x)[i, j = seq_len(ncol(x)), ..., drop])
+              Data(x)[i, j, ..., drop]
+          })
+
 setMethod("dim",
           signature(x = "TermDocMatrix"),
           function(x) {
               dim(Data(x))
+          })
+
+setMethod("ncol",
+          signature(x = "TermDocMatrix"),
+          function(x) {
+              ncol(Data(x))
+          })
+
+setMethod("nrow",
+          signature(x = "TermDocMatrix"),
+          function(x) {
+              nrow(Data(x))
           })
 
 setGeneric("findFreqTerms", function(object, lowfreq, highfreq) standardGeneric("findFreqTerms"))

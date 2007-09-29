@@ -7,6 +7,7 @@
 \alias{asPlain,XMLTextDocument,function-method}
 \alias{asPlain,Reuters21578Document,ANY-method}
 \alias{asPlain,RCV1Document,ANY-method}
+\alias{asPlain,StructuredTextDocument,ANY-method}
 \title{Methods for Function asPlain in Package `tm'}
 \description{
 Methods for function \code{asPlain} in package \pkg{tm}.
@@ -23,6 +24,8 @@ Methods for function \code{asPlain} in package \pkg{tm}.
       \code{PlainTextDocument}.}
     \item{object = "RCV1Document", FUN}{Converts \code{object} to a
       \code{PlainTextDocument}.}
+    \item{object = "StructuredTextDocument"}{Converts \code{object} to a
+      plain text document.}
   }
 }
 \seealso{

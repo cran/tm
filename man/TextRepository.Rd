@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{TextRepository}
 \alias{TextRepository,TextDocCol-method}
-\title{Text document collection}
+\title{Text repository}
 \description{
   Constructs a text document collection from various sources.
 }

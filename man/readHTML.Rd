@@ -1,6 +1,6 @@
 \name{readHTML}
 \alias{readHTML}
-\title{Read In A PDF Document}
+\title{Read In A Simple HTML Document}
 \description{
   Returns a function which reads in a simple HTML
   document extracting both its text and its metadata. The reader uses

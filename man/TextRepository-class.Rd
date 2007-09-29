@@ -3,7 +3,7 @@
 \alias{TextRepository-class}
 \alias{RepoMetaData}
 \alias{RepoMetaData,TextRepository-method}
-\title{Text document collection}
+\title{Text repository}
 \description{
   A class representing a repository of text document collections.
 }

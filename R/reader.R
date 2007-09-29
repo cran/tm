@@ -2,7 +2,7 @@
 
 # Reader
 
-readPlain <- function(...) {
+readPlain <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         doc <- if (load) {
             new("PlainTextDocument", .Data = elem$content, URI = elem$uri, Cached = TRUE,
@@ -15,10 +15,9 @@ readPlain <- function(...) {
 
         return(doc)
     }
-}
-attr(readPlain, "FunctionGenerator") <- TRUE
+})
 
-readReut21578XML <- function(...) {
+readReut21578XML <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         tree <- xmlTreeParse(corpus, asText = TRUE)
@@ -56,10 +55,9 @@ readReut21578XML <- function(...) {
 
         return(doc)
     }
-}
-attr(readReut21578XML, "FunctionGenerator") <- TRUE
+})
 
-readRCV1 <- function(...) {
+readRCV1 <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         tree <- xmlTreeParse(corpus, asText = TRUE)
@@ -84,10 +82,9 @@ readRCV1 <- function(...) {
 
         return(doc)
     }
-}
-attr(readRCV1, "FunctionGenerator") <- TRUE
+})
 
-readNewsgroup <- function(...) {
+readNewsgroup <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         mail <- elem$content
         author <- gsub("From: ", "", grep("^From:", mail, value = TRUE))
@@ -116,10 +113,9 @@ readNewsgroup <- function(...) {
 
         return(doc)
     }
-}
-attr(readNewsgroup, "FunctionGenerator") <- TRUE
+})
 
-readGmane <- function(...) {
+readGmane <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         corpus <- paste(elem$content, "\n", collapse = "")
         # Remove namespaces
@@ -149,18 +145,12 @@ readGmane <- function(...) {
 
         return(doc)
     }
-}
-attr(readGmane, "FunctionGenerator") <- TRUE
+})
 
-readPDF <- function(...) {
+# readPDF needs pdftotext and pdfinfo installed to be able to extract the text and meta information
+readPDF <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
-        # pdftotext and pdfinfo give error code 99 when printing version
-        if (system("pdftotext -v 1>&2", ignore.stderr = TRUE) / 256 != 99)
-            stop("pdftotext not found")
-        if (system("pdfinfo -v 1>&2", ignore.stderr = TRUE) / 256 != 99)
-            stop("pdfinfo not found")
-
-        meta <- system(paste("pdfinfo", as.character(elem$uri[2])), intern = TRUE)
+        meta <- system(paste("pdfinfo", shQuote(as.character(elem$uri[2]))), intern = TRUE)
         heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
         author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
         datetimestamp <- as.POSIXct(strptime(gsub("CreationDate:[[:space:]]*", "",
@@ -172,15 +162,14 @@ readPDF <- function(...) {
         if (!load)
             warning("load on demand not supported for PDF documents")
 
-        corpus <- paste(system(paste("pdftotext", as.character(elem$uri[2]), "-"), intern = TRUE), sep = "\n", collapse = "")
+        corpus <- paste(system(paste("pdftotext", shQuote(as.character(elem$uri[2])), "-"), intern = TRUE), sep = "\n", collapse = "")
         new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
             Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
             Origin = origin, Heading = heading, Language = language)
     }
-}
-attr(readPDF, "FunctionGenerator") <- TRUE
+})
 
-readHTML <- function(...) {
+readHTML <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
         tree <- xmlTreeParse(elem$content, asText = TRUE)
         root <- xmlRoot(tree)
@@ -219,8 +208,7 @@ readHTML <- function(...) {
             Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
             Origin = origin, Heading = heading, Language = language)
     }
-}
-attr(readHTML, "FunctionGenerator") <- TRUE
+})
 
 # Converter
 

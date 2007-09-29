@@ -5,6 +5,7 @@
 \alias{[[-methods}
 \alias{[[<--methods}
 \alias{[,TextDocCol,ANY,ANY,ANY-method}
+\alias{[,TermDocMatrix,ANY,ANY,ANY-method}
 \alias{[<-,TextDocCol,ANY,ANY,ANY-method}
 \alias{[[,TextDocCol,ANY,ANY-method}
 \alias{[[<-,TextDocCol,ANY,ANY-method}
@@ -16,6 +17,7 @@
 \arguments{
   \item{x = "TextDocCol"}{the text document collection to be subsetted
     or modified.}
+  \item{x = "TermDocMatrix"}{the term-document matrix to be subsetted.}
 }
 \examples{
 data("crude")
