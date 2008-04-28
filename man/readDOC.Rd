@@ -6,17 +6,17 @@
   document extracting its text.
 }
 \usage{
-readDOC(...)
+readDOC(AntiwordOptions = "", ...)
 }
 \arguments{
-  \item{...}{Arguments for the generator function.}
+  \item{AntiwordOptions}{options passed over to \code{antiword}.}
+  \item{\dots}{arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
   function (which reads in a text document) with a well-defined
-  signature, but can access passed over arguments via lexical
-  scoping. This is especially useful for reader functions for complex
-  data structures which need a lot of configuration options.
+  signature, but can access passed over arguments (e.g., options to
+  \code{antiword}) via lexical scoping.
 
   Note that this MS Word reader needs the tool \code{antiword} installed
   and accessable on your system.
@@ -41,4 +41,3 @@ readDOC(...)
   Use \code{\link{getReaders}} to list available reader functions.
 }
 \author{Ingo Feinerer}
-\keyword{file}

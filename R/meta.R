@@ -31,15 +31,15 @@ setMethod("meta",
           signature(object = "TextDocument"),
           function(object, tag = NULL, type = NULL) {
               if (is.null(tag)) {
-                  slots <- sort(setdiff(names(getSlots(class(object))), c(".Data", "LocalMetaData")))
+                  slots <- sort(setdiff(slotNames(object), c(".Data", "LocalMetaData")))
                   cat("Available meta data pairs are:\n")
                   for (s in slots)
                       cat(sprintf("  %-13s: %s\n", s, paste(as(slot(object, s), "character"), collapse = " ")))
-                  cat("Dynamic local meta data pairs are:\n")
+                  cat("User-defined local meta data pairs are:\n")
                   show(LocalMetaData(object))
               }
               else {
-                  if (tag %in% names(getSlots(class(object)))) show(slot(object, tag))
+                  if (tag %in% slotNames(object)) show(slot(object, tag))
                   else show(LocalMetaData(object)[[tag]])
               }
           })
@@ -68,7 +68,7 @@ setReplaceMethod("meta",
 setReplaceMethod("meta",
                  signature(object = "TextDocument"),
                  function(object, tag, type = NULL, value) {
-                     if (tag %in% c("Author", "DateTimeStamp", "Description", "ID", "Heading", "Language", "Origin"))
+                     if (tag %in% setdiff(slotNames(object), ".Data"))
                          slot(object, tag) <- value
                      else
                          object@LocalMetaData[[tag]] <- value

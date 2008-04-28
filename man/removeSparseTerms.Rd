@@ -1,26 +1,24 @@
-\name{removeSparseTerms-methods}
-\docType{methods}
+\name{removeSparseTerms}
 \alias{removeSparseTerms}
-\alias{removeSparseTerms-methods}
-\alias{removeSparseTerms,TermDocMatrix,numeric-method}
-\title{Methods for Function removeSparseTerms in Package `tm'}
+\title{Remove Sparse Terms from a Term-Document Matrix}
 \description{
-Methods for function \code{removeSparseTerms} in package \pkg{tm}.
+  Remove sparse terms from a term-document matrix.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "TermDocMatrix", sparse = "numeric"}{Return
-      \code{object} where those columns (i.e., terms) from
-      \code{Data(object)} are removed which have at least a \code{sparse}
-      percentage of empty (i.e., terms occurring 0 times in a document)
-      elements. I.e., the resulting matrix contains only columns with a
-      sparse factor of less than \code{sparse}.
-    }
-  }
+\usage{
+removeSparseTerms(object, sparse)
+}
+\arguments{
+  \item{object}{A term-document matrix.}
+  \item{sparse}{a numeric for the maximal allowed sparsity}
+}
+\value{A term-document matrix where those terms from \code{object} are
+  removed which have at least a \code{sparse} percentage of empty (i.e.,
+  terms occurring 0 times in a document) elements. I.e., the resulting
+  matrix contains only terms with a sparse factor of less than
+  \code{sparse}.
 }
 \examples{
 data("crude")
-tdm <- TermDocMatrix(crude)
+tdm <- TermDocumentMatrix(crude)
 removeSparseTerms(tdm, 0.2)
 }
-\keyword{methods}

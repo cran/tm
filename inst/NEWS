@@ -1,5 +1,57 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.3-4
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   .onLoad() no longer tries to start a MPI cluster (which often
+        failed in misconfigured environments). Use activateCluster()
+        and deactivateCluster() instead.
+
+    o   DocumentTermMatrix (the improved reimplementation of defunct
+        TermDocMatrix) does not use the Matrix package anymore.
+
+NEW FEATURES
+
+    o   The DirSource() constructor now accepts the two new (optional)
+        arguments pattern and ignore.case. With pattern one can define
+        a regular expression for selecting only matching files, and
+        ignore.case specifies whether pattern-matching is
+        case-sensitive.
+
+    o   The readNewsgroup() reader function can now be configured for
+        custom date formats (via the DateFormat argument).
+
+    o   The readPDF() reader function can now be configured (via the
+        PdfinfoOptions and PdftotextOptions arguments).
+
+    o   The readDOC() reader function can now be configured (via the
+        AntiwordOptions argument).
+
+    o   Sources now can be vectorized. This allows faster corpus
+        construction.
+
+    o   New XMLSource class for arbitrary XML files.
+
+    o   The new readTabular() reader function allows to create a custom
+        tailor-made reader configured via mappings from a tabular data
+        structure.
+
+    o   The new readXML() reader function allows to read in arbitrary
+        XML files which are described with a specification.
+
+    o   The new tmReduce() transformation allows to combine multiple
+        maps into one transformation.
+
+DEPRECATED & DEFUNCT
+
+    o   CSVSource is defunct (use DataframeSource instead).
+
+    o   weightLogical is defunct.
+
+    o   TermDocMatrix is defunct (use DocumentTermMatrix or
+        TermDocumentMatrix instead).
+
                 CHANGES IN tm VERSION 0.3-3
 
 NEW FEATURES

@@ -33,10 +33,10 @@
 \alias{LocalMetaData,TextDocument-method}
 \title{Text Document}
 \description{
-  A class representing a text document with additional information.
+  A (virtual) class representing a text document with additional information.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("TextDocument", ...)}.
+Objects can be created by deriving and instantiating subclasses.
 }
 \section{Slots}{
   \describe{

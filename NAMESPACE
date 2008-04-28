@@ -1,54 +1,99 @@
-import(filehash)
-import(Matrix)
 import(methods)
-import(proxy)
-import(Snowball)
-import(XML)
 
 export(
        "activateCluster",
+       "CSVSource", # defunct
        "DataframeSource",
        "deactivateCluster",
+       "Dictionary",
+       "dissimilarity",
+       "Docs",
+       "DocumentTermMatrix",
        "stemCompletion",
+       "GmaneSource",
+       "findAssocs",
+       "findFreqTerms",
        "getFilters",
        "getReaders",
        "getSources",
        "getTransformations",
+       "inspect",
        "makeChunks",
        "materialize",
+       "nDocs",
+       "nTerms",
        "readPlain",
        "readReut21578XML",
        "readRCV1",
        "readNewsgroup",
        "readGmane",
        "readPDF",
+       "readTabular",
        "readHTML",
        "readDOC",
+       "readXML",
+       "removeSparseTerms",
+       "ReutersSource",
        "convertReut21578XMLPlain",
        "convertRCV1Plain",
        "convertMboxEml",
        "sFilter",
        "preprocessReut21578XML",
        "stopwords",
+       "TermDocMatrix", # defunct
+       "TermDocumentMatrix",
        "termFreq",
+       "Terms",
+       "tmReduce",
        "weightTf",
        "weightTfIdf",
        "weightBin",
-       "weightLogical")
+       "XMLSource")
 
-S3method("plot", "TermDocMatrix")
+S3method("Dictionary", "character")
+
+S3method("inspect", "Corpus")
+
+S3method("findAssocs", "matrix")
+
+S3method("dissimilarity", "PlainTextDocument")
+
+S3method("[", "DocumentTermMatrix")
+S3method("colnames", "DocumentTermMatrix")
+S3method("Dictionary", "DocumentTermMatrix")
+S3method("dim", "DocumentTermMatrix")
+S3method("dimnames", "DocumentTermMatrix")
+S3method("dissimilarity", "DocumentTermMatrix")
+S3method("findAssocs", "DocumentTermMatrix")
+S3method("inspect", "DocumentTermMatrix")
+S3method("ncol", "DocumentTermMatrix")
+S3method("nrow", "DocumentTermMatrix")
+S3method("plot", "DocumentTermMatrix")
+S3method("print", "DocumentTermMatrix")
+S3method("t", "DocumentTermMatrix")
+S3method("rownames", "DocumentTermMatrix")
+
+S3method("[", "TermDocumentMatrix")
+S3method("colnames", "TermDocumentMatrix")
+S3method("Dictionary", "TermDocumentMatrix")
+S3method("dim", "TermDocumentMatrix")
+S3method("dimnames", "TermDocumentMatrix")
+S3method("dissimilarity", "TermDocumentMatrix")
+S3method("findAssocs", "TermDocumentMatrix")
+S3method("inspect", "TermDocumentMatrix")
+S3method("ncol", "TermDocumentMatrix")
+S3method("nrow", "TermDocumentMatrix")
+S3method("plot", "TermDocumentMatrix")
+S3method("print", "TermDocumentMatrix")
+S3method("t", "TermDocumentMatrix")
+S3method("rownames", "TermDocumentMatrix")
 
 exportMethods(
               # Constructors
               "Corpus",
               "TextRepository",
-              "TermDocMatrix",
-              "Dictionary",
               "DirSource",
               "VectorSource",
-              "CSVSource",
-              "ReutersSource",
-              "GmaneSource",
               "URISource",
               "FunctionGenerator",
               "WeightFunction",
@@ -90,15 +135,10 @@ exportMethods(
               # TextRepository
               "RepoMetaData",
 
-              # TermDocMatrix
-              "Data",
-              "Data<-",
-              "Weighting",
-              "Weighting<-",
-
               # Sources
               "stepNext",
               "getElem",
+              "pGetElem",
               "eoi",
 
               # Functions
@@ -120,16 +160,7 @@ exportMethods(
               "tmIndex",
               "searchFullText",
               "tmIntersect",
-              "as.matrix",
-              "dim",
-              "dimnames",
-              "ncol",
-              "colnames",
-              "nrow",
-              "rownames",
-              "findFreqTerms",
-              "findAssocs",
-              "removeSparseTerms",
+
               "appendElem",
               "appendMeta",
               "prescindMeta",
@@ -143,10 +174,8 @@ exportMethods(
               "length",
               "show",
               "summary",
-              "inspect",
               "writeCorpus",
-              "%IN%",
-              "dissimilarity")
+              "%IN%")
 
 exportClasses("TextDocument",
               "PlainTextDocument",
@@ -158,17 +187,14 @@ exportClasses("TextDocument",
               "Corpus",
               "MetaDataNode",
               "TextRepository",
-              "TermDocMatrix",
               "Dictionary",
               "Source",
               "DataframeSource",
               "DirSource",
               "VectorSource",
-              "CSVSource",
-              "ReutersSource",
-              "GmaneSource",
               "URISource",
               "FunctionGenerator",
-              "WeightFunction")
+              "WeightFunction",
+              "XMLSource")
 
 useDynLib("tm")

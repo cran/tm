@@ -5,10 +5,10 @@
   Weight a term-document matrix by term frequency.
 }
 \usage{
-weightTf(m)
+weightTf(x)
 }
 \arguments{
-  \item{m}{A \code{dgCMatrix} in term frequency format.}
+  \item{x}{A \code{dgCMatrix} in term frequency format.}
 }
 \details{
   Formally this function is a \code{WeightingFunction} with the additional
@@ -21,4 +21,3 @@ weightTf(m)
   The weighted \code{dgCMatrix}.
 }
 \author{Ingo Feinerer}
-\keyword{file}

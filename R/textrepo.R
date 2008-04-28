@@ -1,6 +1,6 @@
 # Author: Ingo Feinerer
 
-setGeneric("TextRepository", function(object, meta = list(created = Sys.time())) standardGeneric("TextRepository"))
+setGeneric("TextRepository", function(object, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT"))) standardGeneric("TextRepository"))
 setMethod("TextRepository",
           signature(object = "Corpus"),
           function(object, meta) {
@@ -40,8 +40,8 @@ setMethod("show",
           signature(object = "TextRepository"),
           function(object){
                cat(sprintf(ngettext(length(object),
-                                    "A text repository with %d text document collection\n",
-                                    "A text repository with %d text document collections\n"),
+                                    "A text repository with %d corpus\n",
+                                    "A text repository with %d corpora\n"),
                            length(object)))
     })
 

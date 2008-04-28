@@ -3,6 +3,7 @@
 \alias{summary-methods}
 \alias{summary,Corpus-method}
 \alias{summary,TextRepository-method}
+\alias{summary,TermDocumentMatrix-method}
 \title{Methods for Function summary in Package `tm'}
 \description{
 Methods for function \code{summary} in package \pkg{tm}.
@@ -13,6 +14,7 @@ Methods for function \code{summary} in package \pkg{tm}.
       on available meta data tags.}
     \item{object = "TextRepository"}{Prints a description including information
       on available meta data tags.}
+    \item{object = "TermDocumentMatrix"}{Prints a short descriptive summary.}
   }
 }
 \examples{

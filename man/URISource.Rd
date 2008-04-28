@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{URISource}
 \alias{URISource,character-method}
-\alias{URISource,connection-method}
+\alias{URISource,ANY-method}
 \title{Uniform Resource Identifier Source}
 \description{
   Constructs a Uniform Resource Identifier source.

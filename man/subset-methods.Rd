@@ -5,10 +5,14 @@
 \alias{[[-methods}
 \alias{[[<--methods}
 \alias{[,Corpus,ANY,ANY,ANY-method}
-\alias{[,TermDocMatrix,ANY,ANY,ANY-method}
+\alias{[.TermDocumentMatrix}
 \alias{[<-,Corpus,ANY,ANY,ANY-method}
 \alias{[[,Corpus,ANY,ANY-method}
 \alias{[[<-,Corpus,ANY,ANY-method}
+\alias{[,Corpus-method}
+\alias{[<-,Corpus-method}
+\alias{[[,Corpus-method}
+\alias{[[<-,Corpus-method}
 \title{Methods for Subset Functions in Package `tm'}
 \description{
   Methods for subset functions \code{[}, \code{[<-}, \code{[[} and
@@ -17,7 +21,7 @@
 \arguments{
   \item{x = "Corpus"}{The text document collection to be subsetted
     or modified.}
-  \item{x = "TermDocMatrix"}{The term-document matrix to be subsetted.}
+  \item{x = "TermDocumentMatrix"}{The term-document matrix to be subsetted.}
 }
 \examples{
 data("crude")

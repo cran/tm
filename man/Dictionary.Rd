@@ -1,26 +1,25 @@
 \name{Dictionary}
-\docType{methods}
 \alias{Dictionary}
-\alias{Dictionary,character-method}
-\alias{Dictionary,TermDocMatrix-method}
+\alias{Dictionary.character}
+\alias{Dictionary.TermDocumentMatrix}
 \title{Dictionary}
 \description{
   Constructs a dictionary from a character vector or a term-document matrix.
 }
 \usage{
-Dictionary(object)
+\method{Dictionary}{character}(x)
+\method{Dictionary}{TermDocumentMatrix}(x)
 }
 \arguments{
-  \item{object}{A character vector or a term-document matrix holding the terms for the dictionary.}
+  \item{x}{A character vector or a term-document matrix holding the terms for the dictionary.}
 }
 \value{
-  An S4 object of class \code{Dictionary} which extends the class
+  An S4 object of class \code{\linkS4class{Dictionary}} which extends the class
   \code{character} representing a dictionary.
 }
 \examples{
 Dictionary(c("some", "tokens"))
 data(crude)
-Dictionary(TermDocMatrix(crude))
+Dictionary(TermDocumentMatrix(crude))
 }
 \author{Ingo Feinerer}
-\keyword{methods}

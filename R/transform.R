@@ -1,6 +1,9 @@
 # Author: Ingo Feinerer
 # Transformations
 
+tmReduce <- function(x, tmFuns, ...)
+    Reduce(function(f, ...) f(...), tmFuns, x, right = TRUE)
+
 getTransformations <- function() { c("asPlain", "loadDoc",
     "removeCitation", "removeMultipart", "removeNumbers",
     "removePunctuation", "removeSignature", "removeWords",
@@ -126,10 +129,7 @@ setGeneric("stemDoc", function(object, language = "english", ...) standardGeneri
 setMethod("stemDoc",
           signature(object = "PlainTextDocument"),
           function(object, language = "english", ...) {
-              stemLine <- if (suppressWarnings(require("Rstem", quietly = TRUE)))
-                  function(x) Rstem::wordStem(x, language)
-              else
-                  function(x) SnowballStemmer(x, Weka_control(S = language))
+              stemLine <- function(x) Snowball::SnowballStemmer(x, RWeka::Weka_control(S = language))
               Content(object) <- sapply(object,
                                         function(x) paste(stemLine(unlist(strsplit(x, "[[:blank:]]"))), collapse = " "),
                                         USE.NAMES = FALSE)

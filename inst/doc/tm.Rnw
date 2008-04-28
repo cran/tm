@@ -1,6 +1,8 @@
 \documentclass[a4paper]{article}
 
 \usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[round]{natbib}
 \usepackage{url}
 \DeclareUnicodeCharacter{201C}{"}
 \DeclareUnicodeCharacter{201D}{"}
@@ -15,29 +17,25 @@
 %% \VignetteIndexEntry{Introduction to the tm Package}
 
 \begin{document}
-<<Init,echo=FALSE>>=
-options(width = 60)
+<<Init,echo=FALSE,results=hide>>=
 library("tm")
 data("crude")
 @
 \title{Introduction to the \pkg{tm} Package\\Text Mining in \proglang{R}}
 \author{Ingo Feinerer}
 \maketitle
-\sloppy
 
 \section*{Introduction}
 This vignette gives a short introduction to text mining in
 \proglang{R} utilizing the text mining framework provided by the
-\pkg{tm} package. We present methods for data import, corpus
-handling, preprocessing, meta data management, and creation of
-term-document matrices. Our focus is on the main
-aspects of getting started with text mining in \proglang{R}---an in-depth
-description of the text mining infrastructure offered by \pkg{tm} was
-published in the \emph{Journal of Statistical Software} and is available at
-\url{http://www.jstatsoft.org/v25/i05}. An introductory article
-on text mining in \proglang{R} was published in \emph{R News},
-8(2):19--22, October 2008, and can be obtained at
-\url{http://CRAN.R-project.org/doc/Rnews/}.
+\pkg{tm} package. We present methods for data import, corpus handling,
+preprocessing, meta data management, and creation of term-document
+matrices. Our focus is on the main aspects of getting started with
+text mining in \proglang{R}---an in-depth description of the text
+mining infrastructure offered by \pkg{tm} was published in the
+\emph{Journal of Statistical Software}~\citep{Feinerer_etal_2008}. An
+introductory article on text mining in \proglang{R} was published in
+\emph{R News}~\citep{Rnews:Feinerer:2008}.
 
 \section*{Data Import}
 The main structure for managing documents in \pkg{tm} is a so-called
@@ -47,7 +45,7 @@ can be created via its constructor
 
 \code{object} must be a \class{Source} object which abstracts the
 input location. Available sources provided by \pkg{tm} are
-\class{DirSource}, \class{VectorSource}, \class{CSVSource},
+\class{DirSource}, \class{VectorSource}, \class{DataframeSource},
 \class{GmaneSource} and \class{ReutersSource} which handle a
 directory, a vector interpreting each component as document, \acronym{Csv}
 files, a \acronym{Rss} feed as delivered by the Gmane mailing list
@@ -132,7 +130,7 @@ encapsulates this functionality.
 \section*{Inspecting Corpora}
 Custom \code{show()} and \code{summary()} methods are available, which
 hide the raw amount of information (consider a collection could
-consists of several thousand documents, like a
+consist of several thousand documents, like a
 database). \code{summary()} gives more details on meta data than
 \code{show()}, whereas the full content of text documents is displayed
 with \code{inspect()} on a collection.
@@ -185,28 +183,25 @@ tmMap(reuters, stemDoc)
 @
 
 \section*{Filters}
-Often it is of special interest to filter out documents satisfying given
-properties. For this purpose the function \code{tmFilter} is
+Often it is of special interest to filter out documents satisfying
+given properties. For this purpose the function \code{tmFilter} is
 designed. It is possible to write custom filter functions, but for
-most cases the default filter does its job: it integrates a minimal
-query language to filter meta data. Statements in this query language
-are statements as used for subsetting data frames.
-
-E.g., the following statement filters out those documents having the string
-``\code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE}'' as their
-heading and an \code{ID} equal to 10 (both are meta data slot
-variables of the text document).
-<<keep.source=TRUE>>=
-query <- "identifier == '10' &
-  heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
-tmFilter(reuters, query)
+most cases \code{sFilter} does its job: it integrates a minimal query
+language to filter meta data. Statements in this query language are
+statements as used for subsetting data frames.  E.g., the following
+statement filters out those documents having an \code{ID} equal to 10
+and the string ``\code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES
+  SALE}'' as their heading (both are meta data slot variables of the
+text document).
+<<>>=
+query <- "identifier == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
+tmFilter(reuters, FUN = sFilter, query)
 @
-
-There is also a full text search filter available which accepts regular
-expressions:
-<<keep.source=TRUE>>=
-tmFilter(reuters, FUN = searchFullText,
-         pattern = "partnership", doclevel = TRUE)
+There is also a full text search filter available (which is default
+when no explicit filter function \code{FUN} is specified) accepting
+regular expressions:
+<<>>=
+tmFilter(reuters, pattern = "partnership")
 @
 
 \section*{Meta Data Management}
@@ -260,28 +255,30 @@ crude[[1]] %IN% reuters
 
 \section*{Creating Term-Document Matrices}
 A common approach in text mining is to create a term-document matrix
-from a corpus. In the \pkg{tm} package the class \class{TermDocMatrix}
-handles sparse matrices for text document collections.
+from a corpus. In the \pkg{tm} package the classes
+\class{TermDocumentMatrix} and \class{DocumentTermMatrix} (depending
+on whether you want terms as rows and documents as columns, or vice
+versa) handle sparse matrices for text document collections.
 <<>>=
-tdm <- TermDocMatrix(reuters)
-Data(tdm)[1:5,150:155]
+dtm <- DocumentTermMatrix(reuters)
+inspect(dtm[1:5,150:155])
 @
 
 \section*{Operations on Term-Document Matrices}
-Besides the fact that on the \code{Data} part of this matrix a huge
-amount of \proglang{R} functions (like clustering, classifications,
-etc.) is possible, this package brings some shortcuts. Imagine we
-want to find those terms that occur at least five times, then we can use
-the \code{findFreqTerms()} function:
+Besides the fact that on this matrix a huge amount of \proglang{R}
+functions (like clustering, classifications, etc.) can be applied,
+this package brings some shortcuts. Imagine we want to find those
+terms that occur at least five times, then we can use the
+\code{findFreqTerms()} function:
 <<>>=
-findFreqTerms(tdm, 5)
+findFreqTerms(dtm, 5)
 @
 Or we want to find associations (i.e., terms which correlate) with at
 least $0.97$ correlation for the term \code{crop}, then we use
 \code{findAssocs()} (we only display ten arbitrary associations
 found):
 <<>>=
-findAssocs(tdm, "crop", 0.97)[31:40]
+findAssocs(dtm, "crop", 0.97)[31:40]
 @
 The function also accepts a matrix as first argument (which does not
 inherit from a term-document matrix). This matrix is then interpreted
@@ -294,7 +291,7 @@ i.e., terms occurring only in very few documents. Normally, this
 reduces the matrix dramatically without losing significant relations
 inherent to the matrix:
 <<>>=
-removeSparseTerms(tdm, 0.4)
+inspect(removeSparseTerms(dtm, 0.4))
 @
 This function call removes those terms which have at least a 40
 percentage of sparse (i.e., terms occurring 0 times in a document)
@@ -308,14 +305,17 @@ implementing such a dictionary concept. It can be created via the
 <<>>=
 (d <- Dictionary(c("dlrs", "crude", "oil")))
 @
-and may be passed over to the \code{TermDocMatrix()} constructor. Then
+and may be passed over to the \code{DocumentTermMatrix()} constructor. Then
 the created matrix is tabulated against the dictionary, i.e., only
 terms from the dictionary appear in the matrix (terms not occurring in
 the document are skipped for performance reasons). This allows to
 restrict the dimension of the matrix a priori and to focus on specific
 terms for distinct text mining contexts, e.g.,
 <<>>=
-tdmD <- TermDocMatrix(reuters, list(dictionary = d))
-Data(tdmD)
+inspect(DocumentTermMatrix(reuters, list(dictionary = d)))
 @
+
+\bibliographystyle{abbrvnat}
+\bibliography{references}
+
 \end{document}

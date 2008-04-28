@@ -1,26 +1,27 @@
-\name{findFreqTerms-methods}
-\docType{methods}
+\name{findFreqTerms}
 \alias{findFreqTerms}
-\alias{findFreqTerms-methods}
-\alias{findFreqTerms,TermDocMatrix-method}
-\title{Methods for Function findFreqTerms in Package `tm'}
+\title{Find Frequent Terms}
 \description{
-Methods for function \code{findFreqTerms} in package \pkg{tm}.
+  Find frequent terms in a term-document matrix.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "TermDocMatrix", lowfreq = 0, highfreq = Inf}{Return
-      those terms from \code{object} which occur more or equal often
-      than \code{lowfreq} times and less or equal often than
-      \code{highfreq} times. This method works for all numeric
-      weightings but is probably most meaningful for the standard term
-      frequency (\code{tf}) weighting of \code{object}.
-    }
-  }
+\usage{
+findFreqTerms(object, lowfreq = 0, highfreq = Inf)
 }
+\arguments{
+  \item{object}{A term-document matrix.}
+  \item{lowfreq}{An integer for the lower frequency bound.}
+  \item{highfreq}{An integer for the upper frequency bound.}
+}
+\value{
+  A character vector of terms in \code{object} which occur more or equal often
+  than \code{lowfreq} times and less or equal often than \code{highfreq}
+  times.
+}
+\details{This method works for all numeric weightings but is probably
+  most meaningful for the standard term frequency (\code{tf}) weighting
+  of \code{object}.}
 \examples{
 data("crude")
-tdm <- TermDocMatrix(crude)
+tdm <- TermDocumentMatrix(crude)
 findFreqTerms(tdm, 2, 3)
 }
-\keyword{methods}

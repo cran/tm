@@ -1,12 +1,12 @@
 \name{plot}
-\alias{plot.TermDocMatrix}
+\alias{plot.TermDocumentMatrix}
 \title{Visualize a Term-Document Matrix}
 \description{
   Visualize correlations between terms of a term-document matrix.
 }
 \usage{
-\method{plot}{TermDocMatrix}(x,
-     terms = sample(colnames(x), 20),
+\method{plot}{TermDocumentMatrix}(x,
+     terms = sample(Terms(x), 20),
      corThreshold = 0.7,
      weighting = FALSE,
      attrs = list(graph = list(rankdir = "BT"),
@@ -15,8 +15,7 @@
      ...)
 }
 \arguments{
-  \item{x}{an \R object inheriting from S4 class
-    \code{\link{TermDocMatrix}}.}
+  \item{x}{A term-document matrix.}
   \item{terms}{Terms to be plotted. Defaults to 20 randomly chosen terms
     of the term-document matrix.}
   \item{corThreshold}{Do not plot correlations below this
@@ -34,10 +33,8 @@
 \examples{
 if (require("Rgraphviz")) {
   data(crude)
-  tdm <- TermDocMatrix(crude)
-  plot(tdm, terms = colnames(tdm)[1:20])
+  tdm <- TermDocumentMatrix(crude)
   set.seed(1234)
   plot(tdm, corThreshold = 0.2, weighting = TRUE)
 }
 }
-\keyword{math}

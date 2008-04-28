@@ -6,17 +6,18 @@
   document extracting both its text and its meta data.
 }
 \usage{
-readPDF(...)
+readPDF(PdfinfoOptions = "", PdftotextOptions = "", ...)
 }
 \arguments{
-  \item{...}{Arguments for the generator function.}
+  \item{PdfinfoOptions}{options passed over to \code{pdfinfo}.}
+  \item{PdftotextOptions}{options passed over to \code{pdftotext}.}
+  \item{\dots}{arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
   function (which reads in a text document) with a well-defined
-  signature, but can access passed over arguments via lexical
-  scoping. This is especially useful for reader functions for complex
-  data structures which need a lot of configuration options.
+  signature, but can access passed over arguments (e.g., options to
+  \code{pdfinfo} or \code{pdftotext}) via lexical scoping.
 
   Note that this PDF reader needs both the tools \code{pdftotext} and
   \code{pdfinfo} installed and accessable on your system.
@@ -42,9 +43,7 @@ readPDF(...)
 }
 \examples{
 f <- system.file("texts", "pdf", "pdfarchiving.pdf", package = "tm")
-readPDF()
-pdf <- readPDF()(elem = list(uri = substitute(file(f))), language = "en_US", load = TRUE, id = "id1")
+pdf <- readPDF(PdftotextOptions = "-layout")(elem = list(uri = substitute(file(f))), load = TRUE, language = "en_US", id = "id1")
 meta(pdf)
 }
 \author{Ingo Feinerer}
-\keyword{file}

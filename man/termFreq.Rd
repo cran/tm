@@ -14,11 +14,11 @@ termFreq(doc, control = list())
       \item \code{tolower}: A function converting characters to lower
       case. Defaults to \code{base::tolower}.
       \item \code{tokenize}: A function tokenizing documents to single
-      tokens. Defaults to \code{function(x) unlist(strsplit(gsub("[^[:alnum:]]+", " ", x), " ", fixed = TRUE)}.
+      tokens. Defaults to \code{RWeka::AlphabeticTokenizer}.
       \item \code{removeNumbers}: A logical value indicating whether
       numbers should be removed from \code{doc}. Defaults to \code{FALSE}.
-      \item \code{stemming}: A Boolean value indicating whether tokens
-      should be stemmed. Defaults to \code{FALSE}.
+      \item \code{stemming}: Either a Boolean value indicating whether tokens
+      should be stemmed or a stemming function. Defaults to \code{FALSE}.
       \item \code{stopwords}: Either a Boolean value indicating stopword
       removal using default language specific stopword lists shipped
       with this package or a character vector holding custom

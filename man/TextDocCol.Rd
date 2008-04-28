@@ -5,7 +5,7 @@
 \alias{coerce,list,Corpus-method}
 \title{Corpus}
 \description{
-  Constructs a text document collection (corpus).
+  Constructs a corpus (= text document collection).
 }
 \usage{
 \S4method{Corpus}{Source}(object, readerControl = list(reader = object@DefaultReader,

@@ -6,17 +6,18 @@
   \acronym{UCI} \acronym{KDD} newsgroup data set.
 }
 \usage{
-readNewsgroup(...)
+readNewsgroup(DateFormat = "\%d \%B \%Y \%H:\%M:\%S", ...)
 }
 \arguments{
-  \item{...}{arguments for the generator function.}
+  \item{DateFormat}{the format of the Date header in the newsgroup document.}
+  \item{\dots}{arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
   function (which reads in a newsgroup document) with a well-defined
-  signature, but can access passed over arguments via lexical
-  scoping. This is especially useful for reader functions for complex
-  data structures which need a lot of configuration options.
+  signature, but can access passed over arguments (e.g., to specify the
+  format of the Date header in the newsgroup document via
+  \code{DateFormat}) via lexical scoping.
 }
 \value{
   A \code{function} with the signature \code{elem, language, load, id}:
@@ -36,6 +37,8 @@ readNewsgroup(...)
 }
 \seealso{
   Use \code{\link{getReaders}} to list available reader functions.
+
+  See \code{\link{strptime}} for date format specifications.
 }
 \author{Ingo Feinerer}
 \keyword{file}

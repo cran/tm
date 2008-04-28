@@ -7,14 +7,14 @@
   Constructs a directory source.
 }
 \usage{
-\S4method{DirSource}{character}(directory, encoding = "UTF-8", recursive = FALSE)
+\S4method{DirSource}{character}(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
 }
 \arguments{
   \item{directory}{a directory.}
-    \item{encoding}{a character giving the encoding of the files in the
-      directory.}
-  \item{recursive}{a logical value indicating whether the directory
-    should be traversed recursively.}
+  \item{encoding}{a character giving the encoding of the files in the directory.}
+  \item{pattern}{an optional regular expression. Only file names which match the regular expression will be returned.}
+  \item{recursive}{logical. Should the listing recurse into directories?}
+  \item{ignore.case}{logical. Should pattern-matching be case-insensitive?}
 }
 \value{
   An S4 object of class \code{DirSource} which extends the class

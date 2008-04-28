@@ -1,24 +1,24 @@
-\name{findAssocs-methods}
-\docType{methods}
+\name{findAssocs}
 \alias{findAssocs}
-\alias{findAssocs-methods}
-\alias{findAssocs,TermDocMatrix,character-method}
-\alias{findAssocs,matrix,character-method}
-\title{Methods for Function findAssocs in Package `tm'}
+\alias{findAssocs.TermDocumentMatrix}
+\alias{findAssocs.matrix}
+\title{Find Associations in a Term-Document Matrix}
 \description{
-Methods for function \code{findAssocs} in package \pkg{tm}.
+  Find associations in a term-document matrix.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "TermDocMatrix", term = "character", corlimit}{Finds those terms
-      from \code{object} which correlate with \code{term} more than \code{corlimit}.}
-    \item{object = "matrix", term = "character", corlimit}{Finds those terms
-      from the correlation matrix \code{object} which correlate with \code{term} more than \code{corlimit}.}
-  }
+\usage{
+\method{findAssocs}{TermDocumentMatrix}(x, term, corlimit)
+\method{findAssocs}{matrix}(x, term, corlimit)
 }
+\arguments{
+  \item{x}{A term-document matrix.}
+  \item{term}{A character holding a term.}
+  \item{corlimit}{A numeric for the lower correlation bound limit.}
+}
+\value{A named numeric with those terms from \code{x} which correlate
+  with \code{term} more than \code{corlimit}.}   
 \examples{
 data("crude")
-tdm <- TermDocMatrix(crude)
+tdm <- TermDocumentMatrix(crude)
 findAssocs(tdm, "oil", 0.7)
 }
-\keyword{methods}

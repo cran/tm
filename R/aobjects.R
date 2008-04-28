@@ -1,11 +1,10 @@
 # Author: Ingo Feinerer
 # S4 class and accessor definitions
-# Assignment and accessor functions are implemented as described in "S4 Classes in 15 pages, more or less"
 
 # Text document
 setClass("TextDocument",
          representation(Author = "character",
-                        DateTimeStamp = "POSIXct",
+                        DateTimeStamp = "POSIXt",
                         Description = "character",
                         ID = "character",
                         Origin = "character",
@@ -14,13 +13,7 @@ setClass("TextDocument",
                         LocalMetaData = "list",
                         "VIRTUAL"))
 
-if (!isGeneric("Author")) {
-    if (is.function("Author"))
-        fun <- Author
-    else
-        fun <- function(object) standardGeneric("Author")
-    setGeneric("Author", fun)
-}
+setGeneric("Author", function(object) standardGeneric("Author"))
 setMethod("Author", "TextDocument", function(object) object@Author)
 setGeneric("Author<-", function(x, value) standardGeneric("Author<-"))
 setReplaceMethod("Author", "TextDocument", function(x, value) {
@@ -28,13 +21,7 @@ setReplaceMethod("Author", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("DateTimeStamp")) {
-    if (is.function("DateTimeStamp"))
-        fun <- DateTimeStamp
-    else
-        fun <- function(object) standardGeneric("DateTimeStamp")
-    setGeneric("DateTimeStamp", fun)
-}
+setGeneric("DateTimeStamp", function(object) standardGeneric("DateTimeStamp"))
 setMethod("DateTimeStamp", "TextDocument", function(object) object@DateTimeStamp)
 setGeneric("DateTimeStamp<-", function(x, value) standardGeneric("DateTimeStamp<-"))
 setReplaceMethod("DateTimeStamp", "TextDocument", function(x, value) {
@@ -42,12 +29,7 @@ setReplaceMethod("DateTimeStamp", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("Description")) {
-    if (is.function("Description"))
-        fun <- Description
-    else fun <- function(object) standardGeneric("Description")
-    setGeneric("Description", fun)
-}
+setGeneric("Description", function(object) standardGeneric("Description"))
 setMethod("Description", "TextDocument", function(object) object@Description)
 setGeneric("Description<-", function(x, value) standardGeneric("Description<-"))
 setReplaceMethod("Description", "TextDocument", function(x, value) {
@@ -55,12 +37,7 @@ setReplaceMethod("Description", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("ID")) {
-    if (is.function("ID"))
-        fun <- ID
-    else fun <- function(object) standardGeneric("ID")
-    setGeneric("ID", fun)
-}
+setGeneric("ID", function(object) standardGeneric("ID"))
 setMethod("ID", "TextDocument", function(object) object@ID)
 setGeneric("ID<-", function(x, value) standardGeneric("ID<-"))
 setReplaceMethod("ID", "TextDocument", function(x, value) {
@@ -68,12 +45,7 @@ setReplaceMethod("ID", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("Origin")) {
-    if (is.function("Origin"))
-        fun <- Origin
-    else fun <- function(object) standardGeneric("Origin")
-    setGeneric("Origin", fun)
-}
+setGeneric("Origin", function(object) standardGeneric("Origin"))
 setMethod("Origin", "TextDocument", function(object) object@Origin)
 setGeneric("Origin<-", function(x, value) standardGeneric("Origin<-"))
 setReplaceMethod("Origin", "TextDocument", function(x, value) {
@@ -81,12 +53,7 @@ setReplaceMethod("Origin", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("Heading")) {
-    if (is.function("Heading"))
-        fun <- Heading
-    else fun <- function(object) standardGeneric("Heading")
-    setGeneric("Heading", fun)
-}
+setGeneric("Heading", function(object) standardGeneric("Heading"))
 setMethod("Heading", "TextDocument", function(object) object@Heading)
 setGeneric("Heading<-", function(x, value) standardGeneric("Heading<-"))
 setReplaceMethod("Heading", "TextDocument", function(x, value) {
@@ -94,12 +61,7 @@ setReplaceMethod("Heading", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("Language")) {
-    if (is.function("Language"))
-        fun <- Language
-    else fun <- function(object) standardGeneric("Language")
-    setGeneric("Language", fun)
-}
+setGeneric("Language", function(object) standardGeneric("Language"))
 setMethod("Language", "TextDocument", function(object) object@Language)
 setGeneric("Language<-", function(x, value) standardGeneric("Language<-"))
 setReplaceMethod("Language", "TextDocument", function(x, value) {
@@ -107,15 +69,10 @@ setReplaceMethod("Language", "TextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("LocalMetaData")) {
-    if (is.function("LocalMetaData"))
-        fun <- LocalMetaData
-    else fun <- function(object) standardGeneric("LocalMetaData")
-    setGeneric("LocalMetaData", fun)
-}
+setGeneric("LocalMetaData", function(object) standardGeneric("LocalMetaData"))
 setMethod("LocalMetaData", "TextDocument", function(object) object@LocalMetaData)
 
-# Inherited text documents
+# Derived text documents
 
 # Define class CallOrNULL as union of call and NULL
 setClassUnion("callOrNULL", c("call", "NULL"))
@@ -125,13 +82,7 @@ setClass("PlainTextDocument",
          representation(URI = c("callOrNULL"), Cached = "logical"),
          contains = c("character", "TextDocument"))
 
-if (!isGeneric("Content")) {
-    if (is.function("Content"))
-        fun <- Content
-    else
-        fun <- function(object) standardGeneric("Content")
-    setGeneric("Content", fun)
-}
+setGeneric("Content", function(object) standardGeneric("Content"))
 setMethod("Content", "PlainTextDocument", function(object) object@.Data)
 setGeneric("Content<-", function(x, value) standardGeneric("Content<-"))
 setReplaceMethod("Content", "PlainTextDocument", function(x, value) {
@@ -139,20 +90,10 @@ setReplaceMethod("Content", "PlainTextDocument", function(x, value) {
   x
 })
 
-if (!isGeneric("URI")) {
-    if (is.function("URI"))
-        fun <- URI
-    else fun <- function(object) standardGeneric("URI")
-    setGeneric("URI", fun)
-}
+setGeneric("URI", function(object) standardGeneric("URI"))
 setMethod("URI", "PlainTextDocument", function(object) object@URI)
 
-if (!isGeneric("Cached")) {
-    if (is.function("Cached"))
-        fun <- Cached
-    else fun <- function(object) standardGeneric("Cached")
-    setGeneric("Cached", fun)
-}
+setGeneric("Cached", function(object) standardGeneric("Cached"))
 setMethod("Cached", "PlainTextDocument", function(object) object@Cached)
 setGeneric("Cached<-", function(x, value) standardGeneric("Cached<-"))
 setReplaceMethod("Cached", "PlainTextDocument", function(x, value) {
@@ -221,27 +162,22 @@ setReplaceMethod("Cached", "StructuredTextDocument", function(x, value) {
     x
 })
 
-# A node in the metadata tree of a text document collection
+# A node in the metadata tree of a corpus
 setClass("MetaDataNode",
          representation(NodeID = "numeric",
                         MetaData = "list",
                         children = "list"))
 
-# Text document collection
+# Corpus (= text document collection)
 setClass("Corpus",
          representation(DMetaData = "data.frame", CMetaData = "MetaDataNode", DBControl = "list"),
          contains = c("list"))
 
 # DMetaData = *MetaData* available for all *D*ocuments
-if (!isGeneric("DMetaData")) {
-    if (is.function("DMetaData"))
-        fun <- DMetaData
-    else fun <- function(object) standardGeneric("DMetaData")
-    setGeneric("DMetaData", fun)
-}
+setGeneric("DMetaData", function(object) standardGeneric("DMetaData"))
 setMethod("DMetaData", "Corpus",
           function(object) {
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   result <- dbFetch(db, "DMetaData")
                   index <- object@DMetaData[[1, "subset"]]
@@ -255,7 +191,7 @@ setMethod("DMetaData", "Corpus",
 setGeneric("DMetaData<-", function(x, value) standardGeneric("DMetaData<-"))
 setReplaceMethod("DMetaData", "Corpus",
                  function(x, value) {
-                     if (DBControl(x)[["useDb"]]) {
+                     if (DBControl(x)[["useDb"]] && require("filehash")) {
                          db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
                          db[["DMetaData"]] <- value
                          x@DMetaData[[1, "subset"]] <- NA
@@ -268,63 +204,16 @@ setReplaceMethod("DMetaData", "Corpus",
                  })
 
 # CMetaData = *MetaData* describing only the Document *C*ollection itself
-if (!isGeneric("CMetaData")) {
-    if (is.function("CMetaData"))
-        fun <- CMetaData
-    else fun <- function(object) standardGeneric("CMetaData")
-    setGeneric("CMetaData", fun)
-}
+setGeneric("CMetaData", function(object) standardGeneric("CMetaData"))
 setMethod("CMetaData", "Corpus", function(object) object@CMetaData)
 
-if (!isGeneric("DBControl")) {
-    if (is.function("DBControl"))
-        fun <- DBControl
-    else fun <- function(object) standardGeneric("DBControl")
-    setGeneric("DBControl", fun)
-}
+setGeneric("DBControl", function(object) standardGeneric("DBControl"))
 setMethod("DBControl", "Corpus", function(object) object@DBControl)
 
-# Repository for text document collections
+# Repository for corpora
 setClass("TextRepository",
          representation(RepoMetaData = "list"),
          contains = c("list"))
 
-if (!isGeneric("RepoMetaData")) {
-    if (is.function("RepoMetaData"))
-        fun <- RepoMetaData
-    else fun <- function(object) standardGeneric("RepoMetaData")
-    setGeneric("RepoMetaData", fun)
-}
+setGeneric("RepoMetaData", function(object) standardGeneric("RepoMetaData"))
 setMethod("RepoMetaData", "TextRepository", function(object) object@RepoMetaData)
-
-# Term-document matrix
-setClass("TermDocMatrix",
-         representation(Data = "Matrix", Weighting = "character"))
-
-if (!isGeneric("Data")) {
-    if (is.function("Data"))
-        fun <- Data
-    else
-        fun <- function(object) standardGeneric("Data")
-    setGeneric("Data", fun)
-}
-setMethod("Data", "TermDocMatrix", function(object) object@Data)
-setGeneric("Data<-", function(x, value) standardGeneric("Data<-"))
-setReplaceMethod("Data", "TermDocMatrix", function(x, value) {
-  x@Data <- value
-  x
-})
-
-if (!isGeneric("Weighting")) {
-    if (is.function("Weighting"))
-        fun <- Weighting
-    else
-        fun <- function(object) standardGeneric("Weighting")
-    setGeneric("Weighting", fun)
-}
-setMethod("Weighting", "TermDocMatrix", function(object) object@Weighting)
-setGeneric("Weighting<-", function(x, value) standardGeneric("Weighting<-"))
-setReplaceMethod("Weighting", "TermDocMatrix", function(x, value) {
-  x@Weighting <- value
-  x
-})

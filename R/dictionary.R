@@ -3,14 +3,8 @@
 setClass("Dictionary",
          contains = "character")
 
-setGeneric("Dictionary", function(object) standardGeneric("Dictionary"))
-setMethod("Dictionary",
-          signature(object = "character"),
-          function(object) {
-              new("Dictionary", .Data = object)
-          })
-setMethod("Dictionary",
-          signature(object = "TermDocMatrix"),
-          function(object) {
-              new("Dictionary", .Data = colnames(Data(object)))
-          })
+Dictionary <- function(x) UseMethod("Dictionary", x)
+Dictionary.character <- function(x)
+    new("Dictionary", .Data = x)
+Dictionary.TermDocumentMatrix <- Dictionary.DocumentTermMatrix <- function(x)
+    new("Dictionary", .Data = Terms(x))

@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{GmaneSource}
 \alias{GmaneSource,character-method}
-\alias{GmaneSource,connection-method}
+\alias{GmaneSource,ANY-method}
 \title{Gmane Source}
 \description{
   Constructs a source for a Gmane mailing list RSS feed.

@@ -2,6 +2,8 @@
 
 # Preprocess the Reuters21578 XML data
 preprocessReut21578XML <- function(ReutersDir, ReutersOapfDir, fixEnc = TRUE) {
+    require("XML")
+
     dir.create(ReutersOapfDir, recursive = TRUE)
     files <- dir(ReutersDir, pattern = "\\.xml", full.names = TRUE)
 
@@ -16,15 +18,15 @@ preprocessReut21578XML <- function(ReutersDir, ReutersOapfDir, fixEnc = TRUE) {
     # Write out each article in a seperate file
     counter <- 1
     for (f in files) {
-        tree <- xmlTreeParse(f)
-        xmlApply(xmlRoot(tree),
+        tree <- XML::xmlTreeParse(f)
+        XML::xmlApply(XML::xmlRoot(tree),
                  function(article) {
                      output.file <- paste(ReutersOapfDir, "reut-",
                                           gsub(" ", "0", format(counter, width = 5)),
                                           ".xml", sep = "")
                      counter <<- counter + 1
                      con <- file(output.file, "w")
-                     saveXML(article, file = con)
+                     XML::saveXML(article, file = con)
                      close(con)
                  })
     }

@@ -2,9 +2,9 @@
 
 # The "..." are additional arguments for the FunctionGenerator reader
 setGeneric("Corpus", function(object,
-                                  readerControl = list(reader = object@DefaultReader, language = "en_US", load = TRUE),
-                                  dbControl = list(useDb = FALSE, dbName = "", dbType = "DB1"),
-                                  ...) standardGeneric("Corpus"))
+                              readerControl = list(reader = object@DefaultReader, language = "en_US", load = TRUE),
+                              dbControl = list(useDb = FALSE, dbName = "", dbType = "DB1"),
+                              ...) standardGeneric("Corpus"))
 setMethod("Corpus",
           signature(object = "Source"),
           function(object,
@@ -16,11 +16,11 @@ setMethod("Corpus",
               if (is(readerControl$reader, "FunctionGenerator"))
                   readerControl$reader <- readerControl$reader(...)
               if (is.null(readerControl$language))
-                  readerControl$language = "en_US"
-              if (is.null(readerControl$load))
-                  readerControl$load = TRUE
+                  readerControl$language <- "en_US"
+              if (is.null(readerControl$load) || (!object@LoDSupport))
+                  readerControl$load <- TRUE
 
-              if (dbControl$useDb) {
+              if (dbControl$useDb && require("filehash")) {
                   if (!dbCreate(dbControl$dbName, dbControl$dbType))
                       stop("error in creating database")
                   db <- dbInit(dbControl$dbName, dbControl$dbType)
@@ -32,33 +32,37 @@ setMethod("Corpus",
               else
                   list()
 
-              counter <- 1
-              while (!eoi(object)) {
-                  object <- stepNext(object)
-                  elem <- getElem(object)
-                  # If there is no Load on Demand support
-                  # we need to load the corpus into memory at startup
-                  if (!object@LoDSupport)
-                      readerControl$load <- TRUE
-                  doc <- readerControl$reader(elem, readerControl$load, readerControl$language, as.character(counter))
-                  if (dbControl$useDb) {
-                      dbInsert(db, ID(doc), doc)
-                      if (object@Length > 0)
-                          tdl[[counter]] <- ID(doc)
-                      else
-                          tdl <- c(tdl, ID(doc))
+              if ((!dbControl$useDb) && object@Vectorized)
+                  tdl <- lapply(mapply(c, pGetElem(object), id = seq_len(object@Length), SIMPLIFY = FALSE),
+                                function(x) readerControl$reader(x[c("content", "uri")],
+                                                                 readerControl$load,
+                                                                 readerControl$language,
+                                                                 as.character(x$id)))
+              else {
+                  counter <- 1
+                  while (!eoi(object)) {
+                      object <- stepNext(object)
+                      elem <- getElem(object)
+                      doc <- readerControl$reader(elem, readerControl$load, readerControl$language, as.character(counter))
+                      if (dbControl$useDb && require("filehash")) {
+                          dbInsert(db, ID(doc), doc)
+                          if (object@Length > 0)
+                              tdl[[counter]] <- ID(doc)
+                          else
+                              tdl <- c(tdl, ID(doc))
+                      }
+                      else {
+                          if (object@Length > 0)
+                              tdl[[counter]] <- doc
+                          else
+                              tdl <- c(tdl, list(doc))
+                      }
+                      counter <- counter + 1
                   }
-                  else {
-                      if (object@Length > 0)
-                          tdl[[counter]] <- doc
-                      else
-                          tdl <- c(tdl, list(doc))
-                  }
-                  counter <- counter + 1
               }
 
               df <- data.frame(MetaID = rep(0, length(tdl)), stringsAsFactors = FALSE)
-              if (dbControl$useDb) {
+              if (dbControl$useDb && require("filehash")) {
                   dbInsert(db, "DMetaData", df)
                   dmeta.df <- data.frame(key = "DMetaData", subset = I(list(NA)))
               }
@@ -67,7 +71,7 @@ setMethod("Corpus",
 
               cmeta.node <- new("MetaDataNode",
                             NodeID = 0,
-                            MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
+                            MetaData = list(create_date = as.POSIXlt(Sys.time(), tz = "GMT"), creator = Sys.getenv("LOGNAME")),
                             children = list())
 
               return(new("Corpus", .Data = tdl, DMetaData = dmeta.df, CMetaData = cmeta.node, DBControl = dbControl))
@@ -91,7 +95,7 @@ setMethod("loadDoc",
 setMethod("loadDoc",
           signature(object =  "XMLTextDocument"),
           function(object, ...) {
-              if (!Cached(object)) {
+              if (!Cached(object) && require("XML")) {
                   con <- eval(URI(object))
                   corpus <- paste(readLines(con), "\n", collapse = "")
                   close(con)
@@ -171,7 +175,7 @@ setMethod("tmMap",
           function(object, FUN, ..., lazy = FALSE) {
               result <- object
               # Note that text corpora are automatically loaded into memory via \code{[[}
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   if (lazy)
                       warning("lazy mapping is deactived when using database backend")
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
@@ -238,6 +242,8 @@ setMethod("asPlain",
 setMethod("asPlain",
           signature(object = "XMLTextDocument"),
           function(object, FUN, ...) {
+              require("XML")
+
               corpus <- Content(object)
 
               # As XMLDocument is no native S4 class, restore valid information
@@ -249,6 +255,8 @@ setMethod("asPlain",
 setMethod("asPlain",
           signature(object = "Reuters21578Document"),
           function(object, FUN, ...) {
+              require("XML")
+
               FUN <- convertReut21578XMLPlain
               corpus <- Content(object)
 
@@ -317,7 +325,7 @@ setGeneric("appendElem", function(object, data, meta = NULL) standardGeneric("ap
 setMethod("appendElem",
           signature(object = "Corpus", data = "TextDocument"),
           function(object, data, meta = NULL) {
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   if (dbExists(db, ID(data)))
                       warning("document with identical ID already exists")
@@ -388,7 +396,7 @@ setMethod("[",
 
               object <- x
               object@.Data <- x@.Data[i, ..., drop = FALSE]
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   index <- object@DMetaData[[1 , "subset"]]
                   if (any(is.na(index)))
                       object@DMetaData[[1 , "subset"]] <- i
@@ -404,7 +412,7 @@ setMethod("[<-",
           signature(x = "Corpus", i = "ANY", j = "ANY", value = "ANY"),
           function(x, i, j, ... , value) {
               object <- x
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   counter <- 1
                   for (id in object@.Data[i, ...]) {
@@ -424,7 +432,7 @@ setMethod("[<-",
 setMethod("[[",
           signature(x = "Corpus", i = "ANY", j = "ANY"),
           function(x, i, j, ...) {
-              if (DBControl(x)[["useDb"]]) {
+              if (DBControl(x)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
                   result <- dbFetch(db, x@.Data[[i]])
                   return(loadDoc(result))
@@ -441,7 +449,7 @@ setMethod("[[<-",
           signature(x = "Corpus", i = "ANY", j = "ANY", value = "ANY"),
           function(x, i, j, ..., value) {
               object <- x
-              if (DBControl(object)[["useDb"]]) {
+              if (DBControl(object)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   index <- object@.Data[[i]]
                   db[[index]] <- value
@@ -489,27 +497,23 @@ update_id <- function(object, id = 0, mapping = NULL, left.mapping = NULL, level
 
 setMethod("c",
           signature(x = "Corpus"),
-          function(x, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
+          function(x, ..., meta = list(merge_date = as.POSIXlt(Sys.time(), tz = "GMT"), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
               args <- list(...)
               if (length(args) == 0)
                   return(x)
 
               if (!all(sapply(args, inherits, "Corpus")))
-                  stop("not all arguments are text document collections")
-              if (DBControl(x)[["useDb"]] == TRUE || any(unlist(sapply(args, DBControl)["useDb", ])))
-                  stop("concatenating text document collections with activated database is not supported")
+                  stop("not all arguments are corpora")
+              if (DBControl(x)[["useDb"]] || any(unlist(sapply(args, DBControl)["useDb", ])))
+                  stop("concatenating corpora with activated database is not supported")
 
-              result <- x
-              for (c in args) {
-                  result <- c2(result, c)
-              }
-              return(result)
+              Reduce(c2, base::c(list(x), args))
           })
 
-setGeneric("c2", function(x, y, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) standardGeneric("c2"))
+setGeneric("c2", function(x, y, ..., meta = list(merge_date = as.POSIXlt(Sys.time(), tz = "GMT"), merger = Sys.getenv("LOGNAME")), recursive = TRUE) standardGeneric("c2"))
 setMethod("c2",
           signature(x = "Corpus", y = "Corpus"),
-          function(x, y, ..., meta = list(merge_date = Sys.time(), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
+          function(x, y, ..., meta = list(merge_date = as.POSIXlt(Sys.time(), tz = "GMT"), merger = Sys.getenv("LOGNAME")), recursive = TRUE) {
               object <- x
               # Concatenate data slots
               object@.Data <- c(as(x, "list"), as(y, "list"))
@@ -572,7 +576,7 @@ setMethod("c",
               dmeta.df <- data.frame(MetaID = rep(0, length(list(x, ...))), stringsAsFactors = FALSE)
               cmeta.node <- new("MetaDataNode",
                             NodeID = 0,
-                            MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
+                            MetaData = list(create_date = as.POSIXlt(Sys.time(), tz = "GMT"), creator = Sys.getenv("LOGNAME")),
                             children = list())
 
               return(new("Corpus",
@@ -592,8 +596,8 @@ setMethod("show",
           signature(object = "Corpus"),
           function(object){
               cat(sprintf(ngettext(length(object),
-                                   "A text document collection with %d text document\n",
-                                   "A text document collection with %d text documents\n"),
+                                   "A corpus with %d text document\n",
+                                   "A corpus with %d text documents\n"),
                           length(object)))
     })
 
@@ -613,26 +617,24 @@ setMethod("summary",
               }
     })
 
-setGeneric("inspect", function(object) standardGeneric("inspect"))
-setMethod("inspect",
-          signature("Corpus"),
-          function(object) {
-              summary(object)
-              cat("\n")
-              if (DBControl(object)[["useDb"]]) {
-                  db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
-                  show(dbMultiFetch(db, unlist(object)))
-              }
-              else
-                  print(noquote(lapply(object, identity)))
-          })
+inspect <- function(x) UseMethod("inspect", x)
+inspect.Corpus <- function(x) {
+    summary(x)
+    cat("\n")
+    if (DBControl(x)[["useDb"]] && require("filehash")) {
+        db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
+        show(filehash::dbMultiFetch(db, unlist(x)))
+    }
+    else
+        print(noquote(lapply(x, identity)))
+}
 
 # No metadata is checked
 setGeneric("%IN%", function(x, y) standardGeneric("%IN%"))
 setMethod("%IN%",
           signature(x = "TextDocument", y = "Corpus"),
           function(x, y) {
-              if (DBControl(y)[["useDb"]]) {
+              if (DBControl(y)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(y)[["dbName"]], DBControl(y)[["dbType"]])
                   result <- any(sapply(y, function(x, z) {x %in% Content(z)}, x))
               }
@@ -644,7 +646,7 @@ setMethod("%IN%",
 setMethod("lapply",
           signature(X = "Corpus"),
           function(X, FUN, ...) {
-              if (DBControl(X)[["useDb"]]) {
+              if (DBControl(X)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- lapply(dbMultiFetch(db, unlist(X)), FUN, ...)
               }
@@ -660,7 +662,7 @@ setMethod("lapply",
 setMethod("sapply",
           signature(X = "Corpus"),
           function(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE) {
-              if (DBControl(X)[["useDb"]]) {
+              if (DBControl(X)[["useDb"]] && require("filehash")) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- sapply(dbMultiFetch(db, unlist(X)), FUN, ...)
               }
@@ -676,14 +678,14 @@ setMethod("sapply",
 setAs("list", "Corpus", function(from) {
     cmeta.node <- new("MetaDataNode",
                       NodeID = 0,
-                      MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
+                      MetaData = list(create_date = as.POSIXlt(Sys.time(), tz = "GMT"), creator = Sys.getenv("LOGNAME")),
                       children = list())
     data <- list()
     counter <- 1
     for (f in from) {
         doc <- new("PlainTextDocument",
                    .Data = f, URI = NULL, Cached = TRUE,
-                   Author = "", DateTimeStamp = Sys.time(),
+                   Author = "", DateTimeStamp = as.POSIXlt(Sys.time(), tz = "GMT"),
                    Description = "", ID = as.character(counter),
                    Origin = "", Heading = "", Language = "en_US")
         data <- c(data, list(doc))

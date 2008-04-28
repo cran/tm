@@ -7,7 +7,7 @@
   Constructs a text repository.
 }
 \usage{
-\S4method{TextRepository}{Corpus}(object, meta = list(created = Sys.time()))
+\S4method{TextRepository}{Corpus}(object, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT")))
 }
 \arguments{
   \item{object}{A directory containing the documents.}
