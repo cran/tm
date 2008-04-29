@@ -2,7 +2,8 @@
 \docType{methods}
 \alias{Corpus}
 \alias{Corpus,Source-method}
-\title{Text document collection}
+\alias{coerce,list,Corpus-method}
+\title{Corpus}
 \description{
   Constructs a text document collection (corpus).
 }
@@ -12,24 +13,25 @@ language = "en_US", load = TRUE), dbControl = list(useDb = FALSE, dbName = "",
 dbType = "DB1"), ...)
 }
 \arguments{
-  \item{object}{a \code{Source} object.}
-  \item{readerControl}{a list with the named components \code{reader}
+  \item{object}{A \code{Source} object.}
+  \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
-    found in \code{object}, \code{language} giving the text's language, and
+    found in \code{object}, \code{language} giving the text's language
+    (preferably in \acronym{Iso} 639-1 format), and
     \code{load} being a logical value indicating whether the text corpus of
     documents should be loaded immediately into memory (\code{load = TRUE}) or loaded when
     necessary (\code{load = FALSE}). This allows to minimize memory
     demands for large document collections. If \code{object} does not
     support load on demand the text corpus is automatically loaded,
     i.e., this argument is overruled.}
-  \item{dbControl}{a list with the named components \code{useDb}
+  \item{dbControl}{A list with the named components \code{useDb}
     indicating that database support should be activated, \code{dbName}
     giving the filename holding the sourced out objects (i.e., the
     database), and \code{dbType} holding a valid database type as
     supported by \pkg{filehash}. Under activated database
     support the \code{tm} packages tries to keep as few as possible
     resources in memory under usage of the database.}
-  \item{...}{optional arguments for the \code{reader}.}
+  \item{...}{Optional arguments for the \code{reader}.}
 }
 \value{
   An S4 object of class \code{Corpus} which extends the class

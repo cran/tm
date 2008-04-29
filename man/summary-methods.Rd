@@ -10,9 +10,9 @@ Methods for function \code{summary} in package \pkg{tm}.
 \section{Methods}{
   \describe{
     \item{object = "Corpus"}{Prints a description including information
-      on available metadata tags.}
+      on available meta data tags.}
     \item{object = "TextRepository"}{Prints a description including information
-      on available metadata tags.}
+      on available meta data tags.}
   }
 }
 \examples{

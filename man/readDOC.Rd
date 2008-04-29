@@ -1,6 +1,6 @@
 \name{readDOC}
 \alias{readDOC}
-\title{Read In A MS Word Document}
+\title{Read In a MS Word Document}
 \description{
   Returns a function which reads in a Microsoft Word
   document extracting its text.
@@ -9,7 +9,7 @@
 readDOC(...)
 }
 \arguments{
-  \item{...}{arguments for the generator function.}
+  \item{...}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -27,7 +27,7 @@ readDOC(...)
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}.  The first element must hold the document corpus to
     be read in, the second element must hold a call to the document
-    corpus.  The call is evaluated upon a request for load on demand.}
+    corpus. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} giving the text's language.}
   \item{load}{A \code{logical} value indicating whether the document
     corpus should be immediately loaded into memory.}

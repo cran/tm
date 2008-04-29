@@ -9,7 +9,7 @@
 }
 \section{Methods}{
   \describe{
-    \item{object = "PlainTextDocument", words = "character"}{return
+    \item{object = "PlainTextDocument", words = "character"}{Return
       \code{TRUE} if \code{words} appear in \code{object}'s text corpus.}
   }
 }

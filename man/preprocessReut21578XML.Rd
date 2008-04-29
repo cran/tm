@@ -2,8 +2,8 @@
 \alias{preprocessReut21578XML}
 \title{Preprocess the Reuters21578 XML archive.}
 \description{
-  Preprocess the Reuters21578 XML archive by correcting invalid UTF8
-  encoding and copying each text document into a separate file.
+  Preprocess the Reuters21578 XML archive by correcting invalid UTF-8
+  encodings and copying each text document into a separate file.
 }
 \usage{
 preprocessReut21578XML(ReutersDir, ReutersOapfDir, fixEnc = TRUE)
@@ -11,7 +11,7 @@ preprocessReut21578XML(ReutersDir, ReutersOapfDir, fixEnc = TRUE)
 \arguments{
   \item{ReutersDir}{a character describing the input directory.}
   \item{ReutersOapfDir}{a character describing the output directory.}
-  \item{fixEnc}{a logical value indicating whether the invalid UTF8
+  \item{fixEnc}{a logical value indicating whether a invalid UTF-8
     encoding in the Reuters21578 XML dataset should be corrected.}
 }
 \value{

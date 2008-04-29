@@ -6,6 +6,7 @@
 \alias{eoi,CSVSource-method}
 \alias{eoi,ReutersSource-method}
 \alias{eoi,GmaneSource-method}
+\alias{eoi,VectorSource-method}
 \title{Methods for Function eoi in Package `tm'}
 \description{
   Methods for function \code{eoi} in package \pkg{tm}..
@@ -19,6 +20,8 @@
     \item{object = "ReutersSource"}{returns \code{TRUE} if the last item has
       been reached.}
     \item{object = "GmaneSource"}{returns \code{TRUE} if the last item has
+      been reached.}
+    \item{object = "VectorSource"}{returns \code{TRUE} if the last item has
       been reached.}
   }
 }

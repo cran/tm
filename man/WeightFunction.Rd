@@ -10,10 +10,10 @@
 WeightFunction(object, name)
 }
 \arguments{
-  \item{object}{a function which takes a \code{dgCMatrix} term-document
+  \item{object}{A function which takes a \code{dgCMatrix} term-document
     matrix with term frequencies as input, weights the elements, and
     returns the weighted matrix.}
-  \item{name}{a character naming the weighting function}
+  \item{name}{A character naming the weighting function}
 }
 \value{
   An S4 object of class \code{WeightFunction} which extends the class

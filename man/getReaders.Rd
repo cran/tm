@@ -1,6 +1,6 @@
 \name{getReaders}
 \alias{getReaders}
-\title{Get available readers}
+\title{Get Available Readers}
 \description{
   Get available readers.
 }

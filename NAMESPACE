@@ -9,7 +9,10 @@ export(
        "stemCompletion",
        "getFilters",
        "getReaders",
+       "getSources",
        "getTransformations",
+       "makeChunks",
+       "materialize",
        "readPlain",
        "readReut21578XML",
        "readRCV1",
@@ -39,6 +42,7 @@ exportMethods(
               "TermDocMatrix",
               "Dictionary",
               "DirSource",
+              "VectorSource",
               "CSVSource",
               "ReutersSource",
               "GmaneSource",
@@ -70,6 +74,8 @@ exportMethods(
 
               "meta",
               "meta<-",
+              "DublinCore",
+              "DublinCore<-",
 
               # Corpus
               "DMetaData",
@@ -108,11 +114,12 @@ exportMethods(
               "removeSignature",
               "removeWords",
               "removePunctuation",
-              "replaceWords",
+              "replacePatterns",
               "tmFilter",
               "tmIndex",
               "searchFullText",
               "tmIntersect",
+              "as.matrix",
               "dim",
               "dimnames",
               "ncol",
@@ -131,6 +138,7 @@ exportMethods(
               "[[",
               "[[<-",
               "c",
+              "coerce", # for setAs
               "length",
               "show",
               "summary",
@@ -153,8 +161,11 @@ exportClasses("TextDocument",
               "Dictionary",
               "Source",
               "DirSource",
+              "VectorSource",
               "CSVSource",
               "ReutersSource",
               "GmaneSource",
               "FunctionGenerator",
               "WeightFunction")
+
+useDynLib("tm")

@@ -3,7 +3,7 @@
 \alias{TextRepository-class}
 \alias{RepoMetaData}
 \alias{RepoMetaData,TextRepository-method}
-\title{Text repository}
+\title{Text Repository}
 \description{
   A class representing a repository of text document collections.
 }
@@ -14,8 +14,8 @@
 }
 \section{Slots}{
   \describe{
-    \item{\code{RepresentationMetaData}:}{Object of class \code{list}
-      containing representational metadata for the text document
+    \item{\code{RepoMetaData}:}{Object of class \code{list}
+      containing meta data for the text document
       collections in form of tag-value pairs.}
   }
 }
@@ -24,8 +24,8 @@
 }
 \section{Methods}{
   \describe{
-    \item{RepresentationMetaData}{\code{signature(object = "TextRepository")}:
-      returns representational metadata in form of a tag-value paired
+    \item{RepoMetaData}{\code{signature(object = "TextRepository")}:
+      returns meta data in form of a tag-value paired
       list.}
   }
 }

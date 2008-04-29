@@ -1,5 +1,5 @@
 setMethod("show",
           signature(object = "PlainTextDocument"),
           function(object){
-              print(Content(object))
+              print(noquote(Content(object)))
     })

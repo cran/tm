@@ -9,7 +9,7 @@
 \alias{Weighting<-,TermDocMatrix-method}
 \alias{Data,TermDocMatrix-method}
 \alias{Data<-,TermDocMatrix-method}
-\title{Term-document matrix}
+\title{Term-Document Matrix}
 \description{
   A class representing a sparse term-document matrix. A column represents a
   term, and a row the ID of a text document, respectively.
@@ -25,20 +25,21 @@
       matrix.}
     \item{\code{Weighting}:}{Object of class \code{character} containing
       the mode which was applied on the matrix. Possible are term
-      frequency \code{"tf"}, term frequency-inverse document frequency
-      \code{"tf-idf"}, binary \code{"bin"} and logical \code{"logical"}.}
+      frequency \code{"term frequency"}, term frequency-inverse document frequency
+      \code{"term frequency - inverse document frequency"}, binary
+      \code{"binary"} and logical \code{"logical"}.}
   }
 }
 \section{Methods}{
   \describe{
-    \item{Data}{\code{signature(object = "TermDocMatrix")}: return the
-      sparse matrix}
-    \item{Data<-}{\code{signature(object = "TermDocMatrix")}: sets the
-      sparse matrix}
-    \item{Weighting}{\code{signature(object = "TermDocMatrix")}: returns the
-      weighting mode}
-    \item{Weighting<-}{\code{signature(object = "TermDocMatrix")}: sets the
-      weighting mode}
+    \item{Data}{\code{signature(object = "TermDocMatrix")}: Return the
+      sparse matrix.}
+    \item{Data<-}{\code{signature(object = "TermDocMatrix")}: Sets the
+      sparse matrix.}
+    \item{Weighting}{\code{signature(object = "TermDocMatrix")}: Returns the
+      weighting mode.}
+    \item{Weighting<-}{\code{signature(object = "TermDocMatrix")}: Sets the
+      weighting mode.}
   }
 }
 \author{Ingo Feinerer}

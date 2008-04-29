@@ -1,8 +1,8 @@
 \name{getTransformations}
 \alias{getTransformations}
-\title{Get available filters}
+\title{Get Available Transformations}
 \description{
-  Get available transformations.
+  Get available transformations (mappings).
 }
 \usage{
 getTransformations()

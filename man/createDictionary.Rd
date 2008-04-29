@@ -10,7 +10,7 @@ Methods for function \code{createDictionary} in package \pkg{tm}.
 \section{Methods}{
   \describe{
     \item{object = "TermDocMatrix"}{Creates a dictionary holding the
-      column names of \code{object} as terms..
+      column names of \code{object} as terms.
     }
   }
 }

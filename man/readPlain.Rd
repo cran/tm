@@ -1,6 +1,6 @@
 \name{readPlain}
 \alias{readPlain}
-\title{Read In A Text Document}
+\title{Read In a Text Document}
 \description{
   Returns a function which reads in a text document without knowledge
   about its internal structure and possible available metadata.
@@ -24,7 +24,7 @@ readPlain(...)
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}.  The first element must hold the document corpus to
     be read in, the second element must hold a call to the document
-    corpus.  The call is evaluated upon a request for load on demand.}
+    corpus. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} giving the text's language.}
   \item{load}{A \code{logical} value indicating whether the document
     corpus should be immediately loaded into memory.}

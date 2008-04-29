@@ -12,12 +12,12 @@
 \title{Methods for Subset Functions in Package `tm'}
 \description{
   Methods for subset functions \code{[}, \code{[<-}, \code{[[} and
-  \code{[[<-} in package \pkg{tm}..
+  \code{[[<-} in package \pkg{tm}.
 }
 \arguments{
-  \item{x = "Corpus"}{the text document collection to be subsetted
+  \item{x = "Corpus"}{The text document collection to be subsetted
     or modified.}
-  \item{x = "TermDocMatrix"}{the term-document matrix to be subsetted.}
+  \item{x = "TermDocMatrix"}{The term-document matrix to be subsetted.}
 }
 \examples{
 data("crude")

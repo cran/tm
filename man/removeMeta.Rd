@@ -12,9 +12,10 @@ Methods for function \code{removeMeta} in package \pkg{tm}.
   \describe{
     \item{object = "Corpus", cname = NULL, dname = NULL}{Returns a text
       document collection where the \code{cname} is removed from the
-      \code{CMetaData} and \code{dname} is removed from the \code{DMetaData}.}  
+      \code{CMetaData} and \code{dname} is removed from the
+      \code{DMetaData} of corpus \code{object}.}  
     \item{object = "TextRepository", cname = NULL, dname = NULL}{Returns a text
-      repository where \code{cname} is removed from the metadata slot of the
+      repository where \code{cname} is removed from the meta data slot of the
       \code{object} text repository.}
   }
 }

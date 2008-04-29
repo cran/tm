@@ -1,15 +1,15 @@
 \name{readPDF}
 \alias{readPDF}
-\title{Read In A PDF Document}
+\title{Read In a PDF Document}
 \description{
   Returns a function which reads in a portable document format (PDF)
-  document extracting both its text and its metadata.
+  document extracting both its text and its meta data.
 }
 \usage{
 readPDF(...)
 }
 \arguments{
-  \item{...}{arguments for the generator function.}
+  \item{...}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -27,7 +27,7 @@ readPDF(...)
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}.  The first element must hold the document corpus to
     be read in, the second element must hold a call to the document
-    corpus.  The call is evaluated upon a request for load on demand.}
+    corpus. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} giving the text's language.}
   \item{load}{A \code{logical} value indicating whether the document
     corpus should be immediately loaded into memory.}
@@ -35,7 +35,7 @@ readPDF(...)
     string for the returned text document.}
 
   The function returns a \code{PlainTextDocument} representing the text
-  and metadata in \code{content}.
+  and meta data in \code{content}.
 }
 \author{Ingo Feinerer}
 \keyword{file}

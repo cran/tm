@@ -9,12 +9,12 @@ Methods for function \code{tmIndex} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "Corpus", FUN  = sFilter, doclevel = FALSE}{If
+    \item{object = "Corpus", FUN = sFilter, doclevel = FALSE}{If
       \code{doclevel} is set, the method applies \code{FUN} onto each element
       of \code{object} and returns the indices; otherwise
-      \code{FUN} is applied to \code{object} itself. Note that metadata is
-      automatically passed to \code{FUN}. The function \code{FUN} must
-      return a Boolean value.}
+      \code{FUN} is applied to \code{object} itself. Note that meta data
+      (\code{\link{DMetaData}}) is automatically passed to
+      \code{FUN}. The function \code{FUN} must return a Boolean value.}
   }
 }
 \seealso{

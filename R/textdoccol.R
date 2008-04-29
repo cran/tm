@@ -153,24 +153,65 @@ setMethod("tmUpdate",
               return(object)
           })
 
-setGeneric("tmMap", function(object, FUN, ...) standardGeneric("tmMap"))
+setGeneric("tmMap", function(object, FUN, ..., lazy = FALSE) standardGeneric("tmMap"))
 setMethod("tmMap",
           signature(object = "Corpus", FUN = "function"),
-          function(object, FUN, ...) {
+          function(object, FUN, ..., lazy = FALSE) {
               result <- object
               # Note that text corpora are automatically loaded into memory via \code{[[}
               if (DBControl(object)[["useDb"]]) {
+                  if (lazy)
+                      warning("lazy mapping is deactived when using database backend")
                   db <- dbInit(DBControl(object)[["dbName"]], DBControl(object)[["dbType"]])
                   i <- 1
                   for (id in unlist(object)) {
                       db[[id]] <- FUN(object[[i]], ..., DMetaData = DMetaData(object))
                       i <- i + 1
                   }
+                  # Suggested by Christian Buchta
+                  dbReorganize(db)
               }
-              else
-                  result@.Data <- lapply(object, FUN, ..., DMetaData = DMetaData(object))
+              else {
+                  # Lazy mapping
+                  if (lazy) {
+                      lazyTmMap <- meta(object, tag = "lazyTmMap", type = "corpus")
+                      if (is.null(lazyTmMap)) {
+                          meta(result, tag = "lazyTmMap", type = "corpus") <-
+                              list(index = rep(TRUE, length(result)),
+                                   maps = list(function(x, DMetaData) FUN(x, ..., DMetaData = DMetaData)))
+                      }
+                      else {
+                          lazyTmMap$maps <- c(lazyTmMap$maps, list(function(x, DMetaData) FUN(x, ..., DMetaData = DMetaData)))
+                          meta(result, tag = "lazyTmMap", type = "corpus") <- lazyTmMap
+                      }
+                  }
+                  else
+                      result@.Data <- lapply(object, FUN, ..., DMetaData = DMetaData(object))
+              }
               return(result)
           })
+
+# Materialize lazy mappings
+# Improvements by Christian Buchta
+materialize <- function(corpus, range = seq_along(corpus)) {
+    lazyTmMap <- meta(corpus, tag = "lazyTmMap", type = "corpus")
+    if (!is.null(lazyTmMap)) {
+       # Make valid and lazy index
+       idx <- (seq_along(corpus) %in% range) & lazyTmMap$index
+       if (any(idx)) {
+           res <- lapply(corpus@.Data[idx], loadDoc)
+           for (m in lazyTmMap$maps)
+               res <- lapply(res, m, DMetaData = DMetaData(corpus))
+           corpus@.Data[idx] <- res
+           lazyTmMap$index[idx] <- FALSE
+       }
+    }
+    # Clean up if everything is materialized
+    if (!any(lazyTmMap$index))
+        lazyTmMap <- NULL
+    meta(corpus, tag = "lazyTmMap", type = "corpus") <- lazyTmMap
+    return(corpus)
+}
 
 setGeneric("asPlain", function(object, FUN, ...) standardGeneric("asPlain"))
 setMethod("asPlain",
@@ -218,7 +259,8 @@ setMethod("asPlain",
           function(object, FUN, ...) {
               new("PlainTextDocument", .Data = Content(object), Cached = TRUE, URI = "", Author = Author(object),
                   DateTimeStamp = DateTimeStamp(object), Description = Description(object), ID = ID(object),
-                  Origin = Origin(object), Heading = Heading(object), Language = Language(object))
+                  Origin = Origin(object), Heading = Heading(object), Language = Language(object),
+                  LocalMetaData = LocalMetaData(object))
           })
 setMethod("asPlain",
           signature(object = "StructuredTextDocument"),
@@ -226,7 +268,8 @@ setMethod("asPlain",
               new("PlainTextDocument", .Data = unlist(Content(object)), Cached = TRUE,
                   URI = "", Author = Author(object), DateTimeStamp = DateTimeStamp(object),
                   Description = Description(object), ID = ID(object), Origin = Origin(object),
-                  Heading = Heading(object), Language = Language(object))
+                  Heading = Heading(object), Language = Language(object),
+                  LocalMetaData = LocalMetaData(object))
           })
 
 setGeneric("tmFilter", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmFilter"))
@@ -389,8 +432,12 @@ setMethod("[[",
                   result <- dbFetch(db, x@.Data[[i]])
                   return(loadDoc(result))
               }
-              else
+              else {
+                  lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
+                  if (!is.null(lazyTmMap))
+                      .Call("copyCorpus", x, materialize(x, i))
                   return(loadDoc(x@.Data[[i]]))
+              }
           })
 
 setMethod("[[<-",
@@ -402,8 +449,16 @@ setMethod("[[<-",
                   index <- object@.Data[[i]]
                   db[[index]] <- value
               }
-              else
+              else {
+                  # Mark new objects as not active for lazy mapping
+                  lazyTmMap <- meta(object, tag = "lazyTmMap", type = "corpus")
+                  if (!is.null(lazyTmMap)) {
+                      lazyTmMap$index[i] <- FALSE
+                      meta(object, tag = "lazyTmMap", type = "corpus") <- lazyTmMap
+                  }
+                  # Set the value
                   object@.Data[[i, ...]] <- value
+              }
               return(object)
           })
 
@@ -572,7 +627,7 @@ setMethod("inspect",
                   show(dbMultiFetch(db, unlist(object)))
               }
               else
-                  show(object@.Data)
+                  print(noquote(lapply(object, identity)))
           })
 
 # No metadata is checked
@@ -592,12 +647,17 @@ setMethod("%IN%",
 setMethod("lapply",
           signature(X = "Corpus"),
           function(X, FUN, ...) {
+              print("lapply")
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- lapply(dbMultiFetch(db, unlist(X)), FUN, ...)
               }
-              else
+              else {
+                  lazyTmMap <- meta(X, tag = "lazyTmMap", type = "corpus")
+                  if (!is.null(lazyTmMap))
+                      .Call("copyCorpus", X, materialize(X))
                   result <- base::lapply(X, FUN, ...)
+              }
               return(result)
           })
 
@@ -608,10 +668,36 @@ setMethod("sapply",
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- sapply(dbMultiFetch(db, unlist(X)), FUN, ...)
               }
-              else
+              else {
+                  lazyTmMap <- meta(X, tag = "lazyTmMap", type = "corpus")
+                  if (!is.null(lazyTmMap))
+                      .Call("copyCorpus", X, materialize(X))
                   result <- base::sapply(X, FUN, ...)
+              }
               return(result)
           })
+
+setAs("list", "Corpus", function(from) {
+    cmeta.node <- new("MetaDataNode",
+                      NodeID = 0,
+                      MetaData = list(create_date = Sys.time(), creator = Sys.getenv("LOGNAME")),
+                      children = list())
+    data <- list()
+    counter <- 1
+    for (f in from) {
+        doc <- new("PlainTextDocument",
+                   .Data = f, URI = NULL, Cached = TRUE,
+                   Author = "", DateTimeStamp = Sys.time(),
+                   Description = "", ID = as.character(counter),
+                   Origin = "", Heading = "", Language = "en_US")
+        data <- c(data, list(doc))
+        counter <- counter + 1
+    }
+    return(new("Corpus", .Data = data,
+               DMetaData = data.frame(MetaID = rep(0, length(from)), stringsAsFactors = FALSE),
+               CMetaData = cmeta.node,
+               DBControl = dbControl <- list(useDb = FALSE, dbName = "", dbType = "DB1")))
+})
 
 setGeneric("writeCorpus", function(object, path = ".", filenames = NULL) standardGeneric("writeCorpus"))
 setMethod("writeCorpus",

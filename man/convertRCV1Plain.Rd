@@ -1,6 +1,6 @@
 \name{convertRCV1Plain}
 \alias{convertRCV1Plain}
-\title{Transform A RCV1 Document To A Plain Text Document}
+\title{Transform a RCV1 Document to a Plain Text Document}
 \description{
   Transform a Reuters Corpus Volume 1 XML document to a plain text
   document.

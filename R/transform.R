@@ -110,12 +110,11 @@ setMethod("removeWords",
               return(object)
           })
 
-setGeneric("replaceWords", function(object, words, by, ...) standardGeneric("replaceWords"))
-setMethod("replaceWords",
-          signature(object = "PlainTextDocument", words = "character", by = "character"),
-          function(object, words, by, ...) {
-              pattern <- paste(words, collapse = "|")
-              Content(object) <- gsub(pattern, by, Content(object))
+setGeneric("replacePatterns", function(object, patterns, by, ...) standardGeneric("replacePatterns"))
+setMethod("replacePatterns",
+          signature(object = "PlainTextDocument", patterns = "character", by = "character"),
+          function(object, patterns, by, ...) {
+              Content(object) <- gsub(patterns, by, Content(object))
               return(object)
           })
 

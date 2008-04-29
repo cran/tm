@@ -5,7 +5,7 @@
 \alias{writeCorpus,Corpus-method}
 \title{Methods for Function writeCorpus in Package `tm'}
 \description{
-Methods for function \code{writeCorpus} in Package `tm'
+Methods for function \code{writeCorpus} in Package \pkg{tm}
 }
 \section{Methods}{
   \describe{

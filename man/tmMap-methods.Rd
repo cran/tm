@@ -9,16 +9,26 @@ Methods for function \code{tmMap} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "Corpus", FUN}{Applies \code{FUN} onto each element
+    \item{object = "Corpus", FUN, ..., lazy = FALSE}{Applies \code{FUN} onto each element
       of \code{object}. Note that document specific metadata (i.e.,
       \code{DMetaData(object)} is automatically passed to
       \code{FUN} as argument \code{DMetaData}. \code{FUN} must be a
-      function which returns a \code{TextDocument}.}
+      function which returns a \code{TextDocument}. If \code{lazy} is
+      set, so-called lazy mapping is activated, i.e., mappings are
+      delayed until the documents' content is accessed. Lazy mapping is
+      useful when working with large corpora but only a few documents
+      are accessed, as it avoids applying the mapping to all elements in
+      the document collection.}
   }
 }
 \seealso{
   See \code{\link{getTransformations}} for available transformations
-  shipped with \pkg{tm}.
+  shipped with \pkg{tm}. See \code{\link{materialize}} for manually
+  materializing lazy transformations.
+}
+\details{
+Please be aware that lazy transformations are an experimental feature and
+change R's standard evaluation semantics.
 }
 \examples{
 data("crude")

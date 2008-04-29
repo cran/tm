@@ -1,0 +1,46 @@
+citHeader("To cite in publications use:")
+
+meta <- packageDescription("tm")
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s.", meta$Version)
+
+citEntry(entry = "Manual",
+         title = "tm: Text Mining Package",
+         author = {
+             personList(person(first = "Ingo", last = "Feinerer",
+                               email = "h0125130@wu-wien.ac.at"))
+         },
+         year = year,
+         note = note,
+         url = "http://CRAN.R-project.org/package=tm",
+         textVersion = {
+             paste("Ingo Feinerer",
+                   sprintf("(%s).", year),                         
+                   "tm: Text Mining Package.",
+                   note,
+                   sep = "  ")
+         })
+
+citEntry(entry = "Article",
+         title = "Text Mining Infrastructure in R",
+         author = {
+             personList(person(first = "Ingo", last = "Feinerer",
+                               email = "h0125130@wu-wien.ac.at"),
+			person(first = "Kurt", last = "Hornik",
+                               email = "Kurt.Hornik@R-project.org"),
+			person(first = "David", last = "Meyer",
+                               email = "David.Meyer@wu-wien.ac.at"))
+         },
+         year = 2008,
+         journal = "Journal of Statistical Software",
+         volume = 25,
+         number = 5,
+         url = "http://www.jstatsoft.org/v25/i05/",
+         month = "March",
+         textVersion = {
+             paste("Ingo Feinerer, Kurt Hornik, and David Meyer (2008).",
+                   "Text Mining Infrastructure in R.",
+                   "Journal of Statistical Software 25/5.",
+                   "URL: http://www.jstatsoft.org/v25/i05/.",
+                   sep = "  ")
+         })

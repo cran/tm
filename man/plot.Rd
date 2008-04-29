@@ -1,6 +1,6 @@
 \name{plot}
 \alias{plot.TermDocMatrix}
-\title{Visualize Term-Document Matrix}
+\title{Visualize a Term-Document Matrix}
 \description{
   Visualize correlations between terms of a term-document matrix.
 }
@@ -23,7 +23,7 @@
     threshold. Defaults to \code{0.7}.}
   \item{weighting}{Define whether the line width corresponds to the
     correlation.}
-  \item{attrs}{argument passed to the plot method for class
+  \item{attrs}{Argument passed to the plot method for class
     \code{\link[graph:graphNEL-class]{graphNEL}}.}
   \item{\dots}{Other arguments passed to the
     \code{\link[graph:graphNEL-class]{graphNEL}} plot method.}

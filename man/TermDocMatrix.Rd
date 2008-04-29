@@ -2,7 +2,8 @@
 \docType{methods}
 \alias{TermDocMatrix}
 \alias{TermDocMatrix,Corpus-method}
-\title{Term-document matrix}
+\alias{as.matrix,TermDocMatrix-method}
+\title{Term-Document Matrix}
 \description{
   Constructs a term-document matrix.
 }
@@ -21,8 +22,8 @@ TermDocMatrix(object, control = list())
   An S4 object of class \code{TermDocMatrix} containing a sparse term-document
   matrix. The following slots contain useful information:
 
-  \item{Data}{The sparse \code{Matrix}}
-  \item{Weighting}{The weighting mode applied to the term-document matrix}
+  \item{Data}{The sparse \code{Matrix}.}
+  \item{Weighting}{The weighting mode applied to the term-document matrix.}
 }
 \seealso{
   The documentation to \code{\link{termFreq}} gives an extensive list of

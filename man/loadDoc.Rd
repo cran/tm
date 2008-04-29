@@ -18,7 +18,7 @@ Methods for function \code{loadDoc} in package \pkg{tm}.
       \code{object} from disk into memory and return the new object.}
     \item{object = "NewsgroupDocument"}{Loads the text corpus of
       \code{object} from disk into memory and return the new object.}
-    \item{object = "'StructuredTextDocument"}{Loads the text corpus of
+    \item{object = "StructuredTextDocument"}{Loads the text corpus of
       \code{object} from disk into memory and return the new object.}
   }
 }

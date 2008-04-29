@@ -1,6 +1,6 @@
 \name{getFilters}
 \alias{getFilters}
-\title{Get available filters}
+\title{Get Available Filters}
 \description{
   Get available filters.
 }

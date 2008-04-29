@@ -9,9 +9,9 @@
 }
 \section{Methods}{
   \describe{
-    \item{object = "PlainTextDocument", pattern = "character"}{return
-      \code{TRUE} if the regular expression \code{pattern} matches
-      \code{object}'s text corpus.}
+    \item{object = "PlainTextDocument", pattern = "character"}{Return
+      \code{TRUE} if the regular expression \code{pattern} matches in
+      \code{object}'s text.}
   }
 }
 \examples{

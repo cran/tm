@@ -9,9 +9,9 @@ Methods for function \code{c} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{x = "Corpus"}{concatenates several text document collections
+    \item{x = "Corpus"}{Concatenates several text document collections
       to a single one.}
-    \item{x = "TextDocument"}{concatenates several text documents
+    \item{x = "TextDocument"}{Concatenates several text documents
       to a single text document collection.}
   }
 }

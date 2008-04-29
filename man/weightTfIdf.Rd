@@ -8,7 +8,7 @@
 weightTfIdf(m)
 }
 \arguments{
-  \item{m}{a \code{dgCMatrix} in term frequency format.}
+  \item{m}{A \code{dgCMatrix} in term frequency format.}
 }
 \details{
   Formally this function is a \code{WeightingFunction} with the additional

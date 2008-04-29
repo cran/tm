@@ -10,7 +10,7 @@ Methods for function \code{prescindMeta} in package \pkg{tm}.
 \section{Methods}{
   \describe{
     \item{object = "Corpus", meta = "character"}{Copies the
-      \code{meta} data from document slots or (local) document metadata
+      \code{meta} data from document slots or (local) document meta data
       of all documents in \code{object} to the (global) \code{DMetaData}
       data frame of \code{object} and returns the whole collection.}
   }

@@ -1,10 +1,10 @@
 \name{Reuters21578Document-class}
 \docType{class}
 \alias{Reuters21578Document-class}
-\title{Text document}
+\title{Reuters21578 Text Document}
 \description{
   A class representing a Reuters21578 XML text document with additional
-  information. The XML document itself is represented by inherting from
+  information. The XML document itself is represented by inheriting from
   \code{XMLTextDocument}.
 }
 \section{Objects from the Class}{

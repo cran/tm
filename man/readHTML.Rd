@@ -1,11 +1,11 @@
 \name{readHTML}
 \alias{readHTML}
-\title{Read In A Simple HTML Document}
+\title{Read In a Simple HTML Document}
 \description{
   Returns a function which reads in a simple HTML
   document extracting both its text and its metadata. The reader uses
   \code{h1} headings as structure information whereas text and tags
-  between headings are considered as textual information. Metadata is
+  between headings are considered as textual information. Meta data is
   extracted from \code{meta} tags in the HTML head.
 }
 \usage{
@@ -27,7 +27,7 @@ readHTML(...)
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}.  The first element must hold the document corpus to
     be read in, the second element must hold a call to the document
-    corpus.  The call is evaluated upon a request for load on demand.}
+    corpus. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} giving the text's language.}
   \item{load}{A \code{logical} value indicating whether the document
     corpus should be immediately loaded into memory.}

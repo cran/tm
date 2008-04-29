@@ -9,7 +9,7 @@
 \alias{DBControl,Corpus-method}
 \alias{DMetaData,Corpus-method}
 \alias{DMetaData<-,Corpus-method}
-\title{Text document collection}
+\title{Corpus}
 \description{
   A class representing a collection of text documents (denoted as corpus
   in linguistics).
@@ -42,12 +42,12 @@ Class \code{list}, directly.
 }
 \section{Methods}{
   \describe{
-    \item{CMetaData}{\code{signature(object = "Corpus")}: returns the
+    \item{CMetaData}{\code{signature(object = "Corpus")}: Returns the
       document collection specific metadata in form of a tag-value
       paired list.}
-    \item{DMetaData}{\code{signature(object = "Corpus")}: returns the
+    \item{DMetaData}{\code{signature(object = "Corpus")}: Returns the
       document specific metadata in form of a data frame.}
-    \item{DBControl}{\code{signature(object = "Corpus")}: returns
+    \item{DBControl}{\code{signature(object = "Corpus")}: Returns
       the database configuration settings.}
   }
 }

@@ -9,7 +9,7 @@ Methods for function \code{stripWhitespace} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "PlainTextDocument", ...}{Strips any unnecessary
+    \item{object = "PlainTextDocument", ...}{Strips unnecessary
       whitespace from \code{object} and return the object.}
   }
 }

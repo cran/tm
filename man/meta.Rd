@@ -15,21 +15,23 @@ Methods for function \code{meta} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "TextDocument"}{If no \code{tag} is given, this
+    \item{object = "TextDocument", tag = NULL}{If no \code{tag} is given, this
       method pretty prints all \code{object}'s meta data. If \code{tag}
       is provided its value in the meta data is returned.}
-    \item{object = "Corpus"}{If no \code{tag} is given, this
+    \item{object = "Corpus", tag = NULL, type = "indexed"}{This
       method investigates the \code{type} argument. \code{type} must be
-      either \code{indexed} (default) or \code{corpus}. Former is a
+      either \code{indexed} (default), \code{local}, or \code{corpus}. Former is a
       shortcut for accessing document level meta data
       (\code{\link{DMetaData}}) stored at the collection level (because
       it forms an own entity, or for performance reasons, i.e., a form
-      of indexing, hence the name indexed), the latter a shortcut for
+      of indexing, hence the name indexed), \code{local} accesses the
+      meta data local to each text document (i.e., meta data in text
+      documents' S4 slots), and \code{corpus} is a shortcut for
       collection (corpus) specific meta data
       (\code{\link{CMetaData}}). Depending whether a tag is set or not,
       all or only the meta data identified by the tag is displayed or
       modified.}
-    \item{object = "TextRepository"}{If no \code{tag} is given, this
+    \item{object = "TextRepository", tag = NULL}{If no \code{tag} is given, this
       method pretty prints all \code{object}'s meta data. If \code{tag}
       is provided its value in the meta data is returned.}
   }

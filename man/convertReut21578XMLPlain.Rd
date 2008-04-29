@@ -1,6 +1,6 @@
 \name{convertReut21578XMLPlain}
 \alias{convertReut21578XMLPlain}
-\title{Transform A Reuters21578 XML Document To A Plain Text Document}
+\title{Transform a Reuters21578 XML Document to a Plain Text Document}
 \description{
   Transform a Reuters21578 XML document to a plain text
   document.

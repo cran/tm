@@ -9,7 +9,7 @@ Methods for function \code{rownames} in package \pkg{tm}.
 \section{Methods}{
   \describe{
     \item{x = "TermDocMatrix"}{Retrieve the row names of the
-      term-document matrix.}
+      term-document matrix \code{x}.}
   }
 }
 \examples{

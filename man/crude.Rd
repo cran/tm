@@ -1,7 +1,7 @@
 \name{crude}
 \docType{data}
 \alias{crude}
-\title{20 exemplary news articles from the Reuters-21578 XML data set of topic crude}
+\title{20 Exemplary News Articles from the Reuters-21578 XML Data Set of Topic crude}
 \description{
   This data set holds 20 news articles with additional meta
   information from the Reuters-21578 XML data set. All documents belong
@@ -10,7 +10,7 @@
 \usage{data("crude")}
 \format{A text document collection of 20 text documents.}
 \source{Reuters-21578 Text Categorization Collection Distribution 1.0
-  (XML format)}
+  (XML format).}
 \references{
   Lewis, David (1997) \emph{Reuters-21578 Text Categorization
     Collection Distribution 1.0}.

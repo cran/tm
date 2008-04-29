@@ -12,7 +12,8 @@ Methods for function \code{appendMeta} in package \pkg{tm}.
   \describe{
     \item{object = "Corpus", cmeta = NULL, dmeta = NULL}{Returns a text
       document collection where the \code{cmeta} is added to the
-      \code{CMetaData} and \code{dmeta} is added to the \code{DMetaData}.}  
+      \code{CMetaData} and \code{dmeta} is added to the \code{DMetaData}
+      of corpus \code{object}.}  
     \item{object = "TextRepository", cmeta = NULL, dmeta = NULL}{Returns a text
       repository where \code{cmeta} is added to the metadata slot of the
       \code{object} text repository.}

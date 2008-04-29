@@ -1,6 +1,6 @@
 \name{readReut21578XML}
 \alias{readReut21578XML}
-\title{Read In A Reuters21578 XML Document}
+\title{Read In a Reuters21578 XML Document}
 \description{
   Returns a function which reads in a Reuters21578 XML document.
 }
@@ -8,7 +8,7 @@
 readReut21578XML(...)
 }
 \arguments{
-  \item{...}{arguments for the generator function.}
+  \item{...}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -23,7 +23,7 @@ readReut21578XML(...)
    \item{elem}{A \code{list} with the two named elements \code{content}
      and \code{uri}.  The first element must hold the document corpus to
      be read in, the second element must hold a call to the document
-     corpus.  The call is evaluated upon a request for load on demand.}
+     corpus. The call is evaluated upon a request for load on demand.}
    \item{language}{A \code{character} giving the text's language.}
    \item{load}{A \code{logical} value indicating whether the document
      corpus should be immediately loaded into memory.}

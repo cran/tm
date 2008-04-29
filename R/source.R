@@ -1,5 +1,9 @@
 # Author: Ingo Feinerer
 
+getSources <- function() {
+   c("CSVSource", "DirSource", "GmaneSource", "ReutersSource", "VectorSource")
+}
+
 # Source objects
 
 setClass("Source",
@@ -8,6 +12,11 @@ setClass("Source",
                         DefaultReader = "function",
                         Encoding = "character",
                         "VIRTUAL"))
+
+# A vector where each component is interpreted as document
+setClass("VectorSource",
+         representation(Content = "vector"),
+         contains = c("Source"))
 
 # A directory with files
 setClass("DirSource",
@@ -35,6 +44,14 @@ setClass("GmaneSource",
 
 
 # Methods for Source objects
+
+setGeneric("VectorSource", function(object, encoding = "UTF-8") standardGeneric("VectorSource"))
+setMethod("VectorSource",
+          signature(object = "vector"),
+          function(object, encoding = "UTF-8") {
+              new("VectorSource", LoDSupport = FALSE, Content = object, Position = 0,
+                  DefaultReader = readPlain, Encoding = encoding)
+          })
 
 setGeneric("DirSource", function(directory, encoding = "UTF-8", recursive = FALSE) standardGeneric("DirSource"))
 setMethod("DirSource",
@@ -127,6 +144,12 @@ setMethod("GmaneSource",
 
 setGeneric("stepNext", function(object) standardGeneric("stepNext"))
 setMethod("stepNext",
+          signature(object = "VectorSource"),
+          function(object) {
+              object@Position <- object@Position + 1
+              object
+          })
+setMethod("stepNext",
           signature(object = "DirSource"),
           function(object) {
               object@Position <- object@Position + 1
@@ -152,6 +175,12 @@ setMethod("stepNext",
           })
 
 setGeneric("getElem", function(object) standardGeneric("getElem"))
+setMethod("getElem",
+          signature(object = "VectorSource"),
+          function(object) {
+              list(content = object@Content[object@Position],
+                   uri = NULL)
+          })
 setMethod("getElem",
           signature(object = "DirSource"),
           function(object) {
@@ -188,6 +217,14 @@ setMethod("getElem",
           })
 
 setGeneric("eoi", function(object) standardGeneric("eoi"))
+setMethod("eoi",
+          signature(object = "VectorSource"),
+          function(object) {
+              if (length(object@Content) <= object@Position)
+                  return(TRUE)
+              else
+                  return(FALSE)
+          })
 setMethod("eoi",
           signature(object = "DirSource"),
           function(object) {

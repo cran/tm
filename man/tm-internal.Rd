@@ -2,7 +2,7 @@
 \alias{fun}
 \title{Internal tm Functions}
 \description{
-  Internal tm functions
+  Internal \pkg{tm} functions.
 }
 \details{
   These are not to be called by the user (or in some cases are just
