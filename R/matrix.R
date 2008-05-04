@@ -128,14 +128,6 @@ inspect.TermDocumentMatrix <- inspect.DocumentTermMatrix <- function(x) {
     m
 }
 
-dim.TermDocumentMatrix <- dim.DocumentTermMatrix <- function(x) c(x$nrow, x$ncol)
-ncol.TermDocumentMatrix <- ncol.DocumentTermMatrix <- function(x) x$ncol
-nrow.TermDocumentMatrix <- nrow.DocumentTermMatrix <- function(x) x$nrow
-
-dimnames.TermDocumentMatrix <- dimnames.DocumentTermMatrix <- function(x) x$dimnames
-colnames.TermDocumentMatrix <- colnames.DocumentTermMatrix <- function(x) x$dimnames[[2]]
-rownames.TermDocumentMatrix <- rownames.DocumentTermMatrix <- function(x) x$dimnames[[1]]
-
 nDocs <- function(x) if (inherits(x, "DocumentTermMatrix")) x$nrow else x$ncol
 nTerms <- function(x) if (inherits(x, "DocumentTermMatrix")) x$ncol else x$nrow
 
