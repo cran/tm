@@ -1,8 +1,19 @@
 # Author: Ingo Feinerer
 
-stemCompletion <- function(object, words) {
+stemCompletion <- function(object, words, type = c("prevalent", "first")) {
     # Get a list of all terms from the collection
-    terms <- unique(unlist(lapply(object, strsplit, "[^[:alnum:]]+")))
-    # As heuristic just take the first found completion
-    sapply(words, function(w) grep(sprintf("^%s", w), terms, value = TRUE)[1])
+    terms <- unlist(lapply(object, strsplit, "[^[:alnum:]]+"))
+
+    type <- match.arg(type)
+    switch(type,
+           # As heuristics just take the first found completion
+           first = na.omit(sapply(words, function(w) grep(sprintf("^%s", w), unique(terms), value = TRUE)[1])),
+           # As heuristics take the most frequent completion
+           prevalent = {
+               possibleCompletions <- lapply(words, function(w) grep(sprintf("^%s", w), terms, value = TRUE))
+               possibleCompletions <- lapply(possibleCompletions, table)
+               possibleCompletions <- lapply(possibleCompletions, sort, decreasing = TRUE)
+               s <- structure(names(sapply(possibleCompletions, "[", 1)), names = words)
+               s[nchar(s) > 0]}
+           )
 }

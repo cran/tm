@@ -1,11 +1,10 @@
 # Author: Ingo Feinerer
 # Transformations
 
-getTransformations <- function() {
-    c("asPlain", "loadDoc", "removeCitation", "removeMultipart",
-      "removePunctuation", "removeSignature", "removeWords",
-      "replaceWords", "stemDoc", "stripWhitespace", "tmTolower")
-}
+getTransformations <- function() { c("asPlain", "loadDoc",
+    "removeCitation", "removeMultipart", "removeNumbers",
+    "removePunctuation", "removeSignature", "removeWords",
+    "replacePatterns", "stemDoc", "stripWhitespace", "tmTolower") }
 
 setGeneric("removeMultipart",
            function(object, ...) standardGeneric("removeMultipart"))
@@ -100,13 +99,18 @@ setMethod("removeSignature",
               return(object)
           })
 
-setGeneric("removeWords", function(object, stopwords, ...) standardGeneric("removeWords"))
+setGeneric("removeWords", function(object, words, ...) standardGeneric("removeWords"))
 setMethod("removeWords",
-          signature(object = "PlainTextDocument", stopwords = "character"),
-          function(object, stopwords, ...) {
-              splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
-              noStopwordsCorpus <- splittedCorpus[!splittedCorpus %in% stopwords]
-              Content(object) <- paste(noStopwordsCorpus, collapse = " ")
+          signature(object = "PlainTextDocument", words = "character"),
+          function(object, words, ...) {
+              Content(object) <- gsub(paste("([[:blank:]]|^)",
+                                            paste(words, collapse = "([[:blank:]]|$)|([[:blank:]]|^)"),
+                                            "([[:blank:]]|$)", sep = ""),
+                                      " ",
+                                      # Add blank so that adjacent words can be matched
+                                      gsub("([[:blank:]])", "\\1 ", Content(object)))
+              # Remove doubled blanks
+              Content(object) <- gsub("([[:blank:]]) ", "\\1", Content(object))
               return(object)
           })
 
@@ -122,12 +126,13 @@ setGeneric("stemDoc", function(object, language = "english", ...) standardGeneri
 setMethod("stemDoc",
           signature(object = "PlainTextDocument"),
           function(object, language = "english", ...) {
-              splittedCorpus <- unlist(strsplit(object, " ", fixed = TRUE))
-              stemmedCorpus <- if (require("Rstem", quietly = TRUE))
-                  Rstem::wordStem(splittedCorpus, language)
+              stemLine <- if (suppressWarnings(require("Rstem", quietly = TRUE)))
+                  function(x) Rstem::wordStem(x, language)
               else
-                  SnowballStemmer(splittedCorpus, Weka_control(S = language))
-              Content(object) <- paste(stemmedCorpus, collapse = " ")
+                  function(x) SnowballStemmer(x, Weka_control(S = language))
+              Content(object) <- sapply(object,
+                                        function(x) paste(stemLine(unlist(strsplit(x, "[[:blank:]]"))), collapse = " "),
+                                        USE.NAMES = FALSE)
               return(object)
           })
 

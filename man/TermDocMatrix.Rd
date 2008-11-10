@@ -12,8 +12,8 @@ TermDocMatrix(object, control = list())
 }
 \arguments{
   \item{object}{a text document collection}
-  \item{control}{a list of control options. The option \code{weighting}
-    must be a weighting function capable of handling a
+  \item{control}{a named list of control options. The component
+    \code{weighting} must be a weighting function capable of handling a
     \code{dgCMatrix}. It defaults to \code{weightTf} for term frequency
     weighting. All other options are delegated internally to a
     \code{\link{termFreq}} call.}

@@ -6,16 +6,15 @@
 \alias{show,TextRepository-method}
 \title{Methods for Function show in Package `tm'}
 \description{
-  Methods for function \code{show} in package \pkg{tm}.
+  Methods for generic function \code{show} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
     \item{object = "PlainTextDocument"}{Prints the text of a plain text
-      document without all slots.}
-    \item{object = "Corpus"}{Prints some short information on a text
-      document collection.}
-    \item{object = "TextRepository"}{Prints some short information on a text
-      repository.}
+      document without any slots.}
+    \item{object = "Corpus"}{Prints a short descriptive overview of the corpus.}
+    \item{object = "TextRepository"}{Prints a short descriptive overview
+      of the repository.}
   }
 }
 \examples{

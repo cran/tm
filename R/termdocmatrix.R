@@ -11,7 +11,10 @@ setMethod("TermDocMatrix",
               if (is.null(weight))
                   weight <- weightTf
 
-              tflist <- lapply(object, termFreq, control)
+              tflist <- if (clusterAvailable())
+                  snow::parLapply(snow::getMPIcluster(), object, termFreq, control)
+              else
+                  lapply(object, termFreq, control)
               allTerms <- unique(unlist(lapply(tflist, names), use.names = FALSE))
 
               i <- lapply(tflist, function(x) match(names(x), allTerms)[x > 0])
@@ -26,7 +29,7 @@ setMethod("TermDocMatrix",
               tdm <- weight(t(tdm))
               tdm@Dimnames <- list(Docs = sapply(object, ID), Terms = allTerms)
 
-              new("TermDocMatrix", Data = tdm, Weighting = weight@Name)
+              new("TermDocMatrix", Data = tdm, Weighting = c(weight@Name, weight@Acronym))
           })
 
 termFreq <- function(doc, control = list()) {
@@ -50,7 +53,7 @@ termFreq <- function(doc, control = list()) {
     # Stemming
     stemming <- control$stemming
     if (is.logical(stemming) && stemming) {
-        txt <- if (require("Rstem", quietly = TRUE))
+        txt <- if (suppressWarnings(require("Rstem", quietly = TRUE)))
             Rstem::wordStem(txt, language = resolveISOCode(Language(doc)))
         else
             SnowballStemmer(txt, Weka_control(S = resolveISOCode(Language(doc))))
@@ -174,11 +177,4 @@ setMethod("removeSparseTerms",
                   Data(object) <- m[, as.numeric(names(t[t]))]
               }
               return(object)
-          })
-
-setGeneric("createDictionary", function(object) standardGeneric("createDictionary"))
-setMethod("createDictionary",
-          signature(object = "TermDocMatrix"),
-          function(object) {
-              Dictionary(colnames(Data(object)))
           })

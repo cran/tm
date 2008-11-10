@@ -18,6 +18,9 @@ Objects can be created by calls of the form \code{new("Source", ...)}.
       the position in the source.}
     \item{\code{Encoding}:}{Object of class \code{character} holding the
       encoding of the texts delivered by the source.}
+    \item{\code{Length}:}{Object of class \code{numeric} denoting the
+      number of the elements delivered by the source. If the number
+      cannot be determined in advance it should be set to zero.}
   }
 }
 \author{Ingo Feinerer}

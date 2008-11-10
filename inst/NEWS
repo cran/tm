@@ -1,0 +1,21 @@
+                        Dear Emacs, please make this -*-Text-*- mode!
+
+                CHANGES IN tm VERSION 0.3-2
+
+NEW FEATURES
+
+    o	Weighting functions now have an Acronym slot containing
+        abbreviations of the weighting functions' names. This is highly
+        useful when generating tables with indications which weighting
+        scheme was actually used for your experiments.
+
+    o   The functions tmFilter(), tmIndex(), tmMap() and TermDocMatrix()
+        now can use a MPI cluster (via the snow and Rmpi packages) if
+        available. Use (de)activateCluster() to manually override
+        cluster usage settings. Special thanks to Stefan Theussl for
+        his constructive comments.
+
+    o   The Source class receives a new Length slot. It contains the
+        number of elements provided by the source (although there
+        might be rare cases where the number cannot be determined in
+        advance---then it should be set to zero).

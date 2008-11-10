@@ -26,7 +26,7 @@ Methods for function \code{tmMap} in package \pkg{tm}.
   shipped with \pkg{tm}. See \code{\link{materialize}} for manually
   materializing lazy transformations.
 }
-\details{
+\note{
 Please be aware that lazy transformations are an experimental feature and
 change R's standard evaluation semantics.
 }

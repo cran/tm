@@ -10,9 +10,13 @@ Methods for function \code{replacePatterns} in package \pkg{tm}.
 \section{Methods}{
   \describe{
     \item{object = "PlainTextDocument", patterns = "character", by = "character"}{Replaces all
-      \code{patterns} (in POSIX 1003.2 extended regular expressions format, as used by gsub) which
-      occur in \code{object} with \code{by} and return the object.}
+      \code{patterns} (in POSIX 1003.2 extended regular expressions
+      format, as used by \code{\link{gsub}}) which occur in
+      \code{object} with \code{by} and return the object.}
   }
+}
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")

@@ -22,6 +22,8 @@ Objects can be created by calls of the form \code{new("GmaneSource", ...)}.
       indicating Load on Demand Support.}
     \item{\code{Position}:}{Object of class \code{numeric} giving the
       position in the source.}
+    \item{\code{Length}:}{Object of class \code{numeric} denoting the
+      number of the elements delivered by the source.}
   }
 }
 \section{Extends}{

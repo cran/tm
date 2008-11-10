@@ -13,4 +13,7 @@ Methods for function \code{removeCitation} in package \pkg{tm}.
       messages beginning with \code{>} and return the object.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \keyword{methods}

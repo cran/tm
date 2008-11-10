@@ -6,6 +6,8 @@ import(Snowball)
 import(XML)
 
 export(
+       "activateCluster",
+       "deactivateCluster",
        "stemCompletion",
        "getFilters",
        "getReaders",
@@ -91,9 +93,6 @@ exportMethods(
               "Data<-",
               "Weighting",
               "Weighting<-",
-
-              # Dictionary
-              "createDictionary",
 
               # Sources
               "stepNext",

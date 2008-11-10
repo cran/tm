@@ -2,8 +2,6 @@
 # S4 class and accessor definitions
 # Assignment and accessor functions are implemented as described in "S4 Classes in 15 pages, more or less"
 
-.onLoad <- function(lib, pkg) require(methods)
-
 # Text document
 setClass("TextDocument",
          representation(Author = "character",

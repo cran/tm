@@ -15,6 +15,10 @@ Methods for function \code{prescindMeta} in package \pkg{tm}.
       data frame of \code{object} and returns the whole collection.}
   }
 }
+\value{
+  A \code{\link{Corpus}} constructed from \code{object} with shifted up
+  \code{meta} data.
+}
 \seealso{
   \code{\link{DMetaData}}
 }

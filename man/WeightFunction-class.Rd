@@ -14,6 +14,8 @@ Objects can be created by calls of the form \code{new("WeightFunction", ...)}.
       weighting function.}
     \item{\code{Name}}{Object of class \code{character} containing a
       name representation for the weighting function.}
+    \item{\code{Acronym}}{Object of class \code{character} containing an
+      acronym for the name of the weighting function.}
   }
 }
 \section{Extends}{

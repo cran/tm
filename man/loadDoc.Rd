@@ -22,4 +22,7 @@ Methods for function \code{loadDoc} in package \pkg{tm}.
       \code{object} from disk into memory and return the new object.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \keyword{methods}

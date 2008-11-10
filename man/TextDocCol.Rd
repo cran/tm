@@ -28,8 +28,8 @@ dbType = "DB1"), ...)
     indicating that database support should be activated, \code{dbName}
     giving the filename holding the sourced out objects (i.e., the
     database), and \code{dbType} holding a valid database type as
-    supported by \pkg{filehash}. Under activated database
-    support the \code{tm} packages tries to keep as few as possible
+    supported by package \pkg{filehash}. Under activated database
+    support the \code{tm} package tries to keep as few as possible
     resources in memory under usage of the database.}
   \item{...}{Optional arguments for the \code{reader}.}
 }

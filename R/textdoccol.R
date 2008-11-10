@@ -26,7 +26,12 @@ setMethod("Corpus",
                   db <- dbInit(dbControl$dbName, dbControl$dbType)
               }
 
-              tdl <- list()
+              # Allocate memory in advance if length is known
+              tdl <- if (object@Length > 0)
+                  vector("list", as.integer(object@Length))
+              else
+                  list()
+
               counter <- 1
               while (!eoi(object)) {
                   object <- stepNext(object)
@@ -38,10 +43,17 @@ setMethod("Corpus",
                   doc <- readerControl$reader(elem, readerControl$load, readerControl$language, as.character(counter))
                   if (dbControl$useDb) {
                       dbInsert(db, ID(doc), doc)
-                      tdl <- c(tdl, ID(doc))
+                      if (object@Length > 0)
+                          tdl[[counter]] <- ID(doc)
+                      else
+                          tdl <- c(tdl, ID(doc))
                   }
-                  else
-                      tdl <- c(tdl, list(doc))
+                  else {
+                      if (object@Length > 0)
+                          tdl[[counter]] <- doc
+                      else
+                          tdl <- c(tdl, list(doc))
+                  }
                   counter <- counter + 1
               }
 
@@ -185,8 +197,12 @@ setMethod("tmMap",
                           meta(result, tag = "lazyTmMap", type = "corpus") <- lazyTmMap
                       }
                   }
-                  else
-                      result@.Data <- lapply(object, FUN, ..., DMetaData = DMetaData(object))
+                  else {
+                      result@.Data <- if (clusterAvailable())
+                          snow::parLapply(snow::getMPIcluster(), object, FUN, ..., DMetaData = DMetaData(object))
+                      else
+                          lapply(object, FUN, ..., DMetaData = DMetaData(object))
+                  }
               }
               return(result)
           })
@@ -220,7 +236,7 @@ setMethod("asPlain",
               return(object)
           })
 setMethod("asPlain",
-          signature(object = "XMLTextDocument", FUN = "function"),
+          signature(object = "XMLTextDocument"),
           function(object, FUN, ...) {
               corpus <- Content(object)
 
@@ -245,14 +261,7 @@ setMethod("asPlain",
 setMethod("asPlain",
           signature(object = "RCV1Document"),
           function(object, FUN, ...) {
-              FUN <- convertRCV1Plain
-              corpus <- Content(object)
-
-              # As XMLDocument is no native S4 class, restore valid information
-              class(corpus) <- "XMLDocument"
-              names(corpus) <- c("doc","dtd")
-
-              return(FUN(xmlRoot(corpus), ...))
+              return(convertRCV1Plain(object, ...))
           })
 setMethod("asPlain",
           signature(object = "NewsgroupDocument"),
@@ -272,50 +281,37 @@ setMethod("asPlain",
                   LocalMetaData = LocalMetaData(object))
           })
 
-setGeneric("tmFilter", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmFilter"))
+setGeneric("tmFilter", function(object, ..., FUN = searchFullText, doclevel = TRUE) standardGeneric("tmFilter"))
 setMethod("tmFilter",
           signature(object = "Corpus"),
-          function(object, ..., FUN = sFilter, doclevel = FALSE) {
-              if (doclevel)
-                  return(object[sapply(object, FUN, ..., DMetaData = DMetaData(object))])
+          function(object, ..., FUN = searchFullText, doclevel = TRUE) {
+              if (!is.null(attr(FUN, "doclevel")))
+                  doclevel <- attr(FUN, "doclevel")
+              if (doclevel) {
+                  if (clusterAvailable())
+                      return(object[snow::parSapply(snow::getMPIcluster(), object, FUN, ..., DMetaData = DMetaData(object))])
+                  else
+                      return(object[sapply(object, FUN, ..., DMetaData = DMetaData(object))])
+              }
               else
                   return(object[FUN(object, ...)])
           })
 
-setGeneric("tmIndex", function(object, ..., FUN = sFilter, doclevel = FALSE) standardGeneric("tmIndex"))
+setGeneric("tmIndex", function(object, ..., FUN = searchFullText, doclevel = TRUE) standardGeneric("tmIndex"))
 setMethod("tmIndex",
           signature(object = "Corpus"),
-          function(object, ..., FUN = sFilter, doclevel = FALSE) {
-              if (doclevel)
-                  return(sapply(object, FUN, ..., DMetaData = DMetaData(object)))
+          function(object, ..., FUN = searchFullText, doclevel = TRUE) {
+              if (!is.null(attr(FUN, "doclevel")))
+                  doclevel <- attr(FUN, "doclevel")
+              if (doclevel) {
+                  if (clusterAvailable())
+                      return(snow::parSapply(snow::getMPIcluster(), object, FUN, ..., DMetaData = DMetaData(object)))
+                  else
+                      return(sapply(object, FUN, ..., DMetaData = DMetaData(object)))
+              }
               else
                   return(FUN(object, ...))
           })
-
-sFilter <- function(object, s, ...) {
-    con <- textConnection(s)
-    tokens <- scan(con, "character", quiet = TRUE)
-    close(con)
-    localMetaNames <- unique(names(sapply(object, LocalMetaData)))
-    localMetaTokens <- localMetaNames[localMetaNames %in% tokens]
-    n <- names(DMetaData(object))
-    tags <- c("Author", "DateTimeStamp", "Description", "ID", "Origin", "Heading", "Language", localMetaTokens)
-    query.df <- DMetaData(prescindMeta(object, tags))
-    if (DBControl(object)[["useDb"]])
-        DMetaData(object) <- DMetaData(object)[, setdiff(n, tags), drop = FALSE]
-    # Rename to avoid name conflicts
-    names(query.df)[names(query.df) == "Author"] <- "author"
-    names(query.df)[names(query.df) == "DateTimeStamp"] <- "datetimestamp"
-    names(query.df)[names(query.df) == "Description"] <- "description"
-    names(query.df)[names(query.df) == "ID"] <- "identifier"
-    names(query.df)[names(query.df) == "Origin"] <- "origin"
-    names(query.df)[names(query.df) == "Heading"] <- "heading"
-    names(query.df)[names(query.df) == "Language"] <- "language"
-    attach(query.df)
-    try(result <- rownames(query.df) %in% row.names(query.df[eval(parse(text = s)), ]))
-    detach(query.df)
-    return(result)
-}
 
 setGeneric("appendElem", function(object, data, meta = NULL) standardGeneric("appendElem"))
 setMethod("appendElem",
@@ -363,6 +359,7 @@ setMethod("prescindMeta",
               for (m in meta) {
                   if (m %in% c("Author", "DateTimeStamp", "Description", "ID", "Origin", "Heading", "Language")) {
                       local.m <- lapply(object, m)
+                      local.m <- sapply(local.m, paste, collapse = " ")
                       local.m <- lapply(local.m, function(x) if (is.null(x)) return(NA) else return(x))
                       local.m <- unlist(local.m)
                       DMetaData(object) <- cbind(DMetaData(object), data.frame(m = local.m, stringsAsFactors = FALSE))
@@ -647,7 +644,6 @@ setMethod("%IN%",
 setMethod("lapply",
           signature(X = "Corpus"),
           function(X, FUN, ...) {
-              print("lapply")
               if (DBControl(X)[["useDb"]]) {
                   db <- dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
                   result <- lapply(dbMultiFetch(db, unlist(X)), FUN, ...)
@@ -708,7 +704,7 @@ setMethod("writeCorpus",
                                      else filenames)
               i <- 1
               for (o in object) {
-                  writeLines(o, filenames[i])
+                  writeLines(asPlain(o), filenames[i])
                   i <- i + 1
               }
           })

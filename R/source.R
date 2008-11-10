@@ -11,6 +11,7 @@ setClass("Source",
                         Position = "numeric",
                         DefaultReader = "function",
                         Encoding = "character",
+                        Length = "numeric",
                         "VIRTUAL"))
 
 # A vector where each component is interpreted as document
@@ -50,7 +51,7 @@ setMethod("VectorSource",
           signature(object = "vector"),
           function(object, encoding = "UTF-8") {
               new("VectorSource", LoDSupport = FALSE, Content = object, Position = 0,
-                  DefaultReader = readPlain, Encoding = encoding)
+                  DefaultReader = readPlain, Encoding = encoding, Length = length(object))
           })
 
 setGeneric("DirSource", function(directory, encoding = "UTF-8", recursive = FALSE) standardGeneric("DirSource"))
@@ -61,7 +62,7 @@ setMethod("DirSource",
               isdir <- sapply(d, file.info)["isdir",]
               files <- d[isdir == FALSE]
               new("DirSource", LoDSupport = TRUE, FileList = files,
-                  Position = 0, DefaultReader = readPlain, Encoding = encoding)
+                  Position = 0, DefaultReader = readPlain, Encoding = encoding, Length = length(files))
           })
 
 setGeneric("CSVSource", function(object, encoding = "UTF-8") standardGeneric("CSVSource"))
@@ -72,7 +73,8 @@ setMethod("CSVSource",
               con <- eval(object)
               content <- apply(read.csv(con), 1, paste, collapse = " ")
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readPlain, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readPlain,
+                  Encoding = encoding, Length = length(content))
           })
 setMethod("CSVSource",
           signature(object = "ANY"),
@@ -81,7 +83,8 @@ setMethod("CSVSource",
               con <- eval(object)
               content <- apply(read.csv(con), 1, paste, collapse = " ")
               new("CSVSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readPlain, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readPlain,
+                  Encoding = encoding, Length = length(content))
           })
 
 setGeneric("ReutersSource", function(object, encoding = "UTF-8") standardGeneric("ReutersSource"))
@@ -96,7 +99,8 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readReut21578XML, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML,
+                  Encoding = encoding, Length = length(content))
           })
 setMethod("ReutersSource",
           signature(object = "ANY"),
@@ -109,7 +113,8 @@ setMethod("ReutersSource",
               content <- xmlRoot(tree)$children
 
               new("ReutersSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readReut21578XML, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readReut21578XML,
+                  Encoding = encoding, Length = length(content))
           })
 
 setGeneric("GmaneSource", function(object, encoding = "UTF-8") standardGeneric("GmaneSource"))
@@ -125,7 +130,8 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readGmane, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readGmane,
+                  Encoding = encoding, Length = length(content))
           })
 setMethod("GmaneSource",
           signature(object = "ANY"),
@@ -139,7 +145,8 @@ setMethod("GmaneSource",
               content <- content[names(content) == "item"]
 
               new("GmaneSource", LoDSupport = FALSE, URI = object,
-                  Content = content, Position = 0, DefaultReader = readGmane, Encoding = encoding)
+                  Content = content, Position = 0, DefaultReader = readGmane,
+                  Encoding = encoding, Length = length(content))
           })
 
 setGeneric("stepNext", function(object) standardGeneric("stepNext"))
@@ -199,7 +206,8 @@ setMethod("getElem",
           signature(object = "ReutersSource"),
           function(object) {
               # Construct a character representation from the XMLNode
-              con <- textConnection("virtual.file", "w")
+              virtual.file <- character(0)
+              con <- textConnection("virtual.file", "w", local = TRUE)
               saveXML(object@Content[[object@Position]], con)
               close(con)
 
@@ -209,7 +217,8 @@ setMethod("getElem",
           signature(object = "GmaneSource"),
           function(object) {
               # Construct a character representation from the XMLNode
-              con <- textConnection("virtual.file", "w")
+              virtual.file <- character(0)
+              con <- textConnection("virtual.file", "w", local = TRUE)
               saveXML(object@Content[[object@Position]], con)
               close(con)
 

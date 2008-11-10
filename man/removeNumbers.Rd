@@ -13,6 +13,9 @@ Methods for function \code{removeNumbers} in package \pkg{tm}.
       \code{object} and return the object.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \examples{
 data("crude")
 crude[[1]]

@@ -13,6 +13,9 @@ Methods for function \code{removePunctuation} in package \pkg{tm}.
       from \code{object} and return the object.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \examples{
 data("crude")
 crude[[1]]

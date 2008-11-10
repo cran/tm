@@ -14,6 +14,9 @@
       \code{object}'s text.}
   }
 }
+\seealso{
+  Use \code{\link{getFilters}} to list available filter functions.
+}
 \examples{
 data("crude")
 searchFullText(crude[[1]], "co[m]?pany")

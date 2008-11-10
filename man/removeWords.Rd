@@ -9,9 +9,12 @@ Methods for function \code{removeWords} in package \pkg{tm}.
 }
 \section{Methods}{
   \describe{
-    \item{object = "PlainTextDocument", stopwords = "character"}{Removes all
-      words which occur in \code{stopwords} from \code{object} and return the object.}
+    \item{object = "PlainTextDocument", words = "character"}{Removes all
+      words which occur in \code{words} from \code{object} and return the object.}
   }
+}
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")

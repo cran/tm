@@ -19,5 +19,10 @@
   \code{Source} representing a vector interpreting each element as a
   document.
 }
+\examples{
+docs <- c("This is a text.", "This another one.")
+(vs <- VectorSource(docs))
+inspect(Corpus(vs))
+}
 \author{Ingo Feinerer}
 \keyword{methods}

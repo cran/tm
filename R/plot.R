@@ -6,7 +6,7 @@ plot.TermDocMatrix <- function(x,
                                             node = list(shape = "rectangle",
                                                         fixedsize = FALSE)),
                                ...) {
-    if(!require("Rgraphviz"))
+    if (!require("Rgraphviz"))
         stop("could not find (bioconductor.org) Rgraphviz package")
 
     c <- cor(as.matrix(x[seq_len(nrow(x)), terms]))

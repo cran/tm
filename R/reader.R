@@ -83,6 +83,23 @@ readRCV1 <- FunctionGenerator(function(...) {
                 Heading = heading, Language = language)
         }
 
+        # Extract meta data
+        if (!is.null(node[["metadata"]])) {
+            # Get simple Dublin Core meta data
+            dc <- node[["metadata"]][names(node[["metadata"]]) == "dc"]
+            dc <- lapply(dc, xmlAttrs)
+            elements <- sapply(dc, "[[", "element")
+            values <- sapply(dc, "[[", "value")
+            if ("dc.publisher" %in% elements)
+                DublinCore(doc, "Publisher") <- values[elements == "dc.publisher"]
+
+            # Get topic codes
+            codes <- node[["metadata"]][names(node[["metadata"]]) == "codes"]
+            topics <- codes[sapply(codes, xmlAttrs) == "bip:topics:1.0"]
+            if (length(topics) > 0)
+                meta(doc, "Topics") <- unlist(xmlApply(topics[[1]], xmlAttrs), use.names = FALSE)
+        }
+
         return(doc)
     }
 })
@@ -229,15 +246,18 @@ readHTML <- FunctionGenerator(function(...) {
 
 # Converter
 
-# Parse a <newsitem></newsitem> element from a well-formed RCV1 XML file
 convertRCV1Plain <- function(node, ...) {
-    datetimestamp <- as.POSIXct(xmlAttrs(node)[["date"]])
-    id <- xmlAttrs(node)[["itemid"]]
-    corpus <- unlist(xmlApply(node[["text"]], xmlValue), use.names = FALSE)
-    heading <- xmlValue(node[["title"]])
+    content <- Content(node)
+    # As XMLDocument is no native S4 class, restore valid information
+    class(content) <- "XMLDocument"
+    names(content) <- c("doc", "dtd")
+    content <- unlist(xmlApply(xmlRoot(content)[["text"]], xmlValue), use.names = FALSE)
 
-    new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = "", Author = "", DateTimeStamp = datetimestamp,
-        Description = "", ID = id, Origin = "Reuters Corpus Volume 1 XML", Heading = heading, Language = "en_US")
+    new("PlainTextDocument", .Data = content, Cached = TRUE, URI = "",
+        Author = Author(node), DateTimeStamp = DateTimeStamp(node),
+        Description = Description(node), ID = ID(node), Origin =
+        Origin(node), Heading = Heading(node), Language = Language(node),
+        LocalMetaData = LocalMetaData(node))
 }
 
 # Parse a <REUTERS></REUTERS> element from a well-formed Reuters-21578 XML file

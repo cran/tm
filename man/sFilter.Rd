@@ -29,6 +29,9 @@ sFilter(object, s, ...)
   (extended for shifted up variables) data frame as specified by the
   statement.
 }
+\seealso{
+  Use \code{\link{getFilters}} to list available filter functions.
+}
 \examples{
 ## Load example dataset
 data("crude")

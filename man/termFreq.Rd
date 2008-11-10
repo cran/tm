@@ -21,7 +21,8 @@ termFreq(doc, control = list())
       should be stemmed. Defaults to \code{FALSE}.
       \item \code{stopwords}: Either a Boolean value indicating stopword
       removal using default language specific stopword lists shipped
-      with this package or a character vector holding custom stopwords.
+      with this package or a character vector holding custom
+      stopwords. Defaults to \code{FALSE}.
       \item \code{dictionary}: A character vector to be tabulated
       against. No other terms will be listed in the result. Defaults to
       no action (i.e., all terms are considered).

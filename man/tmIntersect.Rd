@@ -10,8 +10,11 @@
 \section{Methods}{
   \describe{
     \item{object = "PlainTextDocument", words = "character"}{Return
-      \code{TRUE} if \code{words} appear in \code{object}'s text corpus.}
+      \code{TRUE} if \code{words} appear in \code{object}'s text.}
   }
+}
+\seealso{
+  Use \code{\link{getFilters}} to list available filter functions.
 }
 \examples{
 data("crude")

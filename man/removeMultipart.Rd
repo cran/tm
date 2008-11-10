@@ -13,4 +13,7 @@ Methods for function \code{removeMultipart} in package \pkg{tm}.
       parts out of multipart e-mail messages and return the object.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \keyword{methods}

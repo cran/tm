@@ -9,3 +9,8 @@ setMethod("Dictionary",
           function(object) {
               new("Dictionary", .Data = object)
           })
+setMethod("Dictionary",
+          signature(object = "TermDocMatrix"),
+          function(object) {
+              new("Dictionary", .Data = colnames(Data(object)))
+          })

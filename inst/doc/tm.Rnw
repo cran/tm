@@ -34,7 +34,10 @@ term-document matrices. Our focus is on the main
 aspects of getting started with text mining in \proglang{R}---an in-depth
 description of the text mining infrastructure offered by \pkg{tm} was
 published in the \emph{Journal of Statistical Software} and is available at
-\url{http://www.jstatsoft.org/v25/i05}.
+\url{http://www.jstatsoft.org/v25/i05}. An introductory article
+on text mining in \proglang{R} was published in \emph{R News},
+8(2):19--22, October 2008, and can be obtained at
+\url{http://CRAN.R-project.org/doc/Rnews/}.
 
 \section*{Data Import}
 The main structure for managing documents in \pkg{tm} is a so-called
@@ -97,16 +100,6 @@ Corpus(DirSource(newsgroup),
        readerControl = list(reader = readNewsgroup,
                             language = "en_US"))
 @
-or \acronym{Pdf} documents:
-<<PDF,keep.source=TRUE>>=
-pdf <- system.file("texts", "pdf", package = "tm")
-
-Corpus(DirSource(pdf),
-       readerControl = list(reader = readPDF))
-@
-Note that \code{readPDF()} needs \code{pdftotext} and \code{pdfinfo}
-installed on your system to be able to extract the text and meta
-information from your \acronym{Pdf}s.
 
 For simple examples \code{VectorSource} is quite useful, as it can
 create a corpus from simple character vectors, e.g.:

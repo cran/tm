@@ -2,12 +2,12 @@
 \docType{methods}
 \alias{asPlain}
 \alias{asPlain-methods}
-\alias{asPlain,NewsgroupDocument,ANY-method}
-\alias{asPlain,PlainTextDocument,ANY-method}
-\alias{asPlain,XMLTextDocument,function-method}
-\alias{asPlain,Reuters21578Document,ANY-method}
-\alias{asPlain,RCV1Document,ANY-method}
-\alias{asPlain,StructuredTextDocument,ANY-method}
+\alias{asPlain,NewsgroupDocument-method}
+\alias{asPlain,PlainTextDocument-method}
+\alias{asPlain,XMLTextDocument-method}
+\alias{asPlain,Reuters21578Document-method}
+\alias{asPlain,RCV1Document-method}
+\alias{asPlain,StructuredTextDocument-method}
 \title{Methods for Function asPlain in Package `tm'}
 \description{
 Methods for function \code{asPlain} in package \pkg{tm}.
@@ -20,9 +20,9 @@ Methods for function \code{asPlain} in package \pkg{tm}.
     \item{object = "XMLTextDocument", FUN}{Converts \code{object} to a
       \code{PlainTextDocument} by applying \code{FUN} on the XML root node
       and returns the new object.}
-    \item{object = "Reuters21578Document", FUN}{Converts \code{object} to a
+    \item{object = "Reuters21578Document"}{Converts \code{object} to a
       \code{PlainTextDocument}.}
-    \item{object = "RCV1Document", FUN}{Converts \code{object} to a
+    \item{object = "RCV1Document"}{Converts \code{object} to a
       \code{PlainTextDocument}.}
     \item{object = "StructuredTextDocument"}{Converts \code{object} to a
       plain text document.}
@@ -31,6 +31,8 @@ Methods for function \code{asPlain} in package \pkg{tm}.
 \seealso{
   \code{\link{convertReut21578XMLPlain}}
   \code{\link{convertRCV1Plain}}
+
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 reut21578 <- system.file("texts", "reut21578", package = "tm")

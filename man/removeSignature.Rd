@@ -15,6 +15,9 @@ Methods for function \code{removeSignature} in package \pkg{tm}.
       parameter in form of regular expression patterns.}
   }
 }
+\seealso{
+  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+}
 \examples{
 newsgroup <- system.file("texts", "newsgroup", package = "tm")
 news <- Corpus(DirSource(newsgroup), readerControl = list(reader = readNewsgroup, language = "en_US", load = TRUE))
