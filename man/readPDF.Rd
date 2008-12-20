@@ -40,5 +40,11 @@ readPDF(...)
 \seealso{
   Use \code{\link{getReaders}} to list available reader functions.
 }
+\examples{
+f <- system.file("texts", "pdf", "pdfarchiving.pdf", package = "tm")
+readPDF()
+pdf <- readPDF()(elem = list(uri = substitute(file(f))), language = "en_US", load = TRUE, id = "id1")
+meta(pdf)
+}
 \author{Ingo Feinerer}
 \keyword{file}

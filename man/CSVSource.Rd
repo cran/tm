@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{CSVSource}
 \alias{CSVSource,character-method}
-\alias{CSVSource,ANY-method}
+\alias{CSVSource,connection-method}
 \title{Comma Seperated Value Source}
 \description{
   Constructs a source for a comma separated values file.
@@ -11,8 +11,7 @@
 \S4method{CSVSource}{character}(object, encoding = "UTF-8")
 }
 \arguments{
-  \item{object}{either a character identifying the file or a call which
-    results in a connection.}
+  \item{object}{either a character identifying the file or a connection.}
   \item{encoding}{a character giving the encoding of the file.}
 }
 \value{

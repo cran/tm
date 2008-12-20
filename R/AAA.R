@@ -15,11 +15,13 @@ deactivateCluster <- function() clActive(FALSE)
 
 .onLoad <- function(libname, pkgname) {
     require("methods")
-    if (suppressWarnings(require("snow", quietly = TRUE)) && suppressWarnings(require("Rmpi", quietly = TRUE)) && is.null(snow::getMPIcluster()))
-        snow::makeMPIcluster(Rmpi::mpi.universe.size())
+    if (suppressWarnings(require("snow", quietly = TRUE)) &&
+        suppressWarnings(require("Rmpi", quietly = TRUE)) &&
+        tryCatch(is.null(snow::getMPIcluster()), error = function(e) FALSE))
+        try(snow::makeMPIcluster(Rmpi::mpi.universe.size()), silent = TRUE)
 }
 
 .Last <- function() {
     if (suppressWarnings(require("snow", quietly = TRUE)) && suppressWarnings(require("Rmpi", quietly = TRUE)))
-        snow::stopCluster(snow::getMPIcluster())
+        try(snow::stopCluster(snow::getMPIcluster()), silent = TRUE)
 }

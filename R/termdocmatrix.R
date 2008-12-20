@@ -15,17 +15,19 @@ setMethod("TermDocMatrix",
                   snow::parLapply(snow::getMPIcluster(), object, termFreq, control)
               else
                   lapply(object, termFreq, control)
-              allTerms <- unique(unlist(lapply(tflist, names), use.names = FALSE))
 
-              i <- lapply(tflist, function(x) match(names(x), allTerms)[x > 0])
-              p <- cumsum(sapply(i, length))
+              tflist <- lapply(tflist, function(x) x[x > 0])
+              allTerms <- sort(unique(unlist(lapply(tflist, names), use.names = FALSE)))
+
+              i <- lapply(tflist, function(x) match(names(x), allTerms))
+              p <- c(0L, cumsum(sapply(i, length)))
               i <- unlist(i) - 1L
 
               x <- as.numeric(unlist(tflist, use.names = FALSE))
               rm(tflist)
 
-              tdm <- new("dgCMatrix", p = c(0L, p), i = i, x = x[x > 0],
-                         Dim = c(length(allTerms), length(p)))
+              tdm <- new("dgCMatrix", p = p, i = i, x = x,
+                         Dim = c(length(allTerms), length(p) - 1L))
               tdm <- weight(t(tdm))
               tdm@Dimnames <- list(Docs = sapply(object, ID), Terms = allTerms)
 

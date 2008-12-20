@@ -1,5 +1,32 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.3-3
+
+NEW FEATURES
+
+    o   The abstract Source class gets a default implementation for
+        the stepNext() method. It increments the position counter by
+        one, a reasonable value for most sources. For special purposes
+        custom methods can be created via overloading stepNext() of
+        the subclass.
+
+    o   New URISource class for a single document identified by a
+        Uniform Resource Identifier.
+
+    o   New DataframeSource for documents stored in a data frame. Each
+        row is interpreted as a single document.
+
+BUG FIXES
+
+    o   Fix off-by-one error in convertMboxEml() function. Reported by
+        Angela Bohn.
+
+    o   Sort row indices in sparse term-document matrices. Kudos to
+        Martin Mächler for his suggestions.
+
+    o   Sources and readers no longer evaluate calls in a non-standard
+        way.
+
                 CHANGES IN tm VERSION 0.3-2
 
 NEW FEATURES

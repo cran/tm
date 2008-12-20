@@ -49,6 +49,6 @@ convertMboxEml <- function(mbox, EmlDir) {
             needWrite <- TRUE
         }
     }
-    if (needWrite && start <= end)
-        writeLines(content[start:end], file(paste(EmlDir, counter, sep = "")))
+    if (needWrite)
+        writeLines(content[start:length(content)], file(paste(EmlDir, counter, sep = "")))
 }

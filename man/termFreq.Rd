@@ -24,8 +24,10 @@ termFreq(doc, control = list())
       with this package or a character vector holding custom
       stopwords. Defaults to \code{FALSE}.
       \item \code{dictionary}: A character vector to be tabulated
-      against. No other terms will be listed in the result. Defaults to
-      no action (i.e., all terms are considered).
+      against. No other terms will be listed in the result. Terms from
+      the dictionary not occurring in the document at all will be
+      skipped for performance reasons. Defaults to no action (i.e., all
+      terms are considered).
       \item \code{minDocFreq}: An integer value. Words that appear less
       often in \code{doc} than this number are discarded. Defaults to
       \code{1} (i.e., every token will be used).

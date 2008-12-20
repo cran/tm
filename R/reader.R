@@ -1,9 +1,8 @@
 # Author: Ingo Feinerer
 # Reader
 
-getReaders <- function() {
+getReaders <- function()
     c("readDOC", "readGmane", "readHTML", "readNewsgroup", "readPDF", "readReut21578XML", "readPlain", "readRCV1")
-}
 
 readPlain <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
@@ -173,7 +172,7 @@ readDOC <- FunctionGenerator(function(...) {
         if (!load)
             warning("load on demand not supported for DOC documents")
 
-        corpus <- paste(system(paste("antiword", shQuote(as.character(elem$uri[2]))), intern = TRUE), sep = "\n", collapse = "")
+        corpus <- paste(system(paste("antiword", shQuote(summary(eval(elem$uri))$description)), intern = TRUE), sep = "\n", collapse = "")
 
         new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
             Author = "", DateTimeStamp = Sys.time(), Description = "", ID = id,
@@ -184,7 +183,7 @@ readDOC <- FunctionGenerator(function(...) {
 # readPDF needs pdftotext and pdfinfo installed to be able to extract the text and meta information
 readPDF <- FunctionGenerator(function(...) {
     function(elem, load, language, id) {
-        meta <- system(paste("pdfinfo", shQuote(as.character(elem$uri[2]))), intern = TRUE)
+        meta <- system(paste("pdfinfo", shQuote(summary(eval(elem$uri))$description)), intern = TRUE)
         heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
         author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
         datetimestamp <- as.POSIXct(strptime(gsub("CreationDate:[[:space:]]*", "",
@@ -196,7 +195,7 @@ readPDF <- FunctionGenerator(function(...) {
         if (!load)
             warning("load on demand not supported for PDF documents")
 
-        corpus <- paste(system(paste("pdftotext", shQuote(as.character(elem$uri[2])), "-"), intern = TRUE), sep = "\n", collapse = "")
+        corpus <- paste(system(paste("pdftotext", shQuote(summary(eval(elem$uri))$description), "-"), intern = TRUE), sep = "\n", collapse = "")
         new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
             Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
             Origin = origin, Heading = heading, Language = language)
@@ -253,7 +252,7 @@ convertRCV1Plain <- function(node, ...) {
     names(content) <- c("doc", "dtd")
     content <- unlist(xmlApply(xmlRoot(content)[["text"]], xmlValue), use.names = FALSE)
 
-    new("PlainTextDocument", .Data = content, Cached = TRUE, URI = "",
+    new("PlainTextDocument", .Data = content, Cached = TRUE, URI = NULL,
         Author = Author(node), DateTimeStamp = DateTimeStamp(node),
         Description = Description(node), ID = ID(node), Origin =
         Origin(node), Heading = Heading(node), Language = Language(node),
@@ -286,7 +285,7 @@ convertReut21578XMLPlain <- function(node, ...) {
 
     topics <- unlist(xmlApply(node[["TOPICS"]], function(x) xmlValue(x)), use.names = FALSE)
 
-    new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = "", Author = author, DateTimeStamp = datetimestamp,
+    new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = NULL, Author = author, DateTimeStamp = datetimestamp,
         Description = description, ID = id, Origin = "Reuters-21578 XML", Heading = heading, Language = "en_US",
         LocalMetaData = list(Topics = topics))
 }

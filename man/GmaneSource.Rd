@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{GmaneSource}
 \alias{GmaneSource,character-method}
-\alias{GmaneSource,ANY-method}
+\alias{GmaneSource,connection-method}
 \title{Gmane Source}
 \description{
   Constructs a source for a Gmane mailing list RSS feed.
@@ -11,8 +11,7 @@
 \S4method{GmaneSource}{character}(object, encoding = "UTF-8")
 }
 \arguments{
-  \item{object}{either a character identifying the file or a call which
-    results in a connection.}
+  \item{object}{either a character identifying the file or a connection.}
   \item{encoding}{a character giving the encoding of the file.}
 }
 \value{

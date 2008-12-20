@@ -2,7 +2,7 @@
 \docType{methods}
 \alias{ReutersSource}
 \alias{ReutersSource,character-method}
-\alias{ReutersSource,ANY-method}
+\alias{ReutersSource,connection-method}
 \title{Reuters Source}
 \description{
   Constructs a source for a Reuters XML document.
@@ -11,8 +11,7 @@
 \S4method{ReutersSource}{character}(object, encoding = "UTF-8")
 }
 \arguments{
-  \item{object}{Either a character identifying the file or a call which
-    results in a connection.}
+  \item{object}{Either a character identifying the file or a connection.}
   \item{encoding}{A character giving the encoding of the file.}
 }
 \value{

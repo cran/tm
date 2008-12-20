@@ -116,9 +116,13 @@ if (!isGeneric("LocalMetaData")) {
 setMethod("LocalMetaData", "TextDocument", function(object) object@LocalMetaData)
 
 # Inherited text documents
+
+# Define class CallOrNULL as union of call and NULL
+setClassUnion("callOrNULL", c("call", "NULL"))
+
 # Plain text documents
 setClass("PlainTextDocument",
-         representation(URI = "ANY", Cached = "logical"),
+         representation(URI = c("callOrNULL"), Cached = "logical"),
          contains = c("character", "TextDocument"))
 
 if (!isGeneric("Content")) {
@@ -160,7 +164,7 @@ setReplaceMethod("Cached", "PlainTextDocument", function(x, value) {
 # If XMLDocument would be a S4 class, we could directly inherit from it
 # Instead we have to do a work-around with a list
 setClass("XMLTextDocument",
-         representation(URI = "ANY", Cached = "logical"),
+         representation(URI = "callOrNULL", Cached = "logical"),
          contains = c("list", "TextDocument"))
 
 setMethod("Content", "XMLTextDocument", function(object) object@.Data)
@@ -185,7 +189,7 @@ setClass("RCV1Document",
 
 # Newsgroup document as found in the Newsgroup dataset of the UCI KDD archive
 setClass("NewsgroupDocument",
-         representation(Newsgroup = "character", URI = "ANY", Cached = "logical"),
+         representation(Newsgroup = "character", URI = "callOrNULL", Cached = "logical"),
          contains = c("character", "TextDocument"))
 
 setMethod("Content", "NewsgroupDocument", function(object) object@.Data)
@@ -202,7 +206,7 @@ setReplaceMethod("Cached", "NewsgroupDocument", function(x, value) {
 
 # Structured text document for sectioned or structured text corpora
 setClass("StructuredTextDocument",
-         representation(URI = "ANY", Cached = "logical"),
+         representation(URI = "callOrNULL", Cached = "logical"),
          contains = c("list", "TextDocument"))
 
 setMethod("Content", "StructuredTextDocument", function(object) object@.Data)
