@@ -8,7 +8,7 @@
 weightTf(x)
 }
 \arguments{
-  \item{x}{A \code{dgCMatrix} in term frequency format.}
+  \item{x}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
 }
 \details{
   Formally this function is a \code{WeightingFunction} with the additional
@@ -18,6 +18,6 @@ weightTf(x)
   already in term frequency format.
 }
 \value{
-  The weighted \code{dgCMatrix}.
+  The weighted matrix.
 }
 \author{Ingo Feinerer}

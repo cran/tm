@@ -1,16 +1,20 @@
 import(methods)
+import(slam)
 
 export(
        "activateCluster",
+       "Corpus", # alias to VCorpus
        "CSVSource", # defunct
        "DataframeSource",
        "deactivateCluster",
        "Dictionary",
+       "DirSource",
        "dissimilarity",
        "Docs",
        "DocumentTermMatrix",
        "stemCompletion",
        "GmaneSource",
+#      "FCorpus",
        "findAssocs",
        "findFreqTerms",
        "getFilters",
@@ -24,6 +28,7 @@ export(
        "nTerms",
        "readPlain",
        "readReut21578XML",
+       "readReut21578XMLasPlain",
        "readRCV1",
        "readNewsgroup",
        "readGmane",
@@ -38,13 +43,18 @@ export(
        "convertRCV1Plain",
        "convertMboxEml",
        "sFilter",
+       "PCorpus",
+       "prescindMeta",
        "preprocessReut21578XML",
+       "VCorpus",
        "stopwords",
        "TermDocMatrix", # defunct
        "TermDocumentMatrix",
        "termFreq",
        "Terms",
        "tmReduce",
+       "URISource",
+       "VectorSource",
        "weightTf",
        "weightTfIdf",
        "weightBin",
@@ -52,9 +62,18 @@ export(
 
 S3method("Dictionary", "character")
 
-S3method("inspect", "Corpus")
+# S3method("inspect", "FCorpus")
+# S3method("TermDocumentMatrix", "FCorpus")
+
+# S3method("print", "MinimalDocument")
+
+S3method("inspect", "VCorpus")
+S3method("TermDocumentMatrix", "VCorpus")
 
 S3method("findAssocs", "matrix")
+
+S3method("inspect", "PCorpus")
+S3method("TermDocumentMatrix", "PCorpus")
 
 S3method("dissimilarity", "PlainTextDocument")
 
@@ -76,25 +95,9 @@ S3method("plot", "TermDocumentMatrix")
 S3method("print", "TermDocumentMatrix")
 S3method("t", "TermDocumentMatrix")
 
-S3method("as.matrix", "simple_triplet_matrix")
-S3method("as.simple_triplet_matrix", "matrix")
-S3method("as.simple_triplet_matrix", "simple_triplet_matrix")
-S3method("Ops", "simple_triplet_matrix")
-S3method("c", "simple_triplet_matrix")
-S3method("cbind", "simple_triplet_matrix")
-S3method("dim", "simple_triplet_matrix")
-S3method("dimnames", "simple_triplet_matrix")
-S3method("duplicated", "simple_triplet_matrix")
-S3method("rbind", "simple_triplet_matrix")
-S3method("unique", "simple_triplet_matrix")
-
 exportMethods(
               # Constructors
-              "Corpus",
               "TextRepository",
-              "DirSource",
-              "VectorSource",
-              "URISource",
               "FunctionGenerator",
               "WeightFunction",
 
@@ -117,10 +120,6 @@ exportMethods(
               "Language<-",
               "LocalMetaData",
 
-              "Cached",
-              "Cached<-",
-              "URI",
-
               "meta",
               "meta<-",
               "DublinCore",
@@ -142,8 +141,6 @@ exportMethods(
               "eoi",
 
               # Functions
-              "loadDoc",
-              "tmUpdate",
               "tmMap",
               "asPlain",
               "stripWhitespace",
@@ -162,16 +159,12 @@ exportMethods(
               "tmIntersect",
 
               "appendElem",
-              "appendMeta",
-              "prescindMeta",
-              "removeMeta",
               "[",
               "[<-",
               "[[",
               "[[<-",
               "c",
               "coerce", # for setAs
-              "length",
               "show",
               "summary",
               "writeCorpus",
@@ -194,6 +187,8 @@ exportClasses("TextDocument",
               "VectorSource",
               "URISource",
               "FunctionGenerator",
+              "PCorpus",
+              "VCorpus",
               "WeightFunction",
               "XMLSource")
 

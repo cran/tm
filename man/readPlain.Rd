@@ -9,7 +9,7 @@
 readPlain(...)
 }
 \arguments{
-  \item{...}{arguments for the generator function.}
+  \item{\dots}{arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -19,15 +19,13 @@ readPlain(...)
   data structures which need a lot of configuration options.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, load, id}:
+  A \code{function} with the signature \code{elem, language, id}:
 
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
     be read in, the second element must hold a call to extract this
     document. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} vector giving the text's language.}
-  \item{load}{A \code{logical} value indicating whether the document
-    corpus should be immediately loaded into memory.}
   \item{id}{A \code{character} vector representing a unique identification
     string for the returned text document.}
 
@@ -41,8 +39,7 @@ readPlain(...)
 docs <- c("This is a text.", "This another one.")
 vs <- VectorSource(docs)
 elem <- getElem(stepNext(vs))
-(result <- readPlain()(elem, TRUE, "en", "id1"))
+(result <- readPlain()(elem, "en", "id1"))
 meta(result)
 }
 \author{Ingo Feinerer}
-\keyword{file}

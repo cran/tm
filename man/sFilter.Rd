@@ -21,7 +21,7 @@ sFilter(object, s, ...)
   that the meta data tags for the slots \code{Author}, \code{DateTimeStamp},
   \code{Description}, \code{ID}, \code{Origin} and \code{Heading} are
   \code{author}, \code{datetimestamp}, \code{description},
-  \code{identifier}, \code{origin} and \code{heading}, respectively, to
+  \code{id}, \code{origin} and \code{heading}, respectively, to
   avoid name conflicts.
 }
 \value{
@@ -37,7 +37,6 @@ sFilter(object, s, ...)
 data("crude")
 
 ## Statement Filter returning TRUE for document with ID 127 and heading DIAMOND ...
-sFilter(crude, "identifier == '127' & heading == 'DIAMOND SHAMROCK (DIA) CUTS CRUDE PRICES'")
+sFilter(crude, "id == '127' & heading == 'DIAMOND SHAMROCK (DIA) CUTS CRUDE PRICES'")
 }
 \author{Ingo Feinerer}
-\keyword{file}

@@ -6,7 +6,7 @@
   document extracting both its text and its meta data.
 }
 \usage{
-readPDF(PdfinfoOptions = "", PdftotextOptions = "", ...)
+readPDF(PdfinfoOptions = "", PdftotextOptions = "", \dots)
 }
 \arguments{
   \item{PdfinfoOptions}{options passed over to \code{pdfinfo}.}
@@ -23,15 +23,13 @@ readPDF(PdfinfoOptions = "", PdftotextOptions = "", ...)
   \code{pdfinfo} installed and accessable on your system.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, load, id}:
+  A \code{function} with the signature \code{elem, language, id}:
 
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
     be read in, the second element must hold a call to extract this
     document. The call is evaluated upon a request for load on demand.}
   \item{language}{A \code{character} vector giving the text's language.}
-  \item{load}{A \code{logical} value indicating whether the document
-    corpus should be immediately loaded into memory.}
   \item{id}{A \code{character} vector representing a unique identification
     string for the returned text document.}
 
@@ -43,7 +41,7 @@ readPDF(PdfinfoOptions = "", PdftotextOptions = "", ...)
 }
 \examples{
 f <- system.file("texts", "pdf", "pdfarchiving.pdf", package = "tm")
-pdf <- readPDF(PdftotextOptions = "-layout")(elem = list(uri = substitute(file(f))), load = TRUE, language = "en_US", id = "id1")
+pdf <- readPDF(PdftotextOptions = "-layout")(elem = list(uri = f), language = "eng", id = "id1")
 meta(pdf)
 }
 \author{Ingo Feinerer}

@@ -32,7 +32,7 @@ setClass("DirSource",
 
 # A single document identified by a Uniform Resource Identifier
 setClass("URISource",
-         representation(URI = "call"),
+         representation(URI = "ANY"),
          contains = c("Source"))
 
 # A vector where each component is interpreted as document
@@ -42,20 +42,17 @@ setClass("VectorSource",
 
 # XML
 setClass("XMLSource",
-         representation(URI = "call",
+         representation(URI = "ANY",
                         Content = "list"),
          contains = c("Source"))
 
 ## Methods
 
-setGeneric("VectorSource", function(object, encoding = "UTF-8") standardGeneric("VectorSource"))
-setMethod("VectorSource",
-          signature(object = "vector"),
-          function(object, encoding = "UTF-8") {
-              new("VectorSource", LoDSupport = FALSE, Content = object, Position = 0,
-                  DefaultReader = readPlain, Encoding = encoding, Length = length(object),
-                  Vectorized = TRUE)
-          })
+VectorSource <- function(object, encoding = "UTF-8") {
+    new("VectorSource", LoDSupport = FALSE, Content = object, Position = 0,
+        DefaultReader = readPlain, Encoding = encoding, Length = length(object),
+        Vectorized = TRUE)
+}
 
 CSVSource <- function(object, encoding = "UTF-8")
     .Defunct("DataframeSource", package = "tm",
@@ -66,27 +63,18 @@ DataframeSource <- function(object, encoding = "UTF-8")
         DefaultReader = readPlain, Encoding = encoding, Length = nrow(object),
         Vectorized = TRUE)
 
-setGeneric("DirSource", function(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) standardGeneric("DirSource"))
-setMethod("DirSource",
-          signature(directory = "character"),
-          function(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) {
-              d <- dir(directory, full.names = TRUE, pattern = pattern, recursive = recursive, ignore.case = ignore.case)
-              isdir <- sapply(d, file.info)["isdir",]
-              files <- d[isdir == FALSE]
-              new("DirSource", LoDSupport = TRUE, FileList = files, Position = 0,
-                  DefaultReader = readPlain, Encoding = encoding, Length = length(files),
-                  Vectorized = TRUE)
-          })
+DirSource <- function(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) {
+    d <- dir(directory, full.names = TRUE, pattern = pattern, recursive = recursive, ignore.case = ignore.case)
+    isdir <- sapply(d, file.info)["isdir",]
+    files <- d[isdir == FALSE]
+    new("DirSource", LoDSupport = TRUE, FileList = files, Position = 0,
+        DefaultReader = readPlain, Encoding = encoding, Length = length(files),
+        Vectorized = TRUE)
+}
 
-setGeneric("URISource", function(object, encoding = "UTF-8") standardGeneric("URISource"))
-setMethod("URISource", signature(object = "character"),
-          function(object, encoding = "UTF-8")
-              new("URISource", LoDSupport = TRUE, URI = substitute(file(object, encoding = encoding)),
-                  Position = 0, DefaultReader = readPlain, Encoding = encoding, Length = 1, Vectorized = FALSE))
-setMethod("URISource", signature(object = "ANY"),
-          function(object, encoding = "UTF-8")
-              new("URISource", LoDSupport = TRUE, URI = match.call()$object,
-                  Position = 0, DefaultReader = readPlain, Encoding = encoding, Length = 1, Vectorized = FALSE))
+URISource <- function(object, encoding = "UTF-8")
+    new("URISource", LoDSupport = TRUE, URI = match.call()$object, Position = 0,
+        DefaultReader = readPlain, Encoding = encoding, Length = 1, Vectorized = FALSE)
 
 GmaneSource <- function(object, encoding = "UTF-8")
     XMLSource(object,
@@ -105,9 +93,8 @@ XMLSource <- function(object, parser, reader, encoding = "UTF-8") {
     corpus <- readLines(object, encoding = encoding)
     tree <- XML::xmlTreeParse(corpus, asText = TRUE)
     content <- parser(tree)
-    uri <- if (is.character(object)) substitute(file(object, encoding = encoding)) else NULL
 
-    new("XMLSource", LoDSupport = FALSE, URI = uri,
+    new("XMLSource", LoDSupport = FALSE, URI = match.call()$object,
         Content = content, Position = 0, DefaultReader = reader,
         Encoding = encoding, Length = length(content), Vectorized = FALSE)
 }
@@ -121,16 +108,16 @@ setMethod("stepNext", signature(object = "Source"),
 
 setGeneric("getElem", function(object) standardGeneric("getElem"))
 setMethod("getElem", signature(object = "VectorSource"),
-          function(object) list(content = object@Content[object@Position], uri = NULL))
+          function(object) list(content = object@Content[object@Position], uri = match.call()$object))
 setMethod("getElem", signature(object = "DataframeSource"),
-          function(object) list(content = object@Content[object@Position, ], uri = NULL))
+          function(object) list(content = object@Content[object@Position, ], uri = match.call()$object))
 setMethod("getElem",
           signature(object = "DirSource"),
           function(object) {
               filename <- object@FileList[object@Position]
               encoding <- object@Encoding
               list(content = readLines(filename, encoding = encoding),
-                   uri = substitute(file(filename, encoding = encoding)))
+                   uri = filename)
           })
 setMethod("getElem", signature(object = "URISource"),
           function(object) list(content = readLines(eval(object@URI)), uri = object@URI))
@@ -151,19 +138,15 @@ setMethod("getElem",
 setGeneric("pGetElem", function(object) standardGeneric("pGetElem"))
 setMethod("pGetElem", signature(object = "DataframeSource"),
           function(object) lapply(seq_len(object@Length),
-                                  function(x) list(content = object@Content[x,], uri = NULL)))
+                                  function(x) list(content = object@Content[x,],
+                                                   uri = match.call()$object)))
 setMethod("pGetElem", signature(object = "DirSource"),
           function(object) {
               lapply(object@FileList,
-                     function(x) {
-                         filename <- x
-                         encoding <- object@Encoding
-                         list(content = readLines(filename, encoding = encoding),
-                              uri = substitute(file(filename, encoding = encoding)))
-                     })
+                     function(x) list(content = readLines(x, encoding = object@Encoding), uri = x))
           })
 setMethod("pGetElem", signature(object = "VectorSource"),
-          function(object) lapply(object@Content, function(x) list(content = x, uri = NULL)))
+          function(object) lapply(object@Content, function(x) list(content = x, uri = match.call()$object)))
 
 setGeneric("eoi", function(object) standardGeneric("eoi"))
 setMethod("eoi", signature(object = "VectorSource"),

@@ -26,14 +26,12 @@ readTabular(mappings, \dots)
   via lexical scoping.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, load, id}:
+  A \code{function} with the signature \code{elem, language, id}:
 
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
     be read in, the second element must hold a call to extract this
     document. The call is evaluated upon a request for load on demand.}
-  \item{load}{A \code{logical} value indicating whether the document
-    corpus should be immediately loaded into memory.}
   \item{language}{A \code{character} vector giving the text's language.}
   \item{id}{A \code{character} vector representing a unique identification
     string for the returned text document.}
@@ -57,7 +55,7 @@ m <- list(.Data = "contents", Heading = "title",
 myReader <- readTabular(mappings = m)
 ds <- DataframeSource(df)
 elem <- getElem(stepNext(ds))
-(result <- myReader(elem, load = TRUE, language = "en", id = "id1"))
+(result <- myReader(elem, language = "en", id = "id1"))
 meta(result)
 }
 \author{Ingo Feinerer}

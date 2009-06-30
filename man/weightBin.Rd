@@ -8,14 +8,13 @@
 weightBin(m)
 }
 \arguments{
-  \item{m}{A \code{dgCMatrix} in term frequency format.}
+  \item{m}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
 }
 \details{
   Formally this function is a \code{WeightingFunction} with the additional
   slots \code{Name} and \code{Acronym}.
 }
 \value{
-  The weighted \code{dgCMatrix}.
+  The weighted matrix.
 }
 \author{Ingo Feinerer}
-\keyword{file}

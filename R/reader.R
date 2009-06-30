@@ -2,45 +2,45 @@
 ## Reader
 
 getReaders <- function()
-    c("readDOC", "readGmane", "readHTML", "readNewsgroup", "readPDF", "readReut21578XML", "readPlain", "readRCV1", "readTabular")
+    c("readDOC", "readGmane", "readHTML", "readNewsgroup", "readPDF", "readReut21578XML", "readReut21578XMLasPlain", "readPlain", "readRCV1", "readTabular")
 
 readPlain <- FunctionGenerator(function(...) {
-    function(elem, load, language, id) {
-        doc <- if (load) {
-            new("PlainTextDocument", .Data = elem$content, URI = elem$uri, Cached = TRUE,
-                Author = "", DateTimeStamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-                Description = "", ID = id, Origin = "", Heading = "", Language = language)
-        }
-        else {
-            new("PlainTextDocument", URI = elem$uri, Cached = FALSE,
-                Author = "", DateTimeStamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-                Description = "", ID = id, Origin = "", Heading = "", Language = language)
-        }
-
-        return(doc)
+    function(elem, language, id) {
+        doc <- new("PlainTextDocument")
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "DateTimeStamp", check = FALSE) <- as.POSIXlt(Sys.time(), tz = "GMT")
+        slot(doc, "Language", check = FALSE) <- language
+        slot(doc, ".Data", check = FALSE) <- elem$content
+        doc
     }
 })
+
+#readSlim <- function(elem, language, id) {
+#    doc <- as.character(elem$content)
+#    class(doc) <- c("MinimalDocument", "character")
+#    attr(doc, "ID") <- id
+#    attr(doc, "Language") <- language
+#    doc
+#}
 
 readXML <- FunctionGenerator(function(spec, doc, ...) {
     spec <- spec
     doc <- doc
-    function(elem, load, language, id) {
+    function(elem, language, id) {
         require("XML")
 
         tree <- XML::xmlInternalTreeParse(elem$content, asText = TRUE)
         for (n in setdiff(names(spec), ".Data"))
             meta(doc, n) <- .xml_content(tree, spec[[n]])
-        if (load) {
-            doc@.Data <- if (".Data" %in% names(spec))
-                .xml_content(tree, spec[[".Data"]])
-            else
-                structure(XML::xmlTreeParse(elem$content, asText = TRUE), class = "list") # Mask as list to bypass S4 checks
-        }
+
+        slot(doc, ".Data", check = FALSE) <- if (".Data" %in% names(spec))
+            .xml_content(tree, spec[[".Data"]])
+        else
+            structure(XML::xmlTreeParse(elem$content, asText = TRUE), class = "list") # Mask as list to bypass S4 checks
+
         XML::free(tree)
 
-        doc@Cached <- load
-        doc@URI <- elem$uri
-        doc@Language <- language
+        slot(doc, "Language", check = FALSE) <- language
 
         doc
     }
@@ -71,6 +71,19 @@ readReut21578XML <- readXML(spec = list(Author = list("node", "/REUTERS/TEXT/AUT
                             Topics = list("node", "/REUTERS/TOPICS/D")),
                             doc = new("Reuters21578Document"))
 
+readReut21578XMLasPlain <- readXML(spec = list(Author = list("node", "/REUTERS/TEXT/AUTHOR"),
+                                   .Data = list("node", "/REUTERS/TEXT/BODY"),
+                                   DateTimeStamp = list("function", function(node)
+                                   strptime(sapply(XML::getNodeSet(node, "/REUTERS/DATE"), XML::xmlValue),
+                                            format = "%d-%B-%Y %H:%M:%S",
+                                            tz = "GMT")),
+                                   Description = list("unevaluated", ""),
+                                   Heading = list("node", "/REUTERS/TEXT/TITLE"),
+                                   ID = list("attribute", "/REUTERS/@NEWID"),
+                                   Origin = list("unevaluated", "Reuters-21578 XML"),
+                                   Topics = list("node", "/REUTERS/TOPICS/D")),
+                                   doc = new("PlainTextDocument"))
+
 readRCV1 <- readXML(spec = list(Author = list("unevaluated", ""),
                     DateTimeStamp = list("function", function(node)
                         as.POSIXlt(as.character(XML::getNodeSet(node, "/newsitem/@date")), tz = "GMT")),
@@ -84,7 +97,7 @@ readRCV1 <- readXML(spec = list(Author = list("unevaluated", ""),
 
 readNewsgroup <- FunctionGenerator(function(DateFormat = "%d %B %Y %H:%M:%S", ...) {
     format <- DateFormat
-    function(elem, load, language, id) {
+    function(elem, language, id) {
         mail <- elem$content
         author <- gsub("From: ", "", grep("^From:", mail, value = TRUE))
         datetimestamp <- strptime(gsub("Date: ", "", grep("^Date:", mail, value = TRUE)),
@@ -94,42 +107,38 @@ readNewsgroup <- FunctionGenerator(function(DateFormat = "%d %B %Y %H:%M:%S", ..
         heading <- gsub("Subject: ", "", grep("^Subject:", mail, value = TRUE))
         newsgroup <- gsub("Newsgroups: ", "", grep("^Newsgroups:", mail, value = TRUE))
 
-        doc <- if (load) {
-            # The header is separated from the body by a blank line.
-            # Reference: \url{http://en.wikipedia.org/wiki/E-mail#Internet_e-mail_format}
-            for (index in seq_along(mail)) {
-                if (mail[index] == "")
-                    break
-            }
-            content <- mail[(index + 1):length(mail)]
-
-            new("NewsgroupDocument", .Data = content, URI = elem$uri, Cached = TRUE,
-                Author = author, DateTimeStamp = datetimestamp,
-                Description = "", ID = id, Origin = origin,
-                Heading = heading, Language = language, Newsgroup = newsgroup)
-        } else {
-            new("NewsgroupDocument", URI = elem$uri, Cached = FALSE, Author = author, DateTimeStamp = datetimestamp,
-                Description = "", ID = id, Origin = origin, Heading = heading, Language = language, Newsgroup = newsgroup)
+        # The header is separated from the body by a blank line.
+        # Reference: \url{http://en.wikipedia.org/wiki/E-mail#Internet_e-mail_format}
+        for (index in seq_along(mail)) {
+            if (mail[index] == "")
+                break
         }
+        content <- mail[(index + 1):length(mail)]
 
-        return(doc)
+        doc <- new("NewsgroupDocument")
+        slot(doc, ".Data", check = FALSE) <- content
+        slot(doc, "Author", check = FALSE) <- author
+        slot(doc, "DateTimeStamp", check = FALSE) <- datetimestamp
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "Origin", check = FALSE) <- origin
+        slot(doc, "Heading", check = FALSE) <- heading
+        slot(doc, "Language", check = FALSE) <- language
+        slot(doc, "Newsgroup", check = FALSE) <- newsgroup
+        doc
     }
 })
 
 # readDOC needs antiword installed to be able to extract the text
 readDOC <- FunctionGenerator(function(AntiwordOptions = "", ...) {
     AntiwordOptions <- AntiwordOptions
-    function(elem, load, language, id) {
-        if (!load)
-            warning("load on demand not supported for DOC documents")
-
-        corpus <- system(paste("antiword", AntiwordOptions,
-                               shQuote(summary(eval(elem$uri))$description)),
-                         intern = TRUE)
-
-        new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
-            Author = "", DateTimeStamp = as.POSIXlt(Sys.time(), tz = "GMT"), Description = "", ID = id,
-            Origin = "", Heading = "", Language = language)
+    function(elem, language, id) {
+        content <- system(paste("antiword", AntiwordOptions, shQuote(eval(elem$uri))), intern = TRUE)
+        doc <- new("PlainTextDocument")
+        slot(doc, ".Data", check = FALSE) <- content
+        slot(doc, "DateTimeStamp", check = FALSE) <- as.POSIXlt(Sys.time(), tz = "GMT")
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "Language", check = FALSE) <- language
+        doc
     }
 })
 
@@ -137,10 +146,8 @@ readDOC <- FunctionGenerator(function(AntiwordOptions = "", ...) {
 readPDF <- FunctionGenerator(function(PdfinfoOptions = "", PdftotextOptions = "", ...) {
     PdfinfoOptions <- PdfinfoOptions
     PdftotextOptions <- PdftotextOptions
-    function(elem, load, language, id) {
-        meta <- system(paste("pdfinfo", PdfinfoOptions,
-                             shQuote(summary(eval(elem$uri))$description)),
-                       intern = TRUE)
+    function(elem, language, id) {
+        meta <- system(paste("pdfinfo", PdfinfoOptions, shQuote(eval(elem$uri))), intern = TRUE)
         heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
         author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
         datetimestamp <- strptime(gsub("CreationDate:[[:space:]]*", "",
@@ -150,21 +157,22 @@ readPDF <- FunctionGenerator(function(PdfinfoOptions = "", PdftotextOptions = ""
         description <- gsub("Subject:[[:space:]]*", "", grep("Subject:", meta, value = TRUE))
         origin <- gsub("Creator:[[:space:]]*", "", grep("Creator:", meta, value = TRUE))
 
-        if (!load)
-            warning("load on demand not supported for PDF documents")
-
-        corpus <- system(paste("pdftotext", PdftotextOptions,
-                               shQuote(summary(eval(elem$uri))$description),
-                               "-"),
-                         intern = TRUE)
-        new("PlainTextDocument", .Data = corpus, URI = elem$uri, Cached = TRUE,
-            Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
-            Origin = origin, Heading = heading, Language = language)
+        content <- system(paste("pdftotext", PdftotextOptions, shQuote(eval(elem$uri)), "-"), intern = TRUE)
+        doc <- new("PlainTextDocument")
+        slot(doc, ".Data", check = FALSE) <- content
+        slot(doc, "Author", check = FALSE) <- author
+        slot(doc, "DateTimeStamp", check = FALSE) <- datetimestamp
+        slot(doc, "Description", check = FALSE) <- description
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "Origin", check = FALSE) <- origin
+        slot(doc, "Heading", check = FALSE) <- heading
+        slot(doc, "Language", check = FALSE) <- language
+        doc
     }
 })
 
 readHTML <- FunctionGenerator(function(...) {
-    function(elem, load, language, id) {
+    function(elem, language, id) {
         require("XML")
 
         tree <- XML::xmlTreeParse(elem$content, asText = TRUE)
@@ -184,9 +192,6 @@ readHTML <- FunctionGenerator(function(...) {
         origin <- paste(metaContents[metaNames == "DC.publisher"])
         language <- paste(metaContents[metaNames == "DC.language"])
 
-        if (!load)
-            warning("load on demand not supported for StructuredTextDocuments using HTML")
-
         content <- list("Prologue" = NULL)
         i <- 1
         for (child in XML::xmlChildren(root[["body"]])) {
@@ -200,24 +205,32 @@ readHTML <- FunctionGenerator(function(...) {
             }
         }
 
-        new("StructuredTextDocument", .Data = content, URI = elem$uri, Cached = TRUE,
-            Author = author, DateTimeStamp = datetimestamp, Description = description, ID = id,
-            Origin = origin, Heading = heading, Language = language)
+        doc <- new("StructuredTextDocument")
+        slot(doc, ".Data", check = FALSE) <- content
+        slot(doc, "Author", check = FALSE) <- author
+        slot(doc, "DateTimeStamp", check = FALSE) <- datetimestamp
+        slot(doc, "Description", check = FALSE) <- description
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "Origin", check = FALSE) <- origin
+        slot(doc, "Heading", check = FALSE) <- heading
+        slot(doc, "Language", check = FALSE) <- language
+        doc
     }
 })
 
 readTabular <- FunctionGenerator(function(mappings, ...) {
     mappings <- mappings
-    function(elem, load, language, id) {
-        doc <- new("PlainTextDocument", URI = elem$uri, Cached = load,
-                   Author = "", DateTimeStamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-                   Description = "", ID = id, Origin = "", Heading = "", Language = language)
+    function(elem, language, id) {
+        doc <- new("PlainTextDocument")
+        slot(doc, "DateTimeStamp", check = FALSE) <- as.POSIXlt(Sys.time(), tz = "GMT")
+        slot(doc, "ID", check = FALSE) <- id
+        slot(doc, "Language", check = FALSE) <- language
 
         for (n in setdiff(names(mappings), ".Data"))
             meta(doc, n) <- elem$content[, mappings[[n]]]
 
-        if (load && (".Data" %in% names(mappings)))
-            doc@.Data <- elem$content[, mappings[[".Data"]]]
+        if (".Data" %in% names(mappings))
+            slot(doc, ".Data", check = FALSE) <- elem$content[, mappings[[".Data"]]]
 
         doc
     }
@@ -234,11 +247,17 @@ convertRCV1Plain <- function(node, ...) {
     names(content) <- c("doc", "dtd")
     content <- unlist(XML::xmlApply(XML::xmlRoot(content)[["text"]], XML::xmlValue), use.names = FALSE)
 
-    new("PlainTextDocument", .Data = content, Cached = TRUE, URI = NULL,
-        Author = Author(node), DateTimeStamp = DateTimeStamp(node),
-        Description = Description(node), ID = ID(node), Origin =
-        Origin(node), Heading = Heading(node), Language = Language(node),
-        LocalMetaData = LocalMetaData(node))
+    doc <- new("PlainTextDocument")
+    slot(doc, ".Data", check = FALSE) <- content
+    slot(doc, "Author", check = FALSE) <- Author(node)
+    slot(doc, "DateTimeStamp", check = FALSE) <- DateTimeStamp(node)
+    slot(doc, "Description", check = FALSE) <- Description(node)
+    slot(doc, "ID", check = FALSE) <- ID(node)
+    slot(doc, "Origin", check = FALSE) <- Origin(node)
+    slot(doc, "Heading", check = FALSE) <- Heading(node)
+    slot(doc, "Language", check = FALSE) <- Language(node)
+    slot(doc, "LocalMetaData", check = FALSE) <- LocalMetaData(node)
+    doc
 }
 
 # Parse a <REUTERS></REUTERS> element from a well-formed Reuters-21578 XML file
@@ -251,11 +270,19 @@ convertReut21578XMLPlain <- function(node, ...) {
                               tz = "GMT")
     description <- ""
     id <- XML::xmlAttrs(node)[["NEWID"]]
-    corpus <- .xml_value_if_not_null(node[["TEXT"]][["BODY"]], "")
+    content <- .xml_value_if_not_null(node[["TEXT"]][["BODY"]], "")
     heading <- .xml_value_if_not_null(node[["TEXT"]][["TITLE"]], "")
     topics <- unlist(XML::xmlApply(node[["TOPICS"]], XML::xmlValue), use.names = FALSE)
 
-    new("PlainTextDocument", .Data = corpus, Cached = TRUE, URI = NULL, Author = author, DateTimeStamp = datetimestamp,
-        Description = description, ID = id, Origin = "Reuters-21578 XML", Heading = heading, Language = "en_US",
-        LocalMetaData = list(Topics = topics))
+    doc <- new("PlainTextDocument")
+    slot(doc, ".Data", check = FALSE) <- content
+    slot(doc, "Author", check = FALSE) <- author
+    slot(doc, "DateTimeStamp", check = FALSE) <- datetimestamp
+    slot(doc, "Description", check = FALSE) <- description
+    slot(doc, "ID", check = FALSE) <- id
+    slot(doc, "Origin", check = FALSE) <- "Reuters-21578 XML"
+    slot(doc, "Heading", check = FALSE) <- heading
+    slot(doc, "Language", check = FALSE) <- "eng"
+    slot(doc, "LocalMetaData", check = FALSE) <- list(Topics = topics)
+    doc
 }

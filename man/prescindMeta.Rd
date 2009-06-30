@@ -1,30 +1,29 @@
-\name{prescindMeta-methods}
-\docType{methods}
+\name{prescindMeta}
 \alias{prescindMeta}
-\alias{prescindMeta-methods}
-\alias{prescindMeta,Corpus,character-method}
-\title{Methods for Function prescindMetadata in Package `tm'}
+\title{Prescind meta data}
 \description{
-Methods for function \code{prescindMeta} in package \pkg{tm}.
+Extracts meta data from each individual document (either stored in its slots
+or in additional user-defined local meta data pairs) of a corpus and
+creates a dataframe which contains both the global meta data information
+of the corpus plus the extracted (i.e., shifted up) local meta data.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "Corpus", meta = "character"}{Copies the
-      \code{meta} data from document slots or (local) document meta data
-      of all documents in \code{object} to the (global) \code{DMetaData}
-      data frame of \code{object} and returns the whole collection.}
-  }
+\usage{
+prescindMeta(object, meta)
+}
+\arguments{
+  \item{object}{a corpus.}
+  \item{meta}{a character vector of meta data names to be shifted up.}
 }
 \value{
-  A \code{\link{Corpus}} constructed from \code{object} with shifted up
+  A data frame constructed from \code{object} with shifted up
   \code{meta} data.
 }
 \seealso{
-  \code{\link{DMetaData}}
+  \code{\link{DMetaData}}, and \code{\link{meta}}
 }
 \examples{
 data("crude")
 DMetaData(crude)
-DMetaData(prescindMeta(crude, c("ID", "Heading")))
+meta(crude, tag = "ID", type = "local")
+prescindMeta(crude, c("ID", "Heading"))
 }
-\keyword{methods}

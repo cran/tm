@@ -4,8 +4,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[round]{natbib}
 \usepackage{url}
-\DeclareUnicodeCharacter{201C}{"}
-\DeclareUnicodeCharacter{201D}{"}
 
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\proglang}[1]{\textsf{#1}}

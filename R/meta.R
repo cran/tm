@@ -1,48 +1,58 @@
 # Author: Ingo Feinerer
 
-setGeneric("meta", function(object, tag = NULL, type = NULL) standardGeneric("meta"))
+setGeneric("meta", function(object, tag, type = NULL) standardGeneric("meta"))
 setMethod("meta",
           signature(object = "Corpus"),
-          function(object, tag = NULL, type = "indexed") {
-              if ((type != "indexed") && (type != "corpus") && (type != "local"))
-                  stop("invalid type")
-              if (is.null(tag) && type == "indexed")
-                  return(DMetaData(object))
-              if (is.null(tag) && type == "corpus")
-                  return(CMetaData(object))
-              if (is.null(tag) && type == "local")
-                  return(invisible(sapply(object, meta)))
-              if (type == "indexed")
+          function(object, tag, type = c("indexed", "corpus", "local")) {
+              type <- match.arg(type)
+              if (identical(type, "indexed"))
                   return(DMetaData(object)[tag])
-              if (type == "local")
-                  return(slot(tag, object))
-              else # (type == "corpus")
+              if (missing(tag) && identical(type, "corpus"))
+                  return(CMetaData(object))
+              if (identical(type, "corpus"))
                   return(CMetaData(object)@MetaData[[tag]])
+              if (missing(tag) && identical(type, "local"))
+                  return(invisible(lapply(object, meta)))
+              if (identical(type, "local"))
+                  return(lapply(object, meta, tag))
           })
 setMethod("meta",
           signature(object = "TextRepository"),
-          function(object, tag = NULL, type = NULL) {
-              if (is.null(tag))
+          function(object, tag, type = NULL) {
+              if (missing(tag))
                   RepoMetaData(object)
               else
                   RepoMetaData(object)[[tag]]
           })
 setMethod("meta",
           signature(object = "TextDocument"),
-          function(object, tag = NULL, type = NULL) {
-              if (is.null(tag)) {
+          function(object, tag, type = NULL) {
+              if (missing(tag)) {
                   slots <- sort(setdiff(slotNames(object), c(".Data", "LocalMetaData")))
                   cat("Available meta data pairs are:\n")
                   for (s in slots)
                       cat(sprintf("  %-13s: %s\n", s, paste(as(slot(object, s), "character"), collapse = " ")))
-                  cat("User-defined local meta data pairs are:\n")
-                  show(LocalMetaData(object))
+                  if (length(LocalMetaData(object)) > 0) {
+                      cat("User-defined local meta data pairs are:\n")
+                      show(LocalMetaData(object))
+                  }
               }
               else {
-                  if (tag %in% slotNames(object)) show(slot(object, tag))
-                  else show(LocalMetaData(object)[[tag]])
+                  if (tag %in% slotNames(object)) slot(object, tag)
+                  else LocalMetaData(object)[[tag]]
               }
           })
+#setMethod("meta",
+#          signature(object = "MinimalDocument"),
+#          function(object, tag, type = NULL) {
+#              if (missing(tag)) {
+#                  cat("Available meta data pairs are:\n")
+#                  for (s in c("ID", "Language"))
+#                      cat(sprintf("  %-8s: %s\n", s, paste(as(attr(object, s), "character"), collapse = " ")))
+#              }
+#              else
+#                  attr(object, tag)
+#          })
 
 setGeneric("meta<-", function(object, tag, type = NULL, value) standardGeneric("meta<-"))
 setReplaceMethod("meta",

@@ -22,7 +22,7 @@ readHTML(...)
   data structures which need a lot of configuration options.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, load, id}:
+  A \code{function} with the signature \code{elem, language, id}:
   
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
@@ -42,7 +42,6 @@ readHTML(...)
 }
 \examples{
 html <- system.file("texts", "html", package = "tm")
-\dontrun{(Corpus(DirSource(html), readerControl = list(reader = readHTML, load = TRUE)))}
+\dontrun{(Corpus(DirSource(html), readerControl = list(reader = readHTML)))}
 }
 \author{Ingo Feinerer}
-\keyword{file}

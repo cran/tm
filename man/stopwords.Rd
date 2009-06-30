@@ -5,16 +5,16 @@
   Return stopwords in different languages.
 }
 \usage{
-stopwords(language = "en")
+stopwords(language = "eng")
 }
 \arguments{
-  \item{language}{A \code{character} giving the desired language.}
+  \item{language}{a \code{character} giving the desired language.}
 }
 \details{At the moment supported languages are \code{danish},
   \code{dutch}, \code{english}, \code{finnish}, \code{french},
   \code{german}, \code{hungarian}, \code{italian}, \code{norwegian},
   \code{portuguese}, \code{russian}, \code{spanish}, and
-  \code{swedish}. Alternatively, their \acronym{Iso} 639-1 code may be
+  \code{swedish}. Alternatively, their \acronym{ISO} 639-2 code may be
   used.}
 \value{A character vector containing the requested stopwords.}
 \examples{

@@ -25,4 +25,3 @@ data("crude")
 x <- tmMap(crude, stemDoc, lazy = TRUE)
 x <- materialize(x)
 }
-\keyword{file}

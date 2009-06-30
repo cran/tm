@@ -9,5 +9,5 @@ makeChunks <- function(corpus, chunksize) {
                         list(corpus[[k]][s[i]:(s[i+1]-1)]))
         }
     }
-    return(as(chunks, "Corpus"))
+    as(chunks, "VCorpus")
 }

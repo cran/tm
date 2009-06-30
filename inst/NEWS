@@ -1,5 +1,29 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.4
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   The Corpus class is now virtual providing an abstract
+        interface.
+
+    o   VCorpus, the default implementation of the abstract corpus
+        interface (by subclassing), provides a corpus with volatile (=
+        standard R object) semantics. It loads all documents into
+        memory, and is designed for small to medium-sized data sets.
+
+    o   PCorpus, an implementation of the abstract corpus interface (by
+        subclassing), provides a corpus with permanent storage
+        semantics. The actual data is stored in an external database
+        (file) object (as supported by the filehash package), with
+        automatic (un-)loading into memory. It is designed for systems
+        with small memory.
+
+    o   Language codes are now in ISO 639-2 (instead of ISO 639-1).
+
+    o   Reader functions no longer have a load argument for lazy
+        loading.
+
                 CHANGES IN tm VERSION 0.3-4
 
 SIGNIFICANT USER-VISIBLE CHANGES

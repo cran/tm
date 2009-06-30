@@ -40,63 +40,67 @@ introductory article on text mining in \proglang{R} was published in
 \section*{Data Import}
 The main structure for managing documents in \pkg{tm} is a so-called
 \class{Corpus}, representing a collection of text documents. A corpus
-can be created via its constructor
-\code{Corpus(object, readerControl, dbControl)}.
+is an abstract concept (modelled via a virtual class), and there can
+exist several implementations in parallel. The default implementation
+is the so-called \class{VCorpus} (short for \emph{Volatile Corpus})
+which realizes a semantics as known from most \proglang{R} objects:
+corpora are \proglang{R} objects held fully in memory. Such a volatile
+corpus can be created via the constructor \code{Corpus(object,
+  readerControl)}. Another implementation is the \class{PCorpus} which
+implements a \emph{Permanent Corpus} semantics, i.e., the
+documents are physically located on a disk, and its changes are
+reflected to all \proglang{R} objects associated with it.
 
-\code{object} must be a \class{Source} object which abstracts the
-input location. Available sources provided by \pkg{tm} are
-\class{DirSource}, \class{VectorSource}, \class{DataframeSource},
-\class{GmaneSource} and \class{ReutersSource} which handle a
-directory, a vector interpreting each component as document, \acronym{Csv}
-files, a \acronym{Rss} feed as delivered by the Gmane mailing list
-archive service, and a Reuters file containing several documents,
-respectively.  Except \class{DirSource}, which is designed
-solely for directories on a file system, and \class{VectorSource},
-which only accepts (character) vectors, all other implemented sources
-can take connections as input (a character string is interpreted as
-file path). \code{getSources()} lists available sources, and the
-user can create his own sources.
+Within the corpus constructor, \code{object} must be a \class{Source}
+object which abstracts the input location. \pkg{tm} provides a set of
+predefined sources, e.g., \class{DirSource}, \class{VectorSource}, or
+\class{DataframeSource}, which handle a directory, a vector
+interpreting each component as document, data frame like structures
+(like \acronym{CSV} files), respectively.  Except \class{DirSource},
+which is designed solely for directories on a file system, and
+\class{VectorSource}, which only accepts (character) vectors, most
+other implemented sources can take connections as input (a character
+string is interpreted as file path). \code{getSources()} lists
+available sources, and the user can create his own sources.
 
-\code{readerControl} has to be a list with the named components
-\code{reader}, \code{language}, and \code{load}. The first component
-\code{reader} constructs a text document from elements delivered by a
-source. The \pkg{tm} package ships with several readers (\code{readPlain()}
-(default), \code{readRCV1()}, \code{readReut21578XML()},
-\code{readGmane()}, \code{readNewsgroup()}, \code{readPDF()},
-\code{readDOC()} and \code{readHTML()}). See \code{getReaders()} for
-an up-to-date list of available readers. Each source has a default
-reader which can be overridden. E.g., for \code{DirSource} the default
-just reads in the input files and interprets their content as
-text. The second component \code{language} sets the texts' language,
-the third component \code{load} can activate lazy document loading,
-i.e., whether documents should be immediately loaded into memory or
-not.
+The second argument \code{readerControl} of the corpus constructor has
+to be a list with the named components \code{reader} and
+\code{language}. The first component \code{reader} constructs a text
+document from elements delivered by a source. The \pkg{tm} package
+ships with several readers (e.g., \code{readPlain()},
+\code{readGmane()}, \code{readNewsgroup()}, \code{readRCV1()},
+\code{readReut21578XMLasPlain()}, \code{readPDF()}, \code{readDOC()},
+\ldots). See \code{getReaders()} for an up-to-date list of available
+readers. Each source has a default reader which can be
+overridden. E.g., for \code{DirSource} the default just reads in the
+input files and interprets their content as text. Finally, the second
+component \code{language} sets the texts' language (preferably using
+\acronym{ISO} 639-2 codes).
 
-Finally \code{dbControl} has to be a list with the named components
-\code{useDb} indicating that database support should be activated,
-\code{dbName} giving the filename holding the sourced out objects
-(i.e., the database), and  \code{dbType} holding a valid database type
-as supported by package \pkg{filehash}. Activated database support reduces
-the memory demand, however, access gets slower since each operation
-is limited by the hard disk's read and write capabilities.
+In case of a permanent corpus, \code{dbControl} has to be a list with
+the named components \code{dbName} giving the filename holding the
+sourced out objects (i.e., the database), and \code{dbType} holding a
+valid database type as supported by package \pkg{filehash}. Activated
+database support reduces the memory demand, however, access gets
+slower since each operation is limited by the hard disk's read and
+write capabilities.
 
 So e.g., plain text files in the directory \code{txt} containing Latin
-(\code{la}) texts by the Roman poet \emph{Ovid} can be read in with
+(\code{lat}) texts by the Roman poet \emph{Ovid} can be read in with
 following code:
 <<Ovid,keep.source=TRUE>>=
 txt <- system.file("texts", "txt", package = "tm")
 (ovid <- Corpus(DirSource(txt),
-                readerControl = list(reader = readPlain,
-                                     language = "la")))
+                readerControl = list(language = "lat")))
 @
 Another example could be mails from newsgroups (as found in the
-\acronym{Uci} \acronym{Kdd} newsgroup data set):
+\acronym{UCI} \acronym{KDD} newsgroup data set):
 <<Mails,keep.source=TRUE>>=
 newsgroup <- system.file("texts", "newsgroup", package = "tm")
 
 Corpus(DirSource(newsgroup),
        readerControl = list(reader = readNewsgroup,
-                            language = "en_US"))
+                            language = "eng"))
 @
 
 For simple examples \code{VectorSource} is quite useful, as it can
@@ -115,7 +119,7 @@ reuters <- Corpus(DirSource(reut21578),
 @
 
 \section*{Data Export}
-For the case you have created a text collection via manipulating other
+For the case you have created a corpus via manipulating other
 objects in \proglang{R}, thus do not have the texts already stored on
 a hard disk, and want to save the text documents to disk, you can
 simply use standard \proglang{R} routines for writing out plain text
@@ -129,34 +133,35 @@ encapsulates this functionality.
 
 \section*{Inspecting Corpora}
 Custom \code{show()} and \code{summary()} methods are available, which
-hide the raw amount of information (consider a collection could
-consist of several thousand documents, like a
-database). \code{summary()} gives more details on meta data than
-\code{show()}, whereas the full content of text documents is displayed
-with \code{inspect()} on a collection.
+hide the raw amount of information (consider a corpus could consist of
+several thousand documents, like a database). \code{summary()} gives
+more details on meta data than \code{show()}, whereas the full content
+of text documents is displayed with \code{inspect()}.
 <<>>=
 inspect(ovid[1:2])
 @
 
 \section*{Transformations}
-Once we have a text document collection we typically want to modify
-the documents in it, e.g., stemming, stopword removal, et cetera. In
-\pkg{tm}, all this functionality is subsumed into the concept of
+Once we have a corpus we typically want to modify the documents in it,
+e.g., stemming, stopword removal, et cetera. In \pkg{tm}, all this
+functionality is subsumed into the concept of
 \emph{transformation}s. Transformations are done via the \code{tmMap}
 function which applies a function to all elements of the
-collection. Basically, all transformations work on single text documents
-and \code{tmMap} just applies them to all documents in a document
-collection.
+corpus. Basically, all transformations work on single text documents
+and \code{tmMap} just applies them to all documents in a corpus.
 
 \subsection*{Converting to Plain Text Documents}
-The text document collection \code{reuters} contains documents
-in \acronym{Xml} format. We have no further use for the \acronym{Xml}
+The corpus \code{reuters} contains documents
+in \acronym{XML} format. We have no further use for the \acronym{XML}
 interna and just want to work with the text content. This can be done
 by converting the documents to plain text documents. It is done by the
 generic \code{asPlain()}.
 <<>>=
 reuters <- tmMap(reuters, asPlain)
 @
+Note that alternatively we could have read in the files with the
+\code{readReut21578XMLasPlain} reader which already returns a plain
+text document in the first place.
 
 \subsection*{Eliminating Extra Whitespace}
 Extra whitespace is eliminated by:
@@ -194,7 +199,7 @@ and the string ``\code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES
   SALE}'' as their heading (both are meta data slot variables of the
 text document).
 <<>>=
-query <- "identifier == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
+query <- "id == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
 tmFilter(reuters, FUN = sFilter, query)
 @
 There is also a full text search filter available (which is default
@@ -219,16 +224,16 @@ DublinCore(crude[[1]], "Creator") <- "Ano Nymous"
 meta(crude[[1]])
 @
 
-For corpora the story is a bit more difficult. Text document
-collections in \pkg{tm} have two types of meta data: one is the meta
-data on the document collection level (\code{corpus} level), the other
-is the meta data related to the individual documents (\code{indexed}
-level) in form of a data frame. The latter is often done for
-performance reasons (hence the named \code{indexed} for indexing) or
-because the meta data has an own entity but still relates directly to
-individual text documents, e.g., a classification result; the
-classifications directly relate to the documents, but the set of classification
-levels forms an own entity. Both cases can be handled with \code{meta()}:
+For corpora the story is a bit more difficult. Corpora in \pkg{tm}
+have two types of meta data: one is the meta data on the corpus level
+(\code{corpus}), the other is the meta data related to the individual
+documents (\code{indexed}) in form of a data frame. The latter is
+often done for performance reasons (hence the named \code{indexed} for
+indexing) or because the meta data has an own entity but still relates
+directly to individual text documents, e.g., a classification result;
+the classifications directly relate to the documents, but the set of
+classification levels forms an own entity. Both cases can be handled
+with \code{meta()}:
 <<>>=
 meta(crude, tag = "test", type = "corpus") <- "test meta"
 meta(crude, type = "corpus")
@@ -237,17 +242,16 @@ meta(crude)
 @
 
 \section*{Standard Operators and Functions}
-Many standard operators and functions (\code{[}, \code{[<-}, \code{[[}, \code{[[<-},
-\code{c()}, \code{length()}, \code{lapply()}, \code{sapply}()) are
-available for text document collections with semantics similar to standard \proglang{R}
-routines. E.g., \code{c()} concatenates two (or more) text document
-collections. Applied to several text documents it returns a text
-document collection. The meta data is automatically updated, if text
-document collections are concatenated (i.e., merged).
+Many standard operators and functions (\code{[}, \code{[<-},
+\code{[[}, \code{[[<-}, \code{c()}, \code{length()}, \code{lapply()},
+\code{sapply}()) are available for corpora with semantics similar to
+standard \proglang{R} routines. E.g., \code{c()} concatenates two (or
+more) corpora. Applied to several text documents it
+returns a corpus. The meta data is automatically updated, if corpora
+are concatenated (i.e., merged).
 
 There is also a custom element-of operator---it checks whether a text
-document is already in a text document collection (meta data is not
-checked, only the corpus):
+document is already in a corpus (meta data is not checked):
 <<>>=
 reuters[[1]] %IN% reuters
 crude[[1]] %IN% reuters
@@ -258,7 +262,7 @@ A common approach in text mining is to create a term-document matrix
 from a corpus. In the \pkg{tm} package the classes
 \class{TermDocumentMatrix} and \class{DocumentTermMatrix} (depending
 on whether you want terms as rows and documents as columns, or vice
-versa) handle sparse matrices for text document collections.
+versa) handle sparse matrices for corpora.
 <<>>=
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[1:5,150:155])

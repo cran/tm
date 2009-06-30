@@ -15,21 +15,6 @@ setMethod("appendElem",
               return(object)
           })
 
-setMethod("appendMeta",
-          signature(object = "TextRepository"),
-          function(object, cmeta = NULL, dmeta = NULL) {
-              object@RepoMetaData <- c(object@RepoMetaData, cmeta)
-              return(object)
-          })
-
-setMethod("removeMeta",
-          signature(object = "TextRepository"),
-          function(object, cname = NULL, dname = NULL) {
-              if (!is.null(cname))
-                  object@RepoMetaData <- RepoMetaData(object)[names(RepoMetaData(object)) != cname]
-              return(object)
-          })
-
 setMethod("length",
           signature(x = "TextRepository"),
           function(x){

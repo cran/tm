@@ -1,16 +1,12 @@
 # Author: Ingo Feinerer
 # Filters
 
-getFilters <- function() {
-   c("searchFullText", "sFilter", "tmIntersect")
-}
+getFilters <- function() c("searchFullText", "sFilter", "tmIntersect")
 
 setGeneric("searchFullText", function(object, pattern, ...) standardGeneric("searchFullText"))
 setMethod("searchFullText",
           signature(object = "PlainTextDocument", pattern = "character"),
-          function(object, pattern, ...) {
-              any(grep(pattern, Content(object)))
-          })
+          function(object, pattern, ...) any(grep(pattern, Content(object))))
 attr(searchFullText, "doclevel") <- TRUE
 
 sFilter <- function(object, s, ...) {
@@ -19,23 +15,15 @@ sFilter <- function(object, s, ...) {
     close(con)
     localMetaNames <- unique(names(sapply(object, LocalMetaData)))
     localMetaTokens <- localMetaNames[localMetaNames %in% tokens]
-    n <- names(DMetaData(object))
-    tags <- c("Author", "DateTimeStamp", "Description", "ID", "Origin", "Heading", "Language", localMetaTokens)
-    query.df <- DMetaData(prescindMeta(object, tags))
-    if (DBControl(object)[["useDb"]])
-        DMetaData(object) <- DMetaData(object)[, setdiff(n, tags), drop = FALSE]
+    tags <- c("Author", "DateTimeStamp", "Description", "ID", "Origin", "Heading", "Language")
+    query.df <- prescindMeta(object, c(tags, localMetaTokens))
     # Rename to avoid name conflicts
-    names(query.df)[names(query.df) == "Author"] <- "author"
-    names(query.df)[names(query.df) == "DateTimeStamp"] <- "datetimestamp"
-    names(query.df)[names(query.df) == "Description"] <- "description"
-    names(query.df)[names(query.df) == "ID"] <- "identifier"
-    names(query.df)[names(query.df) == "Origin"] <- "origin"
-    names(query.df)[names(query.df) == "Heading"] <- "heading"
-    names(query.df)[names(query.df) == "Language"] <- "language"
+    for (tag in tags)
+        names(query.df)[names(query.df) == tag] <- tolower(tag)
     attach(query.df)
     try(result <- rownames(query.df) %in% row.names(query.df[eval(parse(text = s)), ]))
     detach(query.df)
-    return(result)
+    result
 }
 attr(sFilter, "doclevel") <- FALSE
 

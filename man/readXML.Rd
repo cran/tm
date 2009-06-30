@@ -6,7 +6,7 @@
   the XML document can be described with a so-called specification.
 }
 \usage{
-readXML(spec, doc, ...)
+readXML(spec, doc, \dots)
 }
 \arguments{
   \item{spec}{a named \code{list} of \code{list}s each containing two
@@ -25,7 +25,7 @@ readXML(spec, doc, ...)
       \item{type = "attribute", spec = "XPathExpression":}{the XPath
 	expression \code{spec} extracts information from an attribute of
 	an XML node.}
-      \item{type = "function", spec = function(tree) ...:}{The function
+      \item{type = "function", spec = function(tree) \dots:}{The function
 	\code{spec} is called, passing over a tree representation (as
 	delivered by \code{xmlInternalTreeParse} from package \pkg{XML})
 	of the read in XML document as first argument.}
@@ -34,7 +34,7 @@ readXML(spec, doc, ...)
     }
   }
   \item{doc}{an (empty) document of some subclass of \code{\linkS4class{TextDocument}}}
-  \item{...}{arguments for the generator function.}
+  \item{\dots}{arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -43,14 +43,12 @@ readXML(spec, doc, ...)
   via lexical scoping.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, load, id}:
+  A \code{function} with the signature \code{elem, language, id}:
 
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
     be read in, the second element must hold a call to extract this
     document. The call is evaluated upon a request for load on demand.}
-  \item{load}{A \code{logical} value indicating whether the document
-    corpus should be immediately loaded into memory.}
   \item{language}{A \code{character} vector giving the text's language.}
   \item{id}{A \code{character} vector representing a unique identification
     string for the returned text document.}

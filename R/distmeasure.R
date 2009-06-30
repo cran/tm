@@ -8,7 +8,6 @@ dissimilarity.TermDocumentMatrix <- function(x, y = NULL, method)
 dissimilarity.DocumentTermMatrix <- function(x, y = NULL, method)
     proxy::dist(as.matrix(x), y, method)
 
-# TODO: Shound work for all objects derived from TextDocument
 dissimilarity.PlainTextDocument <- function(x, y = NULL, method) {
     tdm <- TermDocumentMatrix(c(x, y))
     dissimilarity(tdm, method = method)

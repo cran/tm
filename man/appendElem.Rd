@@ -26,15 +26,4 @@ Methods for function \code{appendElem} in package \pkg{tm}.
   \code{\link{DMetaData}}
   \code{\link{RepoMetaData}}
 }
-\examples{
-data("acq")
-data("crude")
-summary(crude)
-tdcl <- appendMeta(crude, dmeta = list("number" = 1:20, "letter" = rep(letters[1:10],2)))
-summary(tdcl)
-DMetaData(tdcl)
-tdcl <- appendElem(tdcl, acq[[1]], c(21, letters[1]))
-summary(tdcl)
-DMetaData(tdcl)
-}
 \keyword{methods}

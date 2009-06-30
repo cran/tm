@@ -1,27 +1,23 @@
 \name{[-methods}
 \docType{methods}
-\alias{[-methods}
-\alias{[<--methods}
-\alias{[[-methods}
-\alias{[[<--methods}
-\alias{[,Corpus,ANY,ANY,ANY-method}
-\alias{[.TermDocumentMatrix}
-\alias{[<-,Corpus,ANY,ANY,ANY-method}
-\alias{[[,Corpus,ANY,ANY-method}
-\alias{[[<-,Corpus,ANY,ANY-method}
-\alias{[,Corpus-method}
-\alias{[<-,Corpus-method}
-\alias{[[,Corpus-method}
-\alias{[[<-,Corpus-method}
+\alias{[,PCorpus-method}
+\alias{[,VCorpus-method}
+\alias{[<-,PCorpus-method}
+\alias{[<-,VCorpus-method}
+\alias{[[,PCorpus-method}
+\alias{[[,VCorpus-method}
+\alias{[[<-,PCorpus-method}
+\alias{[[<-,VCorpus-method}
 \title{Methods for Subset Functions in Package `tm'}
 \description{
   Methods for subset functions \code{[}, \code{[<-}, \code{[[} and
   \code{[[<-} in package \pkg{tm}.
 }
 \arguments{
-  \item{x = "Corpus"}{The text document collection to be subsetted
+  \item{x = "VCorpus"}{The corpus to be subsetted
     or modified.}
-  \item{x = "TermDocumentMatrix"}{The term-document matrix to be subsetted.}
+  \item{x = "PCorpus"}{The corpus to be subsetted
+    or modified.}
 }
 \examples{
 data("crude")

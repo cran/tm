@@ -41,6 +41,7 @@ data("crude")
 meta(crude[[1]])
 meta(crude[[1]], tag = "Topics")
 meta(crude[[1]], tag = "Comment") <- "A short comment."
+meta(crude[[1]], tag = "Topics") <- NULL
 meta(crude[[1]])
 meta(crude)
 meta(crude, type = "corpus")
