@@ -1,5 +1,32 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.5
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   All classes, functions, and generics are reimplemented using
+        the S3 class system.
+
+    o   Following functions have been renamed:
+
+          activateCluster()   to tm_startCluster()     ,
+          asPlain()           to as.PlainTextDocument(),
+          deactivateCluster() to tm_stopCluster()      ,
+          tmFilter()          to tm_filter()           ,
+          tmIndex()           to tm_index()            ,
+          tmIntersect()       to tm_intersect()        , and
+          tmMap()             to tm_map()              .
+
+    o   Mail handling functionality is factored out to the
+        tm.plugin.mail package.
+
+DEPRECATED & DEFUNCT
+
+    o   Following functions have been removed:
+
+          tmTolower()         (use tolower() instead), and
+          replacePatterns()   (use gsub()    instead).
+
                 CHANGES IN tm VERSION 0.4
 
 SIGNIFICANT USER-VISIBLE CHANGES
@@ -23,6 +50,16 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
     o   Reader functions no longer have a load argument for lazy
         loading.
+
+NEW FEATURES
+
+    o   The reader function readReut21578XMLasPlain() was added and
+    	combines the functionality of readReut21578XML() and asPlain().
+
+BUG FIXES
+
+    o   weightTfIdf() no longer applies a binary weighting to an input
+        matrix in term frequency format (which happened only in 0.3-4).
 
                 CHANGES IN tm VERSION 0.3-4
 

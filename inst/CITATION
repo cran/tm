@@ -9,7 +9,7 @@ note <- sprintf("R package version %s.", meta$Version)
 citEntry(entry = "Manual",
          title = "tm: Text Mining Package",
          author = {
-             personList(person(first = "Ingo", last = "Feinerer",
+             personList(person("Ingo", "Feinerer",
                                email = "feinerer@logic.at"))
          },
          year = year,
@@ -26,12 +26,12 @@ citEntry(entry = "Manual",
 citEntry(entry = "Article",
          title = "Text Mining Infrastructure in R",
          author = {
-             personList(person(first = "Ingo", last = "Feinerer",
+             personList(person("Ingo", "Feinerer",
                                email = "feinerer@logic.at"),
-			person(first = "Kurt", last = "Hornik",
+			person("Kurt", "Hornik",
                                email = "Kurt.Hornik@R-project.org"),
-			person(first = "David", last = "Meyer",
-                               email = "David.Meyer@wu-wien.ac.at"))
+			person("David", "Meyer",
+                               email = "David.Meyer@wu.ac.at"))
          },
          year = 2008,
          journal = "Journal of Statistical Software",

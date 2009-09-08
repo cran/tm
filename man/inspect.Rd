@@ -1,16 +1,16 @@
 \name{inspect}
 \alias{inspect}
-\alias{inspect.VCorpus}
 \alias{inspect.PCorpus}
 \alias{inspect.TermDocumentMatrix}
+\alias{inspect.VCorpus}
 \title{Inspect Objects}
 \description{
   Inspect, i.e., display detailed information on a corpus or a
   term-document matrix.
 }
 \usage{
-\method{inspect}{VCorpus}(x)
 \method{inspect}{PCorpus}(x)
+\method{inspect}{VCorpus}(x)
 \method{inspect}{TermDocumentMatrix}(x)
 }
 \arguments{

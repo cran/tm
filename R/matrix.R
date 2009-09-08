@@ -1,68 +1,41 @@
 # Author: Ingo Feinerer
 
-TermDocMatrix <- function(object, control = list()) {
+TermDocMatrix <- function(x, control = list()) {
     .Defunct("DocumentTermMatrix", package = "tm")
 }
 
-TermDocumentMatrix <- function(object, control = list()) UseMethod("TermDocumentMatrix", object)
-TermDocumentMatrix.PCorpus <- function(object, control = list()) {
+TermDocumentMatrix <- function(x, control = list()) UseMethod("TermDocumentMatrix", x)
+TermDocumentMatrix.PCorpus <- TermDocumentMatrix.VCorpus <- function(x, control = list()) {
     weight <- control$weighting
     if (is.null(weight))
         weight <- weightTf
 
-    tflist <- lapply(object, termFreq, control)
-    tflist <- lapply(tflist, function(x) x[x > 0])
-    names(tflist) <- NULL
-
-    v <- unlist(tflist)
-    i <- names(v)
-    v <- as.numeric(v)
-    allTerms <- sort(unique(i))
-    i <- match(i, allTerms)
-    j <- rep(seq_along(object), sapply(tflist, length))
-    rm(tflist)
-
-    tdm <- structure(list(i = i, j = j, v = v, nrow = length(allTerms), ncol = length(object),
-                          dimnames = list(Terms = allTerms, Docs = sapply(object, ID)),
-                          Weighting = c(weight@Name, weight@Acronym)),
-                     class = c("TermDocumentMatrix", "simple_triplet_matrix"))
-    weight(tdm)
-}
-#TermDocumentMatrix.FCorpus <-
-TermDocumentMatrix.VCorpus <- function(object, control = list()) {
-    weight <- control$weighting
-    if (is.null(weight))
-        weight <- weightTf
-
-    lazyTmMap <- meta(object, tag = "lazyTmMap", type = "corpus")
+    lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
-        .Call("copyCorpus", object, materialize(object))
-
-    object <- object@.Data
+        .Call("copyCorpus", x, materialize(x))
 
     tflist <- if (clusterAvailable())
-        snow::parLapply(snow::getMPIcluster(), object, termFreq, control)
+        snow::parLapply(snow::getMPIcluster(), x, termFreq, control)
     else
-        lapply(object, termFreq, control)
-    tflist <- lapply(tflist, function(x) x[x > 0])
+        lapply(x, termFreq, control)
+    tflist <- lapply(tflist, function(y) y[y > 0])
 
     v <- unlist(tflist)
     i <- names(v)
     v <- as.numeric(v)
     allTerms <- sort(unique(i))
     i <- match(i, allTerms)
-    j <- rep(seq_along(object), sapply(tflist, length))
-    rm(tflist)
+    j <- rep(seq_along(x), sapply(tflist, length))
 
-    tdm <- structure(list(i = i, j = j, v = v, nrow = length(allTerms), ncol = length(object),
-                          dimnames = list(Terms = allTerms, Docs = sapply(object, ID)),
-                          Weighting = c(weight@Name, weight@Acronym)),
+    tdm <- structure(list(i = i, j = j, v = v, nrow = length(allTerms), ncol = length(x),
+                          dimnames = list(Terms = allTerms, Docs = unlist(lapply(x, ID))),
+                          Weighting = c(attr(weight, "Name"), attr(weight, "Acronym"))),
                      class = c("TermDocumentMatrix", "simple_triplet_matrix"))
     weight(tdm)
 }
 
-DocumentTermMatrix <- function(object, control = list())
-    t(TermDocumentMatrix(object, control))
+DocumentTermMatrix <- function(x, control = list())
+    t(TermDocumentMatrix(x, control))
 
 t.TermDocumentMatrix <- t.DocumentTermMatrix <- function(x) {
     m <- slam:::t.simple_triplet_matrix(x)
@@ -166,9 +139,9 @@ nTerms <- function(x) if (inherits(x, "DocumentTermMatrix")) x$ncol else x$nrow
 Docs <- function(x) if (inherits(x, "DocumentTermMatrix")) x$dimnames[[1]] else x$dimnames[[2]]
 Terms <- function(x) if (inherits(x, "DocumentTermMatrix")) x$dimnames[[2]] else x$dimnames[[1]]
 
-findFreqTerms <- function(object, lowfreq = 0, highfreq = Inf) {
-    if (inherits(object, "DocumentTermMatrix")) object <- t(object)
-    Terms(object)[unique(object$i[object$v >= lowfreq & object$v <= highfreq])]
+findFreqTerms <- function(x, lowfreq = 0, highfreq = Inf) {
+    if (inherits(x, "DocumentTermMatrix")) x <- t(x)
+    Terms(x)[unique(x$i[x$v >= lowfreq & x$v <= highfreq])]
 }
 
 findAssocs <- function(x, term, corlimit) UseMethod("findAssocs", x)
@@ -180,13 +153,13 @@ findAssocs.DocumentTermMatrix <- function(x, term, corlimit) {
 findAssocs.matrix <- function(x, term, corlimit)
     sort(round(x[term, which(x[term,] > corlimit)], 2), decreasing = TRUE)
 
-removeSparseTerms <- function(object, sparse) {
+removeSparseTerms <- function(x, sparse) {
     if ((sparse <= 0) || (sparse >= 1))
         stop("invalid sparse factor")
     else {
-        m <- if (inherits(object, "DocumentTermMatrix")) t(object) else object
+        m <- if (inherits(x, "DocumentTermMatrix")) t(x) else x
         t <- table(m$i) > m$ncol * (1 - sparse)
         termIndex <- as.numeric(names(t[t]))
-        if (inherits(object, "DocumentTermMatrix")) object[, termIndex] else object[termIndex,]
+        if (inherits(x, "DocumentTermMatrix")) x[, termIndex] else x[termIndex,]
     }
 }

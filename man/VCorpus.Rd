@@ -1,30 +1,59 @@
 \name{VCorpus}
-\docType{methods}
 \alias{VCorpus}
 \alias{Corpus}
-\alias{VCorpus,Source-method}
-\alias{coerce,list,VCorpus-method}
-\title{Volatile Corpus Constructor}
+\alias{CMetaData}
+\alias{CMetaData.Corpus}
+\alias{DMetaData}
+\alias{DMetaData.VCorpus}
+\alias{DMetaData<-}
+\alias{DMetaData<-.VCorpus}
+\title{Volatile Corpus}
 \description{
-  Constructs a volatile corpus.
+  Data structures and operators for volatile corpora.
 }
 \usage{
-Corpus(object, readerControl = list(reader = object@DefaultReader, language = "eng"), \dots)
+Corpus(x, readerControl = list(reader = x$DefaultReader, language = "eng"), \dots)
+VCorpus(x, readerControl = list(reader = x$DefaultReader, language = "eng"), \dots)
+\method{DMetaData}{VCorpus}(x)
+\method{CMetaData}{Corpus}(x)
 }
 \arguments{
-  \item{object}{A \code{Source} object.}
+  \item{x}{A \code{\link{Source}} object for \code{Corpus} and
+    \code{VCorpus}, and a corpus for the other functions.}
   \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
-    found in \code{object}, and \code{language} giving the text's language
+    found in \code{x}, and \code{language} giving the text's language
     (preferably in \acronym{ISO} 639-2 format).}
-  \item{...}{Optional arguments for the \code{reader}.}
+  \item{\dots}{Optional arguments for the \code{reader}.}
 }
 \value{
-  An S4 object of class \code{VCorpus} which extends the class
-  \code{list} containing a corpus.
+  An object of class \code{VCorpus} which extends the classes
+  \code{Corpus} and \code{list} containing a collection of text
+  documents.
+}
+\details{
+  Volatile means that the corpus is fully kept in memory and thus all
+  changes only affect the corresponding \R object. In contrast there is
+  also a corpus implementation available providing a permanent semantics
+  (see \code{\link{PCorpus}}).
+
+  The constructed corpus object inherits from a \code{list} and has two
+  attributes containing meta information:
+  \describe{
+    \item{\code{CMetaData}}{Corpus Meta Data contains corpus specific
+      meta data in form of tag-value pairs and information about
+      children in form of a binary tree. This information is useful for
+      reconstructing meta data after e.g. merging corpora.}
+    \item{\code{DMetaData}}{Document Meta Data of class
+      \code{data.frame} contains document specific meta data for the
+      corpus. This data frame typically encompasses clustering or
+      classification results which basically are metadata for documents
+      but form an own entity (e.g., with its name, the value range,
+      etc.).}
+  }
 }
 \examples{
-reut21578 <- system.file("texts", "reut21578", package = "tm")
-Corpus(DirSource(reut21578), readerControl = list(reader = readReut21578XML))
+reut21578 <- system.file("texts", "crude", package = "tm")
+(r <- Corpus(DirSource(reut21578), readerControl = list(reader = readReut21578XMLasPlain)))
 }
 \author{Ingo Feinerer}

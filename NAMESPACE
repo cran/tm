@@ -1,81 +1,117 @@
-import(methods)
 import(slam)
 
-export(
-       "activateCluster",
+export("as.PlainTextDocument",
+       "Author",
+       "CMetaData",
+       "convert_UTF_8",
+       "Content",
+       "Content<-",
        "Corpus", # alias to VCorpus
        "CSVSource", # defunct
        "DataframeSource",
-       "deactivateCluster",
+       "DateTimeStamp",
+       "DBControl",
+       "Description",
        "Dictionary",
        "DirSource",
        "dissimilarity",
+       "DMetaData",
+       "DMetaData<-",
        "Docs",
        "DocumentTermMatrix",
-       "stemCompletion",
+       "DublinCore",
+       "DublinCore<-",
+       "eoi",
+       "FunctionGenerator",
+       "getElem",
        "GmaneSource",
-#      "FCorpus",
+       "Heading",
        "findAssocs",
        "findFreqTerms",
        "getFilters",
        "getReaders",
        "getSources",
        "getTransformations",
+       "ID",
        "inspect",
+       "Language",
+       "LocalMetaData",
        "makeChunks",
        "materialize",
+       "meta",
+       "meta<-",
        "nDocs",
        "nTerms",
+       "Origin",
        "readPlain",
        "readReut21578XML",
        "readReut21578XMLasPlain",
        "readRCV1",
-       "readNewsgroup",
        "readGmane",
        "readPDF",
        "readTabular",
-       "readHTML",
        "readDOC",
        "readXML",
+       "removeNumbers",
+       "removePunctuation",
        "removeSparseTerms",
+       "removeWords",
+       "RepoMetaData",
        "ReutersSource",
-       "convertReut21578XMLPlain",
-       "convertRCV1Plain",
-       "convertMboxEml",
        "sFilter",
+       "stepNext",
        "PCorpus",
+       "pGetElem",
+       "PlainTextDocument",
        "prescindMeta",
        "preprocessReut21578XML",
-       "VCorpus",
+       "RCV1Document",
+       "Reuters21578Document",
+       "searchFullText",
+       "stemCompletion",
+       "stemDocument",
        "stopwords",
+       "stripWhitespace",
        "TermDocMatrix", # defunct
        "TermDocumentMatrix",
        "termFreq",
        "Terms",
-       "tmReduce",
+       "TextRepository",
+       "tm_filter",
+       "tm_index",
+       "tm_intersect",
+       "tm_map",
+       "tm_reduce",
+       "tm_startCluster",
+       "tm_stopCluster",
        "URISource",
+       "VCorpus",
        "VectorSource",
+       "WeightFunction",
        "weightTf",
        "weightTfIdf",
        "weightBin",
+       "writeCorpus",
        "XMLSource")
 
 S3method("Dictionary", "character")
 
-# S3method("inspect", "FCorpus")
-# S3method("TermDocumentMatrix", "FCorpus")
+S3method("c", "Corpus")
+S3method("CMetaData", "Corpus")
+S3method("meta", "Corpus")
+S3method("meta<-", "Corpus")
+S3method("print", "Corpus")
+S3method("summary", "Corpus")
+S3method("tm_filter", "Corpus")
+S3method("tm_index", "Corpus")
 
-# S3method("print", "MinimalDocument")
+S3method("eoi", "DataframeSource")
+S3method("getElem", "DataframeSource")
+S3method("pGetElem", "DataframeSource")
 
-S3method("inspect", "VCorpus")
-S3method("TermDocumentMatrix", "VCorpus")
-
-S3method("findAssocs", "matrix")
-
-S3method("inspect", "PCorpus")
-S3method("TermDocumentMatrix", "PCorpus")
-
-S3method("dissimilarity", "PlainTextDocument")
+S3method("eoi", "DirSource")
+S3method("getElem", "DirSource")
+S3method("pGetElem", "DirSource")
 
 S3method("[", "DocumentTermMatrix")
 S3method("Dictionary", "DocumentTermMatrix")
@@ -86,6 +122,38 @@ S3method("plot", "DocumentTermMatrix")
 S3method("print", "DocumentTermMatrix")
 S3method("t", "DocumentTermMatrix")
 
+S3method("findAssocs", "matrix")
+
+S3method("print", "MetaDataNode")
+
+S3method("[", "PCorpus")
+S3method("[<-", "PCorpus")
+S3method("[[", "PCorpus")
+S3method("[[<-", "PCorpus")
+S3method("DMetaData", "PCorpus")
+S3method("DMetaData<-", "PCorpus")
+S3method("inspect", "PCorpus")
+S3method("TermDocumentMatrix", "PCorpus")
+S3method("tm_map", "PCorpus")
+
+S3method("Content", "PlainTextDocument")
+S3method("Content<-", "PlainTextDocument")
+S3method("dissimilarity", "PlainTextDocument")
+S3method("print", "PlainTextDocument")
+S3method("removeNumbers", "PlainTextDocument")
+S3method("removePunctuation", "PlainTextDocument")
+S3method("removeWords", "PlainTextDocument")
+S3method("searchFullText", "PlainTextDocument")
+S3method("stemDocument", "PlainTextDocument")
+S3method("stripWhitespace", "PlainTextDocument")
+S3method("tm_intersect", "PlainTextDocument")
+
+S3method("as.PlainTextDocument", "RCV1Document")
+
+S3method("as.PlainTextDocument", "Reuters21578Document")
+
+S3method("stepNext", "Source")
+
 S3method("[", "TermDocumentMatrix")
 S3method("Dictionary", "TermDocumentMatrix")
 S3method("dissimilarity", "TermDocumentMatrix")
@@ -95,101 +163,34 @@ S3method("plot", "TermDocumentMatrix")
 S3method("print", "TermDocumentMatrix")
 S3method("t", "TermDocumentMatrix")
 
-exportMethods(
-              # Constructors
-              "TextRepository",
-              "FunctionGenerator",
-              "WeightFunction",
+S3method("c", "TextDocument")
+S3method("meta", "TextDocument")
+S3method("meta<-", "TextDocument")
 
-              # TextDocument
-              "Content",
-              "Content<-",
-              "Author",
-              "Author<-",
-              "DateTimeStamp",
-              "DateTimeStamp<-",
-              "Description",
-              "Description<-",
-              "ID",
-              "ID<-",
-              "Origin",
-              "Origin<-",
-              "Heading",
-              "Heading<-",
-              "Language",
-              "Language<-",
-              "LocalMetaData",
+S3method("meta", "TextRepository")
+S3method("meta<-", "TextRepository")
+S3method("print", "TextRepository")
+S3method("summary", "TextRepository")
 
-              "meta",
-              "meta<-",
-              "DublinCore",
-              "DublinCore<-",
+S3method("eoi", "URISource")
+S3method("getElem", "URISource")
 
-              # Corpus
-              "DMetaData",
-              "DMetaData<-",
-              "CMetaData",
-              "DBControl",
+S3method("[", "VCorpus")
+S3method("[[", "VCorpus")
+S3method("[[<-", "VCorpus")
+S3method("DMetaData", "VCorpus")
+S3method("DMetaData<-", "VCorpus")
+S3method("inspect", "VCorpus")
+S3method("TermDocumentMatrix", "VCorpus")
+S3method("tm_map", "VCorpus")
 
-              # TextRepository
-              "RepoMetaData",
+S3method("eoi", "VectorSource")
+S3method("getElem", "VectorSource")
+S3method("pGetElem", "VectorSource")
 
-              # Sources
-              "stepNext",
-              "getElem",
-              "pGetElem",
-              "eoi",
+S3method("Content<-", "XMLDocument")
 
-              # Functions
-              "tmMap",
-              "asPlain",
-              "stripWhitespace",
-              "tmTolower",
-              "stemDoc",
-              "removeCitation",
-              "removeNumbers",
-              "removeMultipart",
-              "removeSignature",
-              "removeWords",
-              "removePunctuation",
-              "replacePatterns",
-              "tmFilter",
-              "tmIndex",
-              "searchFullText",
-              "tmIntersect",
-
-              "appendElem",
-              "[",
-              "[<-",
-              "[[",
-              "[[<-",
-              "c",
-              "coerce", # for setAs
-              "show",
-              "summary",
-              "writeCorpus",
-              "%IN%")
-
-exportClasses("TextDocument",
-              "PlainTextDocument",
-              "XMLTextDocument",
-              "Reuters21578Document",
-              "RCV1Document",
-              "NewsgroupDocument",
-              "StructuredTextDocument",
-              "Corpus",
-              "MetaDataNode",
-              "TextRepository",
-              "Dictionary",
-              "Source",
-              "DataframeSource",
-              "DirSource",
-              "VectorSource",
-              "URISource",
-              "FunctionGenerator",
-              "PCorpus",
-              "VCorpus",
-              "WeightFunction",
-              "XMLSource")
+S3method("eoi", "XMLSource")
+S3method("getElem", "XMLSource")
 
 useDynLib("tm")

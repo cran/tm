@@ -12,7 +12,7 @@
      attrs = list(graph = list(rankdir = "BT"),
                   node = list(shape = "rectangle",
                               fixedsize = FALSE)),
-     ...)
+     \dots)
 }
 \arguments{
   \item{x}{A term-document matrix.}
@@ -31,10 +31,8 @@
   Visualization requires that package \pkg{Rgraphviz} is available.
 }
 \examples{
-if (require("Rgraphviz")) {
-  data(crude)
-  tdm <- TermDocumentMatrix(crude)
-  set.seed(1234)
-  plot(tdm, corThreshold = 0.2, weighting = TRUE)
-}
+data(crude)
+tdm <- TermDocumentMatrix(crude)
+set.seed(1234)
+plot(tdm, corThreshold = 0.2, weighting = TRUE)
 }

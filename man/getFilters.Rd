@@ -1,8 +1,9 @@
 \name{getFilters}
 \alias{getFilters}
-\title{Get Available Filters}
+\title{List Available Filters}
 \description{
-  Get available filters.
+  List available filters which can be used with \code{\link{tm_filter}}
+  and \code{\link{tm_index}}.
 }
 \usage{
 getFilters()
@@ -14,4 +15,3 @@ getFilters()
 \examples{
 getFilters()
 }
-\keyword{file}

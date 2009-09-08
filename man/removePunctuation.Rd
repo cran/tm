@@ -1,20 +1,21 @@
-\name{removePunctuation-methods}
-\docType{methods}
+\name{removePunctuation}
 \alias{removePunctuation}
-\alias{removePunctuation-methods}
-\alias{removePunctuation,PlainTextDocument-method}
-\title{Methods for Function removePunctuation in Package `tm'}
+\alias{removePunctuation.PlainTextDocument}
+\title{Remove Punctuation Marks from a Text Document}
 \description{
-Methods for function \code{removePunctuation} in package \pkg{tm}.
+  Remove all punctuation marks from a text document.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "PlainTextDocument"}{Removes all punctuation marks
-      from \code{object} and return the object.}
-  }
+\usage{
+\method{removePunctuation}{PlainTextDocument}(x)
+}
+\arguments{
+  \item{x}{A text document.}
+}
+\value{
+  The text document with any punctuation marks in it removed.
 }
 \seealso{
-  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+  \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")

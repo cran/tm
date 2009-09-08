@@ -1,21 +1,24 @@
 \name{TextRepository}
-\docType{methods}
 \alias{TextRepository}
-\alias{TextRepository,Corpus-method}
+\alias{RepoMetaData}
 \title{Text Repository}
 \description{
-  Constructs a text repository.
+  Construct a text repository for corpora. A repository is designed to
+  keep track of multiple corpora, either different ones, or corpora with
+  the same underlying texts but at different preprocessing stages.
 }
 \usage{
-\S4method{TextRepository}{Corpus}(object, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT")))
+TextRepository(x, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT")))
 }
 \arguments{
-  \item{object}{A directory containing the documents.}
-  \item{meta}{An initial list of tag-value pairs for the meta data.}
+  \item{x}{A corpus.}
+  \item{meta}{An initial list of tag-value pairs for the repository meta data.}
 }
 \value{
-  An S4 object of class \code{TextRepository} which extends the class
-  \code{list} containing text document collections.
+  An object of class \code{TextRepository} which extends the class
+  \code{list} containing corpora. Meta data annotations are stored in
+  the attribute \code{RepoMetaData} in form of tag-value pairs (i.e., a
+  named list).
 }
 \examples{
 data("crude")
@@ -24,4 +27,3 @@ summary(repo)
 RepoMetaData(repo)
 }
 \author{Ingo Feinerer}
-\keyword{methods}

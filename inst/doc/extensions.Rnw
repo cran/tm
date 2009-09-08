@@ -5,10 +5,10 @@
 \usepackage[round]{natbib}
 \usepackage{url}
 
+\newcommand{\acronym}[1]{\textsc{#1}}
 \newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\proglang}[1]{\textsf{#1}}
 \let\code\texttt
-\newcommand{\acronym}[1]{\textsc{#1}}
 
 %% \VignetteIndexEntry{Extensions}
 
@@ -29,9 +29,9 @@ which allow extensions. A general explanation of \pkg{tm}'s extension
 mechanism is described
 by~\citet[Sec.~3.3]{Feinerer_etal_2008}. However, for many cases, it
 is not necessary to define each detailed aspect of how to extend
-\pkg{tm}. Typical examples are \acronym{Xml} files which are very
+\pkg{tm}. Typical examples are \acronym{XML} files which are very
 common but can be rather easily handled via standard conforming
-\acronym{Xml} parsers. The aim of this document is to give an overview
+\acronym{XML} parsers. The aim of this document is to give an overview
 on how simpler, more user-friendly, forms of extension mechanisms can
 be applied in \pkg{tm}.
 
@@ -45,9 +45,9 @@ information to build a corpus which is recognized by \pkg{tm}.
 
 This can be done in \pkg{tm} by generating a custom reader function
 for tabular data structures via \code{readTabular()} that can be
-configured via so-called \emph{mappings}. These mappings describe how
+configured via a so-called \emph{mapping}. A mapping describes how
 your information in the tabular data structure is mapped to the
-individual slots of text documents in \pkg{tm}.
+individual attributes of text documents in \pkg{tm}.
 
 We assume that your information is put together in a data frame. E.g.,
 consider the following example:
@@ -59,24 +59,28 @@ df <- data.frame(contents = c("content 1", "content 2", "content 3"),
                  stringsAsFactors = FALSE)
 @
 We want to map \code{contents}, \code{title}, \code{authors}, and
-\code{topics} to the relevant slots of a text
+\code{topics} to the relevant entries of a text
 document. \code{readTabular()} always returns a
-\code{PlainTextDocument}, so possible slots are:
+\code{PlainTextDocument}, so possible attributes are:
 <<>>=
-slotNames("PlainTextDocument")
+names(attributes(PlainTextDocument()))
 @
-The special slot \code{.Data} contains the actual content of the
-document, and \code{LocalMetaData} can be used to model arbitrary
-additional user-defined meta data slots.
+Except \code{class} which contains inheritance information and which
+should not be modified, all other attributes can be used to access and
+set predefined meta data information for a text document. Additional
+user-defined meta data values can be stored via
+\code{LocalMetaData}. An entry \code{Content} in the mapping will be
+matched to fill the actual content of the text document.
 
-So for our data frame we define a possible mappings as follows:
-<<Mapping>>=
-m <- list(.Data = "contents", Heading = "title", Author = "authors", Topic = "topics")
+So for our data frame we define a possible mapping as follows:
+<<Mapping,keep.source=TRUE>>=
+m <- list(Content = "contents", Heading = "title",
+          Author = "authors", Topic = "topics")
 @
 Now we can construct a customized reader by passing over the
 previously defined mapping:
 <<myReader>>=
-myReader <- readTabular(mappings = m)
+myReader <- readTabular(mapping = m)
 @
 
 Finally we can apply our reader function at any place where \pkg{tm}
@@ -86,7 +90,7 @@ frame:
 (corpus <- Corpus(DataframeSource(df), readerControl = list(reader = myReader)))
 @
 
-As we see the information is mapped as we want to the individual slots
+As we see the information is mapped as we want to the individual attributes
 of each document:
 <<>>=
 corpus[[1]]
@@ -94,14 +98,14 @@ meta(corpus[[1]])
 @
 
 \section*{Custom XML Sources}
-Many modern file formats already come in \acronym{Xml} format which
-allows to extract information with any \acronym{Xml} conforming
+Many modern file formats already come in \acronym{XML} format which
+allows to extract information with any \acronym{XML} conforming
 parser, e.g., as implemented in \proglang{R} by the \pkg{XML}
 package.
 
-Now assume we have some custom \acronym{Xml} format which we want to
+Now assume we have some custom \acronym{XML} format which we want to
 access with \pkg{tm}. Then a viable way is to create a custom
-\acronym{Xml} source which can be configured with only a few
+\acronym{XML} source which can be configured with only a few
 commands. E.g., have a look at the following example:
 <<CustomXMLFile>>=
 custom.xml <- system.file("texts", "custom.xml", package = "tm")
@@ -109,41 +113,40 @@ print(readLines(custom.xml), quote = FALSE)
 @
 As you see there is a top-level tag stating that there is a corpus,
 and several document tags below. In fact, this structure is very
-common in \acronym{Xml} files found in text mining applications (e.g.,
-both the Reuters21578 and the Reuter Corpus Volume 1 data sets follow
+common in \acronym{XML} files found in text mining applications (e.g.,
+both the Reuters-21578 and the Reuter Corpus Volume 1 data sets follow
 this general scheme). In \pkg{tm} we expect a source to deliver
 self-contained blocks of information to a reader function, each block
 containing all information necessary such that the reader can
-construct a (subclass of the virtual) \code{TextDocument} from it.
+construct a (subclass of a) \code{TextDocument} from it.
 
 The \code{XMLSource()} function can now be used to construct a custom
-XML source. It has four arguments:
+\acronym{XML} source. It has four arguments:
 \begin{description}
-\item[object] either a character identifying the file or a
-  connection,
-\item[parser] a function accepting an \acronym{Xml} tree (as delivered by
+\item[x] either a character identifying a file or a connection,
+\item[parser] a function accepting an \acronym{XML} tree (as delivered by
   \code{xmlTreeParse()} in package \pkg{XML}) as input and returning a
-  list of \acronym{Xml} elements (each list element will then be delivered to
+  list of \acronym{XML} elements (each list element will then be delivered to
   the reader as such a self-contained block),
-\item[reader] a reader function capable of turning \acronym{Xml}
+\item[reader] a reader function capable of turning \acronym{XML}
   elements as returned by the parser into a subclass of
   \code{TextDocument},
-\item[encoding] a character giving the encoding of the file.
+\item[encoding] a character giving the encoding of \code{x}.
 \end{description}
-E.g., a custom source which can cope with our custom \acronym{Xml}
+E.g., a custom source which can cope with our custom \acronym{XML}
 format could be:
 <<mySource,keep.source=TRUE>>=
-mySource <- function(object, encoding = "UTF-8")
-    XMLSource(object, function(tree) XML::xmlRoot(tree)$children, myXMLReader, encoding)
+mySource <- function(x, encoding = "UTF-8")
+    XMLSource(x, function(tree) XML::xmlRoot(tree)$children, myXMLReader, encoding)
 @
 As you notice in this example we also provide a custom reader function
 (\code{myXMLReader}). See the next section for details.
 
 \section*{Custom XML Readers}
 As we saw in the previous section we often need a custom reader
-function to extract information out of \acronym{Xml} chunks (typically
+function to extract information out of \acronym{XML} chunks (typically
 as delivered by some source). Fortunately, \pkg{tm} provides an easy
-way to define custom \acronym{Xml} reader functions. All you need to
+way to define custom \acronym{XML} reader functions. All you need to
 do is to provide a so-called \emph{specification}.
 
 Let us start with an example which defines a reader function for the
@@ -151,7 +154,7 @@ file format from the previous section:
 <<myXMLReader,keep.source=TRUE>>=
 myXMLReader <- readXML(
     spec = list(Author = list("node", "/document/writer"),
-                .Data = list("node", "/document/description"),
+                Content = list("node", "/document/description"),
                 DateTimeStamp = list("function",
                                      function(x) as.POSIXlt(Sys.time(), tz = "GMT")),
                 Description = list("attribute", "/document/@short"),
@@ -159,20 +162,21 @@ myXMLReader <- readXML(
                 ID = list("function", function(x) tempfile()),
                 Origin = list("unevaluated", "My private bibliography"),
                 Type = list("node", "/document/type")),
-    doc = new("PlainTextDocument"))
+    doc = PlainTextDocument())
 @
 
 Formally, \code{readXML()} is the relevant function which constructs
 an reader. The customization is done via the first argument
 \code{spec}, the second provides an empty instance of the document
 which should be returned (of course augmented with the extracted
-information out of the \acronym{Xml} chunks). The specification must
+information out of the \acronym{XML} chunks). The specification must
 consist of a named list of lists each containing two character
-vectors. The constructed reader will map each list entry to a slot or
-meta datum corresponding to the named list entry. Valid names include
-\code{.Data} to access the document's content, any valid slot name
-(\code{Author}, \code{DateTimeStamp}, \code{Heading}, \code{ID}, and
-\code{Origin} in above example specification), and characters
+vectors. The constructed reader will map each list entry to the
+content or a meta datum of the text document as specified by the named
+list entry. Valid names include \code{Content} to access the
+document's content, any valid attribute name (\code{Author},
+\code{DateTimeStamp}, \code{Description}, \code{Heading}, \code{ID},
+and \code{Origin} in above example specification), and characters
 (\code{Type} in above specification) which are mapped to so-called
 \code{LocalMetaData} entries.
 
@@ -181,16 +185,16 @@ describes the type of the second argument, and the second is the
 specification entry. Valid combinations are:
 \begin{description}
 \item[type = "node", spec = "XPathExpression"] the XPath expression
-  \code{spec} extracts information out of an \acronym{Xml} node (as seen for
-  \code{Author}, \code{.Data}, \code{Heading}, and \code{Type} in our
+  \code{spec} extracts information out of an \acronym{XML} node (as seen for
+  \code{Author}, \code{Content}, \code{Heading}, and \code{Type} in our
   example specification).
 \item[type = "attribute", spec = "XPathExpression"] the XPath
   expression \code{spec} extracts information from an attribute
-  of an \acronym{Xml} node (like \code{Description} in our example).
+  of an \acronym{XML} node (like \code{Description} in our example).
 \item[type = "function", spec = function(tree) \ldots] The function
   \code{spec} is called, passing over a tree representation (as
   delivered by \code{xmlInternalTreeParse()} from package \pkg{XML})
-  of the read in \acronym{Xml} document as first argument (as seen for
+  of the read in \acronym{XML} document as first argument (as seen for
   \code{DateTimeStamp} and \code{ID}). As you notice in our example
   nobody forces us to actually use the passed over tree, instead we
   can do anything we want (e.g., create a unique character vector via
@@ -206,7 +210,7 @@ where a source or reader is expected, respectively. E.g.,
 <<>>=
 corpus <- Corpus(mySource(custom.xml))
 @
-constructs a corpus out of the information in our \acronym{Xml}
+constructs a corpus out of the information in our \acronym{XML}
 file:
 <<>>=
 corpus[[1]]

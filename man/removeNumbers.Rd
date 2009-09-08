@@ -1,24 +1,24 @@
-\name{removeNumbers-methods}
-\docType{methods}
+\name{removeNumbers}
 \alias{removeNumbers}
-\alias{removeNumbers-methods}
-\alias{removeNumbers,PlainTextDocument-method}
-\title{Methods for Function removeNumbers in Package `tm'}
+\alias{removeNumbers.PlainTextDocument}
+\title{Remove Numbers from a Text Document}
 \description{
-Methods for function \code{removeNumbers} in package \pkg{tm}.
+  Stip any numbers from a text document.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "PlainTextDocument", ...}{Strips any numbers from
-      \code{object} and return the object.}
-  }
+\usage{
+\method{removeNumbers}{PlainTextDocument}(x)
+}
+\arguments{
+  \item{x}{A text document.}
+}
+\value{
+  The text document with any numbers in it removed.
 }
 \seealso{
-  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+  \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")
 crude[[1]]
 removeNumbers(crude[[1]])
 }
-\keyword{methods}

@@ -1,8 +1,8 @@
 \name{getReaders}
 \alias{getReaders}
-\title{Get Available Readers}
+\title{List Available Readers}
 \description{
-  Get available readers.
+  List available readers.
 }
 \usage{
 getReaders()
@@ -14,4 +14,3 @@ getReaders()
 \examples{
 getReaders()
 }
-\keyword{file}

@@ -4,158 +4,114 @@
 getSources <- function()
    c("DataframeSource", "DirSource", "GmaneSource", "ReutersSource", "URISource", "VectorSource")
 
-## Class definitions
+.Source <- function(defaultreader, encoding, length, lodsupport, position, vectorized) {
+    if (vectorized && (length <= 0))
+        stop("Vectorized sources must have positive length")
 
-setClass("Source",
-         representation(DefaultReader = "function",
-                        Encoding = "character",
-                        Length = "numeric",
-                        LoDSupport = "logical",
-                        Position = "numeric",
-                        Vectorized = "logical",
-                        "VIRTUAL"),
-         validity = function(object) {
-             if (object@Vectorized && (object@Length <= 0))
-                 return("Vectorized sources must have positive length")
-             TRUE
-         })
-
-# A data frame where each row is interpreted as document
-setClass("DataframeSource",
-         representation(Content = "data.frame"),
-         contains = c("Source"))
-
-# A directory with files
-setClass("DirSource",
-         representation(FileList = "character"),
-         contains = c("Source"))
-
-# A single document identified by a Uniform Resource Identifier
-setClass("URISource",
-         representation(URI = "ANY"),
-         contains = c("Source"))
-
-# A vector where each component is interpreted as document
-setClass("VectorSource",
-         representation(Content = "vector"),
-         contains = c("Source"))
-
-# XML
-setClass("XMLSource",
-         representation(URI = "ANY",
-                        Content = "list"),
-         contains = c("Source"))
-
-## Methods
-
-VectorSource <- function(object, encoding = "UTF-8") {
-    new("VectorSource", LoDSupport = FALSE, Content = object, Position = 0,
-        DefaultReader = readPlain, Encoding = encoding, Length = length(object),
-        Vectorized = TRUE)
+    structure(list(DefaultReader = defaultreader, Encoding = encoding, Length = length,
+                   LoDSupport = lodsupport, Position = position, Vectorized = vectorized),
+              class = "Source")
 }
 
-CSVSource <- function(object, encoding = "UTF-8")
+# A vector where each component is interpreted as document
+VectorSource <- function(x, encoding = "UTF-8") {
+    s <- .Source(readPlain, encoding, length(x), FALSE, 0, TRUE)
+    s$Content <- x
+    class(s) = c("VectorSource", "Source")
+    s
+}
+
+CSVSource <- function(x, encoding = "UTF-8")
     .Defunct("DataframeSource", package = "tm",
              msg = "'CSVSource' is defunct.\nUse 'DataframeSource(read.csv(..., stringsAsFactors = FALSE))' instead.\nSee help(\"Defunct\")")
 
-DataframeSource <- function(object, encoding = "UTF-8")
-    new("DataframeSource", LoDSupport = FALSE, Content = object, Position = 0,
-        DefaultReader = readPlain, Encoding = encoding, Length = nrow(object),
-        Vectorized = TRUE)
+# A data frame where each row is interpreted as document
+DataframeSource <- function(x, encoding = "UTF-8") {
+    s <- .Source(readPlain, encoding, nrow(x), FALSE, 0, TRUE)
+    s$Content <- x
+    class(s) = c("DataframeSource", "Source")
+    s
+}
 
+# A directory with files
 DirSource <- function(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) {
     d <- dir(directory, full.names = TRUE, pattern = pattern, recursive = recursive, ignore.case = ignore.case)
     isdir <- sapply(d, file.info)["isdir",]
     files <- d[isdir == FALSE]
-    new("DirSource", LoDSupport = TRUE, FileList = files, Position = 0,
-        DefaultReader = readPlain, Encoding = encoding, Length = length(files),
-        Vectorized = TRUE)
+
+    s <- .Source(readPlain, encoding, length(files), TRUE, 0, TRUE)
+    s$FileList <- files
+    class(s) = c("DirSource", "Source")
+    s
 }
 
-URISource <- function(object, encoding = "UTF-8")
-    new("URISource", LoDSupport = TRUE, URI = match.call()$object, Position = 0,
-        DefaultReader = readPlain, Encoding = encoding, Length = 1, Vectorized = FALSE)
+# A single document identified by a Uniform Resource Identifier
+URISource <- function(x, encoding = "UTF-8") {
+    s <- .Source(readPlain, encoding, 1, TRUE, 0, FALSE)
+    s$URI <- match.call()$x
+    class(s) = c("URISource", "Source")
+    s
+}
 
-GmaneSource <- function(object, encoding = "UTF-8")
-    XMLSource(object,
+GmaneSource <- function(x, encoding = "UTF-8")
+    XMLSource(x,
               function(tree) {
                   root <- XML::xmlRoot(tree)
                   root$children[names(root$children) == "item"]
               },
               readGmane, encoding)
 
-ReutersSource <- function(object, encoding = "UTF-8")
-    XMLSource(object, function(tree) XML::xmlRoot(tree)$children, readReut21578XML, encoding)
+ReutersSource <- function(x, encoding = "UTF-8")
+    XMLSource(x, function(tree) XML::xmlRoot(tree)$children, readReut21578XML, encoding)
 
-XMLSource <- function(object, parser, reader, encoding = "UTF-8") {
-    require("XML")
-
-    corpus <- readLines(object, encoding = encoding)
+# XML
+XMLSource <- function(x, parser, reader, encoding = "UTF-8") {
+    corpus <- readLines(x, encoding = encoding)
     tree <- XML::xmlTreeParse(corpus, asText = TRUE)
     content <- parser(tree)
 
-    new("XMLSource", LoDSupport = FALSE, URI = match.call()$object,
-        Content = content, Position = 0, DefaultReader = reader,
-        Encoding = encoding, Length = length(content), Vectorized = FALSE)
+    s <- .Source(reader, encoding, length(content), FALSE, 0, FALSE)
+    s$Content <- content
+    s$URI <- match.call()$x
+    class(s) = c("XMLSource", "Source")
+    s
 }
 
-setGeneric("stepNext", function(object) standardGeneric("stepNext"))
-setMethod("stepNext", signature(object = "Source"),
-          function(object) {
-              object@Position <- object@Position + 1
-              object
-          })
+stepNext <- function(x) UseMethod("stepNext", x)
+stepNext.Source <- function(x) {
+    x$Position <- x$Position + 1
+    x
+}
 
-setGeneric("getElem", function(object) standardGeneric("getElem"))
-setMethod("getElem", signature(object = "VectorSource"),
-          function(object) list(content = object@Content[object@Position], uri = match.call()$object))
-setMethod("getElem", signature(object = "DataframeSource"),
-          function(object) list(content = object@Content[object@Position, ], uri = match.call()$object))
-setMethod("getElem",
-          signature(object = "DirSource"),
-          function(object) {
-              filename <- object@FileList[object@Position]
-              encoding <- object@Encoding
-              list(content = readLines(filename, encoding = encoding),
-                   uri = filename)
-          })
-setMethod("getElem", signature(object = "URISource"),
-          function(object) list(content = readLines(eval(object@URI)), uri = object@URI))
-setMethod("getElem",
-          signature(object = "XMLSource"),
-          function(object) {
-              require("XML")
+getElem <- function(x) UseMethod("getElem", x)
+getElem.DataframeSource <- function(x) list(content = x$Content[x$Position, ], uri = match.call()$x)
+getElem.DirSource <- function(x) {
+    filename <- x$FileList[x$Position]
+    encoding <- x$Encoding
+    list(content = readLines(filename, encoding = encoding), uri = filename)
+}
+getElem.URISource <- function(x) list(content = readLines(eval(x$URI)), uri = x$URI)
+getElem.VectorSource <- function(x) list(content = x$Content[x$Position], uri = match.call()$x)
+getElem.XMLSource <- function(x) {
+    # Construct a character representation from the XMLNode
+    virtual.file <- character(0)
+    con <- textConnection("virtual.file", "w", local = TRUE)
+    XML::saveXML(x$Content[[x$Position]], con)
+    close(con)
 
-              # Construct a character representation from the XMLNode
-              virtual.file <- character(0)
-              con <- textConnection("virtual.file", "w", local = TRUE)
-              saveXML(object@Content[[object@Position]], con)
-              close(con)
+    list(content = virtual.file, uri = x$URI)
+}
 
-              list(content = virtual.file, uri = object@URI)
-          })
+pGetElem <- function(x) UseMethod("pGetElem", x)
+pGetElem.DataframeSource <- function(x)
+    lapply(seq_len(x$Length), function(y) list(content = x$Content[y,], uri = match.call()$x))
+pGetElem.DirSource <- function(x)
+    lapply(x$FileList, function(y) list(content = readLines(y, encoding = x$Encoding), uri = y))
+pGetElem.VectorSource <- function(x)
+    lapply(x$Content, function(y) list(content = y, uri = match.call()$x))
 
-setGeneric("pGetElem", function(object) standardGeneric("pGetElem"))
-setMethod("pGetElem", signature(object = "DataframeSource"),
-          function(object) lapply(seq_len(object@Length),
-                                  function(x) list(content = object@Content[x,],
-                                                   uri = match.call()$object)))
-setMethod("pGetElem", signature(object = "DirSource"),
-          function(object) {
-              lapply(object@FileList,
-                     function(x) list(content = readLines(x, encoding = object@Encoding), uri = x))
-          })
-setMethod("pGetElem", signature(object = "VectorSource"),
-          function(object) lapply(object@Content, function(x) list(content = x, uri = match.call()$object)))
-
-setGeneric("eoi", function(object) standardGeneric("eoi"))
-setMethod("eoi", signature(object = "VectorSource"),
-          function(object) return(length(object@Content) <= object@Position))
-setMethod("eoi", signature(object = "DataframeSource"),
-          function(object) return(nrow(object@Content) <= object@Position))
-setMethod("eoi", signature(object = "DirSource"),
-          function(object) return(length(object@FileList) <= object@Position))
-setMethod("eoi", signature(object = "URISource"),
-          function(object) return(1 <= object@Position))
-setMethod("eoi", signature(object = "XMLSource"),
-          function(object) return(length(object@Content) <= object@Position))
+eoi <- function(x) UseMethod("eoi", x)
+eoi.DataframeSource <- function(x) nrow(x$Content) <= x$Position
+eoi.DirSource <- function(x) length(x$FileList) <= x$Position
+eoi.URISource <- function(x) 1 <= x$Position
+eoi.VectorSource <- eoi.XMLSource <- function(x) length(x$Content) <= x$Position

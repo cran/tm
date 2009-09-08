@@ -1,26 +1,25 @@
 \name{FunctionGenerator}
 \docType{methods}
 \alias{FunctionGenerator}
-\alias{FunctionGenerator,function-method}
-\title{Function Generator Constructor}
+\title{Function Generator}
 \description{
-  Constructs a function generator object.
+  Construct a function generator.
 }
 \usage{
-\S4method{FunctionGenerator}{function}(object)
+FunctionGenerator(x)
 }
 \arguments{
-  \item{object}{a generator function which takes some input
+  \item{x}{A generator function which takes some input
     and constructs and returns a new function based on
     that input information.}
 }
 \value{
-  An S4 object of class \code{FunctionGenerator} which extends the class
+  An object of class \code{FunctionGenerator} which extends the class
   \code{function} representing a function generator.
 }
 \seealso{
-  Many reader functions are function generators, e.g.,
-  \code{\link{readPlain}}.
+  Most reader functions (use \code{\link{getReaders}} to list available
+  readers) are function generators.
 }
 \examples{
 funGen <- FunctionGenerator(function(y, ...) {
@@ -31,4 +30,3 @@ funGen(3L)
 funGen("a")
 }
 \author{Ingo Feinerer}
-\keyword{methods}

@@ -10,14 +10,14 @@ clActive <- local({
 
 clusterAvailable <- function() clActive()
 
-activateCluster <- function() {
+tm_startCluster <- function() {
     if (require("snow") && require("Rmpi") && is.null(snow::getMPIcluster()))
         snow::makeMPIcluster(Rmpi::mpi.universe.size())
     if (!is.null(snow::getMPIcluster()))
         clActive(TRUE)
 }
 
-deactivateCluster <- function() {
+tm_stopCluster <- function() {
     clActive(FALSE)
     snow::stopCluster(snow::getMPIcluster())
 }

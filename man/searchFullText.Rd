@@ -1,24 +1,25 @@
-\name{searchFullText-methods}
-\docType{methods}
+\name{searchFullText}
 \alias{searchFullText}
-\alias{searchFullText-methods}
-\alias{searchFullText,PlainTextDocument,character-method}
-\title{Methods for Function searchFullText in Package `tm'}
+\alias{searchFullText.PlainTextDocument}
+\title{Full Text Search}
 \description{
-  Methods for function \code{searchFullText} in package \pkg{tm}.
+  Perform a full text search in text documents.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "PlainTextDocument", pattern = "character"}{Return
-      \code{TRUE} if the regular expression \code{pattern} matches in
-      \code{object}'s text.}
-  }
+\usage{
+\method{searchFullText}{PlainTextDocument}(x, pattern)
+}
+\arguments{
+  \item{x}{A text document.}
+  \item{pattern}{A regular expression as accepted by \code{\link{gsub}}.}
+}
+\value{
+  \code{TRUE} if the regular expression \code{pattern} matches in
+  \code{x}, otherwise \code{FALSE}.
 }
 \seealso{
-  Use \code{\link{getFilters}} to list available filter functions.
+  \code{\link{getFilters}} to list available filter functions.
 }
 \examples{
 data("crude")
 searchFullText(crude[[1]], "co[m]?pany")
 }
-\keyword{methods}

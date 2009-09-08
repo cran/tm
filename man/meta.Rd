@@ -1,51 +1,85 @@
-\name{meta-methods}
-\docType{methods}
+\name{meta}
+\alias{DublinCore}
+\alias{DublinCore<-}
 \alias{meta}
 \alias{meta<-}
-\alias{meta-methods}
-\alias{meta,TextDocument-method}
-\alias{meta<-,TextDocument-method}
-\alias{meta,Corpus-method}
-\alias{meta<-,Corpus-method}
-\alias{meta,TextRepository-method}
-\alias{meta<-,TextRepository-method}
-\title{Methods for Function meta in Package `tm'}
+\alias{meta.TextDocument}
+\alias{meta<-.TextDocument}
+\alias{meta.Corpus}
+\alias{meta<-.Corpus}
+\alias{meta.TextRepository}
+\alias{meta<-.TextRepository}
+\title{Meta Data Management}
 \description{
-Methods for function \code{meta} in package \pkg{tm}.
+  Methods to access and modify meta data of documents, corpora, and
+  repositories. In addition to \pkg{tm}'s internal meta data structures,
+  Simple Dublin Core meta data mappings are available.
 }
-\section{Methods}{
+\usage{
+\method{meta}{Corpus}(x, tag, type = c("indexed", "corpus", "local"))
+\method{meta}{TextDocument}(x, tag, type = NULL)
+\method{meta}{TextRepository}(x, tag, type = NULL)
+DublinCore(x, tag = NULL)
+}
+\arguments{
+  \item{x}{Either a text document, a corpus, or a text repository.}
+  \item{tag}{A character identifying the name of the meta datum.}
+  \item{type}{A character specifying which meta data of a corpus should
+    be considered.}
+}
+\details{
+  In general this function can be used to display meta information but
+  also to modifiy individual meta data:
   \describe{
-    \item{object = "TextDocument", tag = NULL}{If no \code{tag} is given, this
-      method pretty prints all \code{object}'s meta data. If \code{tag}
+    \item{x = "TextDocument", tag = NULL}{If no \code{tag} is given, this
+      method pretty prints all \code{x}'s meta data. If \code{tag}
       is provided its value in the meta data is returned.}
-    \item{object = "Corpus", tag = NULL, type = "indexed"}{This
+    \item{x = "Corpus", tag = NULL, type = "indexed"}{This
       method investigates the \code{type} argument. \code{type} must be
-      either \code{indexed} (default), \code{local}, or \code{corpus}. Former is a
-      shortcut for accessing document level meta data
-      (\code{\link{DMetaData}}) stored at the collection level (because
-      it forms an own entity, or for performance reasons, i.e., a form
-      of indexing, hence the name indexed), \code{local} accesses the
-      meta data local to each text document (i.e., meta data in text
-      documents' S4 slots), and \code{corpus} is a shortcut for
-      collection (corpus) specific meta data
-      (\code{\link{CMetaData}}). Depending whether a tag is set or not,
-      all or only the meta data identified by the tag is displayed or
-      modified.}
-    \item{object = "TextRepository", tag = NULL}{If no \code{tag} is given, this
-      method pretty prints all \code{object}'s meta data. If \code{tag}
+      either \code{indexed} (default), \code{local}, or
+      \code{corpus}. Former is a shortcut for accessing document level
+      meta data (\code{\link{DMetaData}}) stored at the collection level
+      (because it forms an own entity, or for performance reasons, i.e.,
+      a form of indexing, hence the name indexed), \code{local} accesses
+      the meta data local to each text document (i.e., meta data in text
+      documents' attributes), and \code{corpus} is a shortcut for corpus
+      specific meta data (\code{\link{CMetaData}}). Depending whether a
+      tag is set or not, all or only the meta data identified by the tag
+      is displayed or modified.}
+    \item{x = "TextRepository", tag = NULL}{If no \code{tag} is given, this
+      method pretty prints all \code{x}'s meta data. If \code{tag}
       is provided its value in the meta data is returned.}
   }
+
+  Simple Dublin Core meta data is only available locally at each
+  document:
+  \describe{
+    \item{x = "TextDocument", tag = NULL}{Returns or sets the
+      Simple Dublin Core meta datum named \code{tag} for
+      \code{x}. \code{tag} must be a valid Simple Dublin Core
+      element name (i.e, Title, Creator, Subject, Description,
+      Publisher, Contributor, Date, Type, Format, Identifier, Source,
+      Language, Relation, Coverage, or Rights) or \code{NULL}. For the
+      latter all Dublin Core meta data are printed.}
+  }
+}
+\references{
+  Dublin Core Metadata Initiative.
+  \url{http://dublincore.org/}
 }
 \examples{
 data("crude")
 meta(crude[[1]])
+DublinCore(crude[[1]])
 meta(crude[[1]], tag = "Topics")
 meta(crude[[1]], tag = "Comment") <- "A short comment."
 meta(crude[[1]], tag = "Topics") <- NULL
+DublinCore(crude[[1]], tag = "Creator") <- "Ano Nymous"
+DublinCore(crude[[1]], tag = "Format") <- "XML"
+DublinCore(crude[[1]])
 meta(crude[[1]])
 meta(crude)
 meta(crude, type = "corpus")
 meta(crude, "labels") <- 21:40
 meta(crude)
 }
-\keyword{methods}

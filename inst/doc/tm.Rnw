@@ -7,12 +7,11 @@
 \DeclareUnicodeCharacter{201C}{"}
 \DeclareUnicodeCharacter{201D}{"}
 
-\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\acronym}[1]{\textsc{#1}}
 \newcommand{\class}[1]{\mbox{\textsf{#1}}}
 \newcommand{\code}[1]{\mbox{\texttt{#1}}}
-\newcommand{\pkg}[1]{\strong{#1}}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\proglang}[1]{\textsf{#1}}
-\newcommand{\acronym}[1]{\textsc{#1}}
 
 %% \VignetteIndexEntry{Introduction to the tm Package}
 
@@ -40,35 +39,41 @@ introductory article on text mining in \proglang{R} was published in
 \section*{Data Import}
 The main structure for managing documents in \pkg{tm} is a so-called
 \class{Corpus}, representing a collection of text documents. A corpus
-is an abstract concept (modelled via a virtual class), and there can
-exist several implementations in parallel. The default implementation
-is the so-called \class{VCorpus} (short for \emph{Volatile Corpus})
-which realizes a semantics as known from most \proglang{R} objects:
-corpora are \proglang{R} objects held fully in memory. Such a volatile
-corpus can be created via the constructor \code{Corpus(object,
+is an abstract concept, and there can exist several implementations in
+parallel. The default implementation is the so-called \class{VCorpus}
+(short for \emph{Volatile Corpus}) which realizes a semantics as known
+from most \proglang{R} objects: corpora are \proglang{R} objects held
+fully in memory. We denote this as volatile since once the
+\proglang{R} object is destroyed, the whole corpus is gone. Such a
+volatile corpus can be created via the constructor \code{Corpus(x,
   readerControl)}. Another implementation is the \class{PCorpus} which
-implements a \emph{Permanent Corpus} semantics, i.e., the
-documents are physically located on a disk, and its changes are
-reflected to all \proglang{R} objects associated with it.
+implements a \emph{Permanent Corpus} semantics, i.e., the documents
+are physically stored outside of \proglang{R} (e.g., in a database),
+corresponding \proglang{R} objects are basically only pointers to
+external structures, and changes to the underlying corpus are
+reflected to all \proglang{R} objects associated with it. Compared to
+the volatile corpus the corpus encapsulated by a permanent corpus
+object is not destroyed if the corresponding \proglang{R} object is
+released.
 
-Within the corpus constructor, \code{object} must be a \class{Source}
+Within the corpus constructor, \code{x} must be a \class{Source}
 object which abstracts the input location. \pkg{tm} provides a set of
 predefined sources, e.g., \class{DirSource}, \class{VectorSource}, or
 \class{DataframeSource}, which handle a directory, a vector
 interpreting each component as document, data frame like structures
-(like \acronym{CSV} files), respectively.  Except \class{DirSource},
+(like \acronym{CSV} files), respectively. Except \class{DirSource},
 which is designed solely for directories on a file system, and
 \class{VectorSource}, which only accepts (character) vectors, most
 other implemented sources can take connections as input (a character
 string is interpreted as file path). \code{getSources()} lists
-available sources, and the user can create his own sources.
+available sources, and users can create their own sources.
 
 The second argument \code{readerControl} of the corpus constructor has
 to be a list with the named components \code{reader} and
 \code{language}. The first component \code{reader} constructs a text
 document from elements delivered by a source. The \pkg{tm} package
 ships with several readers (e.g., \code{readPlain()},
-\code{readGmane()}, \code{readNewsgroup()}, \code{readRCV1()},
+\code{readGmane()}, \code{readRCV1()},
 \code{readReut21578XMLasPlain()}, \code{readPDF()}, \code{readDOC()},
 \ldots). See \code{getReaders()} for an up-to-date list of available
 readers. Each source has a default reader which can be
@@ -77,13 +82,13 @@ input files and interprets their content as text. Finally, the second
 component \code{language} sets the texts' language (preferably using
 \acronym{ISO} 639-2 codes).
 
-In case of a permanent corpus, \code{dbControl} has to be a list with
-the named components \code{dbName} giving the filename holding the
-sourced out objects (i.e., the database), and \code{dbType} holding a
-valid database type as supported by package \pkg{filehash}. Activated
-database support reduces the memory demand, however, access gets
-slower since each operation is limited by the hard disk's read and
-write capabilities.
+In case of a permanent corpus, a third argument \code{dbControl} has
+to be a list with the named components \code{dbName} giving the
+filename holding the sourced out objects (i.e., the database), and
+\code{dbType} holding a valid database type as supported by package
+\pkg{filehash}. Activated database support reduces the memory demand,
+however, access gets slower since each operation is limited by the
+hard disk's read and write capabilities.
 
 So e.g., plain text files in the directory \code{txt} containing Latin
 (\code{lat}) texts by the Roman poet \emph{Ovid} can be read in with
@@ -93,18 +98,9 @@ txt <- system.file("texts", "txt", package = "tm")
 (ovid <- Corpus(DirSource(txt),
                 readerControl = list(language = "lat")))
 @
-Another example could be mails from newsgroups (as found in the
-\acronym{UCI} \acronym{KDD} newsgroup data set):
-<<Mails,keep.source=TRUE>>=
-newsgroup <- system.file("texts", "newsgroup", package = "tm")
-
-Corpus(DirSource(newsgroup),
-       readerControl = list(reader = readNewsgroup,
-                            language = "eng"))
-@
 
 For simple examples \code{VectorSource} is quite useful, as it can
-create a corpus from simple character vectors, e.g.:
+create a corpus from character vectors, e.g.:
 <<VectorSource,keep.source=TRUE>>=
 docs <- c("This is a text.", "This another one.")
 Corpus(VectorSource(docs))
@@ -113,7 +109,7 @@ Corpus(VectorSource(docs))
 Finally we create a corpus for some Reuters documents as example for
 later use:
 <<Reuters,keep.source=TRUE>>=
-reut21578 <- system.file("texts", "reut21578", package = "tm")
+reut21578 <- system.file("texts", "crude", package = "tm")
 reuters <- Corpus(DirSource(reut21578),
                   readerControl = list(reader = readReut21578XML))
 @
@@ -122,20 +118,18 @@ reuters <- Corpus(DirSource(reut21578),
 For the case you have created a corpus via manipulating other
 objects in \proglang{R}, thus do not have the texts already stored on
 a hard disk, and want to save the text documents to disk, you can
-simply use standard \proglang{R} routines for writing out plain text
-documents. E.g.,
+simply use \code{writeCorpus()}
 <<eval=FALSE,keep.source=TRUE>>=
-lapply(ovid,
-       function(x) writeLines(x, paste(ID(x), ".txt", sep = "")))
+writeCorpus(ovid)
 @
-Alternatively there is the function \code{writeCorpus()} which
-encapsulates this functionality.
+which writes a plain text representation of a corpus to multiple files
+on disk corresponding to the individual documents in the corpus.
 
 \section*{Inspecting Corpora}
-Custom \code{show()} and \code{summary()} methods are available, which
+Custom \code{print()} and \code{summary()} methods are available, which
 hide the raw amount of information (consider a corpus could consist of
 several thousand documents, like a database). \code{summary()} gives
-more details on meta data than \code{show()}, whereas the full content
+more details on meta data than \code{print()}, whereas the full content
 of text documents is displayed with \code{inspect()}.
 <<>>=
 inspect(ovid[1:2])
@@ -144,20 +138,20 @@ inspect(ovid[1:2])
 \section*{Transformations}
 Once we have a corpus we typically want to modify the documents in it,
 e.g., stemming, stopword removal, et cetera. In \pkg{tm}, all this
-functionality is subsumed into the concept of
-\emph{transformation}s. Transformations are done via the \code{tmMap}
-function which applies a function to all elements of the
+functionality is subsumed into the concept of a
+\emph{transformation}. Transformations are done via the \code{tm\_map()}
+function which applies (maps) a function to all elements of the
 corpus. Basically, all transformations work on single text documents
-and \code{tmMap} just applies them to all documents in a corpus.
+and \code{tm\_map()} just applies them to all documents in a corpus.
 
 \subsection*{Converting to Plain Text Documents}
 The corpus \code{reuters} contains documents
 in \acronym{XML} format. We have no further use for the \acronym{XML}
 interna and just want to work with the text content. This can be done
 by converting the documents to plain text documents. It is done by the
-generic \code{asPlain()}.
+generic \code{as.PlainTextDocument()}.
 <<>>=
-reuters <- tmMap(reuters, asPlain)
+reuters <- tm_map(reuters, as.PlainTextDocument)
 @
 Note that alternatively we could have read in the files with the
 \code{readReut21578XMLasPlain} reader which already returns a plain
@@ -166,59 +160,68 @@ text document in the first place.
 \subsection*{Eliminating Extra Whitespace}
 Extra whitespace is eliminated by:
 <<>>=
-reuters <- tmMap(reuters, stripWhitespace)
+reuters <- tm_map(reuters, stripWhitespace)
 @
 
 \subsection*{Convert to Lower Case}
 Conversion to lower case by:
 <<>>=
-reuters <- tmMap(reuters, tmTolower)
+reuters <- tm_map(reuters, tolower)
 @
+As you see you can use arbitrary text processing functions as
+transformations as long the function returns a text document. Most
+text manipulation functions from base \proglang{R} just modify a
+character vector in place, and as such, keep class information
+intact. This is especially true for \code{tolower} as used here, but
+also e.g.\ for \code{gsub} which comes quite handy for a broad range
+of text manipulation tasks.
 
 \subsection*{Remove Stopwords}
 Removal of stopwords by:
 <<>>=
-reuters <- tmMap(reuters, removeWords, stopwords("english"))
+reuters <- tm_map(reuters, removeWords, stopwords("english"))
 @
 
 \subsection*{Stemming}
 Stemming is done by:
 <<>>=
-tmMap(reuters, stemDoc)
+tm_map(reuters, stemDocument)
 @
 
 \section*{Filters}
 Often it is of special interest to filter out documents satisfying
-given properties. For this purpose the function \code{tmFilter} is
+given properties. For this purpose the function \code{tm\_filter} is
 designed. It is possible to write custom filter functions, but for
 most cases \code{sFilter} does its job: it integrates a minimal query
 language to filter meta data. Statements in this query language are
 statements as used for subsetting data frames.  E.g., the following
-statement filters out those documents having an \code{ID} equal to 10
-and the string ``\code{COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES
-  SALE}'' as their heading (both are meta data slot variables of the
-text document).
+statement filters out those documents having an \code{ID} equal to 237
+and the string ``\code{INDONESIA SEEN AT CROSSROADS OVER ECONOMIC CHANGE}'' as
+their heading (both are meta data attributes of the text document).
 <<>>=
-query <- "id == '10' & heading == 'COMPUTER TERMINAL SYSTEMS <CPML> COMPLETES SALE'"
-tmFilter(reuters, FUN = sFilter, query)
+query <- "id == '237' & heading == 'INDONESIA SEEN AT CROSSROADS OVER ECONOMIC CHANGE'"
+tm_filter(reuters, FUN = sFilter, query)
 @
 There is also a full text search filter available (which is default
 when no explicit filter function \code{FUN} is specified) accepting
 regular expressions:
 <<>>=
-tmFilter(reuters, pattern = "partnership")
+tm_filter(reuters, pattern = "company")
 @
 
 \section*{Meta Data Management}
 Meta data is used to annotate text documents or whole corpora with
 additional information. The easiest way to accomplish this with
 \pkg{tm} is to use the \code{meta()} function. A text document has a
-few predefined slots like \code{Author}, but can be extended with an
-arbitrary number of local meta data tags. Alternatively to \code{meta()}
-the function \code{DublinCore()} provides a full mapping
-between Simple Dublin Core meta data and \pkg{tm} meta data structures
-and can be similarly used to get and set meta data information for
-text documents, e.g.:
+few predefined attributes like \code{Author}, but can be extended with
+an arbitrary number of additional user-defined meta data tags. These
+additional meta data tags are individually attached to a single text
+document. From a corpus perspective these meta data attachments are
+locally stored together with each individual text
+document. Alternatively to \code{meta()} the function
+\code{DublinCore()} provides a full mapping between Simple Dublin Core
+meta data and \pkg{tm} meta data structures and can be similarly used
+to get and set meta data information for text documents, e.g.:
 <<DublinCore>>=
 DublinCore(crude[[1]], "Creator") <- "Ano Nymous"
 meta(crude[[1]])
@@ -243,26 +246,18 @@ meta(crude)
 
 \section*{Standard Operators and Functions}
 Many standard operators and functions (\code{[}, \code{[<-},
-\code{[[}, \code{[[<-}, \code{c()}, \code{length()}, \code{lapply()},
-\code{sapply}()) are available for corpora with semantics similar to
-standard \proglang{R} routines. E.g., \code{c()} concatenates two (or
-more) corpora. Applied to several text documents it
-returns a corpus. The meta data is automatically updated, if corpora
-are concatenated (i.e., merged).
-
-There is also a custom element-of operator---it checks whether a text
-document is already in a corpus (meta data is not checked):
-<<>>=
-reuters[[1]] %IN% reuters
-crude[[1]] %IN% reuters
-@
+\code{[[}, \code{[[<-}, \code{c()}, \code{lapply()}) are available for
+corpora with semantics similar to standard \proglang{R}
+routines. E.g., \code{c()} concatenates two (or more) corpora. Applied
+to several text documents it returns a corpus. The meta data is
+automatically updated, if corpora are concatenated (i.e., merged).
 
 \section*{Creating Term-Document Matrices}
 A common approach in text mining is to create a term-document matrix
 from a corpus. In the \pkg{tm} package the classes
 \class{TermDocumentMatrix} and \class{DocumentTermMatrix} (depending
 on whether you want terms as rows and documents as columns, or vice
-versa) handle sparse matrices for corpora.
+versa) employ sparse matrices for corpora.
 <<>>=
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[1:5,150:155])
@@ -278,11 +273,10 @@ terms that occur at least five times, then we can use the
 findFreqTerms(dtm, 5)
 @
 Or we want to find associations (i.e., terms which correlate) with at
-least $0.97$ correlation for the term \code{crop}, then we use
-\code{findAssocs()} (we only display ten arbitrary associations
-found):
+least $0.8$ correlation for the term \code{opec}, then we use
+\code{findAssocs()}:
 <<>>=
-findAssocs(dtm, "crop", 0.97)[31:40]
+findAssocs(dtm, "opec", 0.8)
 @
 The function also accepts a matrix as first argument (which does not
 inherit from a term-document matrix). This matrix is then interpreted
@@ -307,7 +301,7 @@ relevant terms in text mining. We provide a class \class{Dictionary}
 implementing such a dictionary concept. It can be created via the
 \code{Dictionary()} constructor, e.g.,
 <<>>=
-(d <- Dictionary(c("dlrs", "crude", "oil")))
+(d <- Dictionary(c("prices", "crude", "oil")))
 @
 and may be passed over to the \code{DocumentTermMatrix()} constructor. Then
 the created matrix is tabulated against the dictionary, i.e., only

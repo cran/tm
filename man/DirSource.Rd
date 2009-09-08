@@ -1,24 +1,22 @@
 \name{DirSource}
-\docType{methods}
 \alias{DirSource}
-\alias{DirSource,character-method}
 \title{Directory Source}
 \description{
   Constructs a directory source.
 }
 \usage{
-\S4method{DirSource}{character}(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
+DirSource(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
 }
 \arguments{
-  \item{directory}{a directory.}
-  \item{encoding}{a character giving the encoding of the files in the directory.}
-  \item{pattern}{an optional regular expression. Only file names which match the regular expression will be returned.}
-  \item{recursive}{logical. Should the listing recurse into directories?}
-  \item{ignore.case}{logical. Should pattern-matching be case-insensitive?}
+  \item{directory}{A directory.}
+  \item{encoding}{A character giving the encoding of the files in \code{directory}.}
+  \item{pattern}{An optional regular expression. Only file names which match the regular expression will be returned.}
+  \item{recursive}{Logical. Should the listing recurse into directories?}
+  \item{ignore.case}{Logical. Should pattern-matching be case-insensitive?}
 }
 \value{
-  An S4 object of class \code{DirSource} which extends the class
-  \code{Source} representing a directory.
+  An object of class \code{DirSource} which extends the class
+  \code{Source} representing a directory. Each file in this directory is
+  considered to be a document.
 }
 \author{Ingo Feinerer}
-\keyword{methods}

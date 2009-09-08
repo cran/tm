@@ -1,6 +1,6 @@
 \name{weightTf}
 \alias{weightTf}
-\title{Weight By Term Frequency}
+\title{Weight by Term Frequency}
 \description{
   Weight a term-document matrix by term frequency.
 }
@@ -11,8 +11,8 @@ weightTf(x)
   \item{x}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
 }
 \details{
-  Formally this function is a \code{WeightingFunction} with the additional
-  slots \code{Name} and \code{Acronym}.
+  Formally this function is of class \code{WeightingFunction} with the
+  additional attributes \code{Name} and \code{Acronym}.
 
   This function acts as the identity function since the input matrix is
   already in term frequency format.

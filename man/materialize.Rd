@@ -2,7 +2,7 @@
 \alias{materialize}
 \title{Materialize Lazy Mappings}
 \description{
-  The function \code{\link{tmMap}} supports so-called lazy mappings, that
+  The function \code{\link{tm_map}} supports so-called lazy mappings, that
   are mappings which are delayed until the documents' content is
   accessed. This function triggers the evaluation, i.e., it materializes
   the documents.
@@ -19,9 +19,9 @@ materialize(corpus, range = seq_along(corpus))
   documents for the requested range.
 }
 \author{Ingo Feinerer}
-\seealso{\code{\link{tmMap}}}
+\seealso{\code{\link{tm_map}}}
 \examples{
 data("crude")
-x <- tmMap(crude, stemDoc, lazy = TRUE)
+x <- tm_map(crude, stemDocument, lazy = TRUE)
 x <- materialize(x)
 }

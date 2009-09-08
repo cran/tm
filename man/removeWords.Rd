@@ -1,24 +1,25 @@
-\name{removeWords-methods}
-\docType{methods}
+\name{removeWords}
 \alias{removeWords}
-\alias{removeWords-methods}
-\alias{removeWords,PlainTextDocument,character-method}
-\title{Methods for Function removeWords in Package `tm'}
+\alias{removeWords.PlainTextDocument}
+\title{Remove Words from a Text Document}
 \description{
-Methods for function \code{removeWords} in package \pkg{tm}.
+  Remove a set of words from a text document.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "PlainTextDocument", words = "character"}{Removes all
-      words which occur in \code{words} from \code{object} and return the object.}
-  }
+\usage{
+\method{removeWords}{PlainTextDocument}(x, words)
+}
+\arguments{
+  \item{x}{A text document.}
+  \item{words}{A character vector list the words to be removed.}
+}
+\value{
+  The text document with the specified words in it removed.
 }
 \seealso{
-  Use \code{\link{getTransformations}} to list available transformation (mapping) functions.
+  \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")
 crude[[1]]
 removeWords(crude[[1]], stopwords("english"))
 }
-\keyword{methods}

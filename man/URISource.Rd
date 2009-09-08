@@ -1,24 +1,29 @@
 \name{URISource}
-\docType{methods}
 \alias{URISource}
-\alias{URISource,character-method}
-\alias{URISource,ANY-method}
 \title{Uniform Resource Identifier Source}
-\description{
-  Constructs a Uniform Resource Identifier source.
+\description{  
+  Constructs a source which represents a single document located by a
+  uniform resource identifier.
 }
 \usage{
-\S4method{URISource}{character}(object, encoding = "UTF-8")
+URISource(x, encoding = "UTF-8")
 }
 \arguments{
-  \item{object}{the Uniform Resource Identifier, i.e., either a
+  \item{x}{The Uniform Resource Identifier, i.e., either a
     character identifying the file or a connection.}
-  \item{encoding}{a character giving the encoding of the file.}
+  \item{encoding}{A character giving the encoding of \code{x}.}
 }
 \value{
-  An S4 object of class \code{URISource} which extends the class
-  \code{Source} representing a single document identified by a URI.
+  An object of class \code{URISource} which extends the class
+  \code{Source} representing a single document located by a URI.
 }
 \author{Ingo Feinerer}
-\seealso{\code{\link{DirSource}} for accessing multiple files.}
-\keyword{methods}
+\seealso{
+  \code{\link{DirSource}} for accessing multiple files, and
+  \code{\link{getSources}} to list available sources.
+}
+\examples{
+loreipsum <- system.file("texts", "loremipsum.txt", package = "tm")
+us <- URISource(loreipsum)
+inspect(Corpus(us))
+}

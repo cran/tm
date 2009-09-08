@@ -1,45 +1,29 @@
 # Author: Ingo Feinerer
 
-setGeneric("TextRepository", function(object, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT"))) standardGeneric("TextRepository"))
-setMethod("TextRepository",
-          signature(object = "Corpus"),
-          function(object, meta) {
-              return(new("TextRepository", .Data = list(object), RepoMetaData = meta))
-          })
+TextRepository <- function(x, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT"))) {
+    x <- structure(list(x), class = c("TextRepository", "list"))
+    attr(x, "RepoMetaData") <- meta
+    x
+}
 
-setMethod("appendElem",
-          signature(object = "TextRepository", data = "Corpus"),
-          function(object, data, meta = NULL) {
-              object[[length(object)+1]] <- data
-              object@RepoMetaData <- c(object@RepoMetaData, meta)
-              return(object)
-          })
+RepoMetaData <- function(x) attr(x, "RepoMetaData")
 
-setMethod("length",
-          signature(x = "TextRepository"),
-          function(x){
-              return(length(as(x, "list")))
-    })
+print.TextRepository <- function(x, ...) {
+    cat(sprintf(ngettext(length(x),
+                         "A text repository with %d corpus\n",
+                         "A text repository with %d corpora\n"),
+                length(x)))
+    invisible(x)
+}
 
-setMethod("show",
-          signature(object = "TextRepository"),
-          function(object){
-               cat(sprintf(ngettext(length(object),
-                                    "A text repository with %d corpus\n",
-                                    "A text repository with %d corpora\n"),
-                           length(object)))
-    })
-
-setMethod("summary",
-          signature(object = "TextRepository"),
-          function(object){
-              show(object)
-              if (length(RepoMetaData(object)) > 0) {
-                  cat(sprintf(ngettext(length(RepoMetaData(object)),
-                                              "\nThe repository metadata consists of %d tag-value pair\n",
-                                              "\nThe repository metadata consists of %d tag-value pairs\n"),
-                                       length(RepoMetaData(object))))
-                  cat("Available tags are:\n")
-                  cat(names(RepoMetaData(object)), "\n")
-              }
-    })
+summary.TextRepository <- function(object, ...) {
+    print(object)
+    if (length(RepoMetaData(object)) > 0) {
+        cat(sprintf(ngettext(length(RepoMetaData(object)),
+                             "\nThe repository metadata consists of %d tag-value pair\n",
+                             "\nThe repository metadata consists of %d tag-value pairs\n"),
+                    length(RepoMetaData(object))))
+        cat("Available tags are:\n")
+        cat(names(RepoMetaData(object)), "\n")
+    }
+}

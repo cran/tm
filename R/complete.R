@@ -1,8 +1,8 @@
 # Author: Ingo Feinerer
 
-stemCompletion <- function(object, words, type = c("prevalent", "first")) {
+stemCompletion <- function(x, words, type = c("prevalent", "first")) {
     # Get a list of all terms from the corpus
-    terms <- unlist(lapply(object, strsplit, "[^[:alnum:]]+"))
+    terms <- unlist(lapply(x, strsplit, "[^[:alnum:]]+"))
 
     type <- match.arg(type)
     switch(type,

@@ -8,16 +8,18 @@
 stopwords(language = "eng")
 }
 \arguments{
-  \item{language}{a \code{character} giving the desired language.}
+  \item{language}{A \code{character} giving the desired language.}
 }
-\details{At the moment supported languages are \code{danish},
+\details{
+  At the moment supported languages are \code{danish},
   \code{dutch}, \code{english}, \code{finnish}, \code{french},
   \code{german}, \code{hungarian}, \code{italian}, \code{norwegian},
   \code{portuguese}, \code{russian}, \code{spanish}, and
   \code{swedish}. Alternatively, their \acronym{ISO} 639-2 code may be
-  used.}
+  used.
+}
 \value{A character vector containing the requested stopwords.}
 \examples{
-stopwords("english")
+stopwords("eng")
 }
 \keyword{file}

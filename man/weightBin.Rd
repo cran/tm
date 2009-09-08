@@ -11,8 +11,8 @@ weightBin(m)
   \item{m}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
 }
 \details{
-  Formally this function is a \code{WeightingFunction} with the additional
-  slots \code{Name} and \code{Acronym}.
+  Formally this function is of class \code{WeightingFunction} with the
+  additional attributes \code{Name} and \code{Acronym}.
 }
 \value{
   The weighted matrix.

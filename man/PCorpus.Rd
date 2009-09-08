@@ -1,31 +1,62 @@
 \name{PCorpus}
 \docType{methods}
 \alias{PCorpus}
-\alias{PCorpus,Source-method}
+\alias{DBControl}
+\alias{DMetaData.PCorpus}
+\alias{DMetaData<-.PCorpus}
 \title{Permanent Corpus Constructor}
 \description{
-  Constructs a permanent corpus.
+  Construct a permanent corpus.
 }
 \usage{
-PCorpus(object, readerControl = list(reader = object@DefaultReader, language = "eng"), dbControl = list(dbName = "", dbType = "DB1"), \dots)
+PCorpus(x, readerControl = list(reader = x$DefaultReader, language = "eng"), dbControl = list(dbName = "", dbType = "DB1"), \dots)
+DBControl(x)
+\method{DMetaData}{PCorpus}(x)
 }
 \arguments{
-  \item{object}{A \code{Source} object.}
+  \item{x}{A \code{\link{Source}} object for \code{PCorpus}, and a
+    corpus for the other functions.}
   \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
-    found in \code{object}, and \code{language} giving the text's language
+    found in \code{x}, and \code{language} giving the text's language
     (preferably in \acronym{ISO} 639-2 format).}
   \item{dbControl}{A list with the named components \code{dbName}
-    giving the filename holding the sourced out objects (i.e., the
+    giving the filename holding the sourced out documents (i.e., the
     database), and \code{dbType} holding a valid database type as
     supported by package \pkg{filehash}. Under activated database
     support the \code{tm} package tries to keep as few as possible
     resources in memory under usage of the database.}
-  \item{...}{Optional arguments for the \code{reader}.}
+  \item{\dots}{Optional arguments for the \code{reader}.}
 }
 \value{
-  An S4 object of class \code{PCorpus} which extends the class
-  \code{list} containing a permanent corpus.
+  An object of class \code{PCorpus} which extends the classes
+  \code{Corpus} and \code{list} containing a permanent corpus.
+}
+\details{
+  Permanent means that documents are physically stored outside of \R
+  (e.g., in a database) and \R objects are only pointers to external
+  structures. I.e., changes in the underlying external representation
+  can affect multiple \R objects simultaneously.
+  
+  The constructed corpus object inherits from a \code{list} and has
+  three attributes containing meta and database management
+  information:
+  \describe{
+    \item{\code{CMetaData}}{Corpus Meta Data contains corpus specific
+      meta data in form of tag-value pairs and information about
+      children in form of a binary tree. This information is useful for
+      reconstructing meta data after e.g. merging corpora.}
+    \item{\code{DMetaData}}{Document Meta Data of class
+      \code{data.frame} contains document specific meta data for the
+      corpus. This data frame typically encompasses clustering or
+      classification results which basically are metadata for documents
+      but form an own entity (e.g., with its name, the value range,
+      etc.).}
+    \item{\code{DBControl}}{Database control field is a \code{list} with
+      two named components: \code{dbName} holds the path to the
+      permanent database storage, and \code{dbType} stores the database
+      type.}
+  }
 }
 \examples{
 txt <- system.file("texts", "txt", package = "tm")

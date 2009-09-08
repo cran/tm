@@ -5,13 +5,14 @@
   Remove sparse terms from a term-document matrix.
 }
 \usage{
-removeSparseTerms(object, sparse)
+removeSparseTerms(x, sparse)
 }
 \arguments{
-  \item{object}{A term-document matrix.}
-  \item{sparse}{a numeric for the maximal allowed sparsity}
+  \item{x}{A term-document matrix.}
+  \item{sparse}{A numeric for the maximal allowed sparsity.}
 }
-\value{A term-document matrix where those terms from \code{object} are
+\value{
+  A term-document matrix where those terms from \code{x} are
   removed which have at least a \code{sparse} percentage of empty (i.e.,
   terms occurring 0 times in a document) elements. I.e., the resulting
   matrix contains only terms with a sparse factor of less than

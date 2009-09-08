@@ -7,11 +7,11 @@
   Constructs a term-document matrix or a document-term matrix.
 }
 \usage{
-TermDocumentMatrix(object, control = list())
-DocumentTermMatrix(object, control = list())
+TermDocumentMatrix(x, control = list())
+DocumentTermMatrix(x, control = list())
 }
 \arguments{
-  \item{object}{a corpus}
+  \item{x}{a corpus}
   \item{control}{a named list of control options. The component
     \code{weighting} must be a weighting function capable of handling a
     \code{TermDocumentMatrix}. It defaults to \code{weightTf} for term
@@ -21,9 +21,8 @@ DocumentTermMatrix(object, control = list())
 \value{
   An object of class \code{TermDocumentMatrix} or class
   \code{DocumentTermMatrix} containing a sparse term-document matrix or
-  document-term matrix. The following slots contain useful information:
-
-  \item{Weighting}{The weighting applied to the matrix.}
+  document-term matrix. The attribute \code{Weighting} contains the
+  weighting applied to the matrix.
 }
 \seealso{
   The documentation of \code{\link{termFreq}} gives an extensive list of

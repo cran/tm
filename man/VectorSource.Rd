@@ -1,23 +1,23 @@
 \name{VectorSource}
-\docType{methods}
 \alias{VectorSource}
-\alias{VectorSource,vector-method}
-\alias{VectorSource,ANY-method}
-\title{Gmane Source}
+\title{Vector Source}
 \description{
-  Constructs a source for a vector.
+  Constructs a source for a vector as input.
 }
 \usage{
-\S4method{VectorSource}{vector}(object, encoding = "UTF-8")
+VectorSource(x, encoding = "UTF-8")
 }
 \arguments{
-  \item{object}{A vector holding the texts.}
-  \item{encoding}{A character giving the encoding of the file.}
+  \item{x}{A vector.}
+  \item{encoding}{A character giving the encoding of \code{x}.}
 }
 \value{
-  An S4 object of class \code{VectorSource} which extends the class
-  \code{Source} representing a vector interpreting each element as a
-  document.
+  An object of class \code{VectorSource} which extends the class
+  \code{Source} representing a vector where each entry is interpreted as
+  a document.
+}
+\seealso{
+  \code{\link{getSources}} to list available sources.
 }
 \examples{
 docs <- c("This is a text.", "This another one.")
@@ -25,4 +25,3 @@ docs <- c("This is a text.", "This another one.")
 inspect(Corpus(vs))
 }
 \author{Ingo Feinerer}
-\keyword{methods}

@@ -1,8 +1,8 @@
 \name{getSources}
 \alias{getSources}
-\title{Get Available Sources}
+\title{List Available Sources}
 \description{
-  Get available sources.
+  Listt available sources.
 }
 \usage{
 getSources()
@@ -14,4 +14,3 @@ getSources()
 \examples{
 getSources()
 }
-\keyword{file}

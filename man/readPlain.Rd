@@ -2,14 +2,14 @@
 \alias{readPlain}
 \title{Read In a Text Document}
 \description{
-  Returns a function which reads in a text document without knowledge
+  Return a function which reads in a text document without knowledge
   about its internal structure and possible available metadata.
 }
 \usage{
-readPlain(...)
+readPlain(\dots)
 }
 \arguments{
-  \item{\dots}{arguments for the generator function.}
+  \item{\dots}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -20,7 +20,6 @@ readPlain(...)
 }
 \value{
   A \code{function} with the signature \code{elem, language, id}:
-
   \item{elem}{A \code{list} with the two named elements \code{content}
     and \code{uri}. The first element must hold the document to
     be read in, the second element must hold a call to extract this
@@ -28,12 +27,11 @@ readPlain(...)
   \item{language}{A \code{character} vector giving the text's language.}
   \item{id}{A \code{character} vector representing a unique identification
     string for the returned text document.}
-
   The function returns a \code{PlainTextDocument} representing
   \code{content}.
 }
 \seealso{
-  Use \code{\link{getReaders}} to list available reader functions.
+  \code{\link{getReaders}} to list available reader functions.
 }
 \examples{
 docs <- c("This is a text.", "This another one.")

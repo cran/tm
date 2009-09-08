@@ -24,4 +24,3 @@ sapply(ovid, length)
 ovidChunks <- makeChunks(ovid, 5)
 sapply(ovidChunks, length)
 }
-\keyword{file}

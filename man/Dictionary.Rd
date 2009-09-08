@@ -14,8 +14,9 @@
   \item{x}{A character vector or a term-document matrix holding the terms for the dictionary.}
 }
 \value{
-  An S4 object of class \code{\linkS4class{Dictionary}} which extends the class
-  \code{character} representing a dictionary.
+  An object of class \code{Dictionary} which extends the class
+  \code{character} representing a dictionary, i.e., a character vector
+  of terms.
 }
 \examples{
 Dictionary(c("some", "tokens"))

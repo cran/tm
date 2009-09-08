@@ -1,21 +1,22 @@
 \name{prescindMeta}
 \alias{prescindMeta}
-\title{Prescind meta data}
+\title{Prescind Document Meta Data}
 \description{
-Extracts meta data from each individual document (either stored in its slots
-or in additional user-defined local meta data pairs) of a corpus and
-creates a dataframe which contains both the global meta data information
-of the corpus plus the extracted (i.e., shifted up) local meta data.
+  Extracts meta data from each individual document (either stored in its attributes
+  or in additional user-defined local meta data pairs) of a corpus and
+  creates a data frame which contains both the global meta data information
+  of the corpus plus the extracted (i.e., shifted up) local meta data of
+  the individual text documents.
 }
 \usage{
-prescindMeta(object, meta)
+prescindMeta(x, meta)
 }
 \arguments{
-  \item{object}{a corpus.}
-  \item{meta}{a character vector of meta data names to be shifted up.}
+  \item{x}{A corpus.}
+  \item{meta}{A character vector of meta data names to be shifted up.}
 }
 \value{
-  A data frame constructed from \code{object} with shifted up
+  A data frame constructed from \code{x} with shifted up
   \code{meta} data.
 }
 \seealso{

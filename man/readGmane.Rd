@@ -1,8 +1,8 @@
 \name{readGmane}
 \alias{readGmane}
-\title{Read In A Newsgroup Document}
+\title{Read In a Gmane RSS Feed}
 \description{
-  Read in a RSS feed as returned by Gmane for mailing lists.
+  Read in a \acronym{RSS} feed as returned by Gmane for mailing lists.
 }
 \usage{
 readGmane(elem, language, id)
@@ -17,9 +17,15 @@ readGmane(elem, language, id)
     string for the returned text document.}
 }
 \value{
-  A \code{NewsgroupDocument}.
+  A \code{\link{PlainTextDocument}}.
 }
 \seealso{
-  Use \code{\link{getReaders}} to list available reader functions.
+  \code{\link{getReaders}} to list available reader functions.
+}
+\examples{
+gs <- GmaneSource(url("http://rss.gmane.org/gmane.comp.lang.r.general"))
+elem <- getElem(stepNext(gs))
+(gmane <- readGmane(elem, language = "eng", id = "id1"))
+meta(gmane)
 }
 \author{Ingo Feinerer}

@@ -1,8 +1,9 @@
 \name{getTransformations}
 \alias{getTransformations}
-\title{Get Available Transformations}
+\title{List Available Transformations}
 \description{
-  Get available transformations (mappings).
+  List available transformations (mappings) which can be used with
+  \code{\link{tm_map}}.
 }
 \usage{
 getTransformations()
@@ -14,4 +15,3 @@ getTransformations()
 \examples{
 getTransformations()
 }
-\keyword{file}

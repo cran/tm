@@ -1,21 +1,26 @@
-\name{stripWhitespace-methods}
-\docType{methods}
+\name{stripWhitespace}
 \alias{stripWhitespace}
-\alias{stripWhitespace-methods}
-\alias{stripWhitespace,PlainTextDocument-method}
-\title{Methods for Function stripWhitespace in Package `tm'}
+\alias{stripWhitespace.PlainTextDocument}
+\title{Strip Whitespace from a Text Document}
 \description{
-Methods for function \code{stripWhitespace} in package \pkg{tm}.
+  Strip extra whitespace from a text document. Multiple white space
+  characters are collapsed to a single blank.
 }
-\section{Methods}{
-  \describe{
-    \item{object = "PlainTextDocument", ...}{Strips unnecessary
-      whitespace from \code{object} and return the object.}
-  }
+\usage{
+\method{stripWhitespace}{PlainTextDocument}(x)
+}
+\arguments{
+  \item{x}{A text document.}
+}
+\value{
+  The text document with multiple white space characters collapse to a
+  single blank.
+}
+\seealso{
+  \code{\link{getTransformations}} to list available transformation (mapping) functions.
 }
 \examples{
 data("crude")
 crude[[1]]
 stripWhitespace(crude[[1]])
 }
-\keyword{methods}
