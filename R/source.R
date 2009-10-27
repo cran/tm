@@ -54,15 +54,10 @@ URISource <- function(x, encoding = "UTF-8") {
 }
 
 GmaneSource <- function(x, encoding = "UTF-8")
-    XMLSource(x,
-              function(tree) {
-                  root <- XML::xmlRoot(tree)
-                  root$children[names(root$children) == "item"]
-              },
-              readGmane, encoding)
+    XMLSource(x, function(tree) XML::xmlChildren(XML::xmlRoot(tree))[names(XML::xmlChildren(XML::xmlRoot(tree))) == "item"], readGmane, encoding)
 
 ReutersSource <- function(x, encoding = "UTF-8")
-    XMLSource(x, function(tree) XML::xmlRoot(tree)$children, readReut21578XML, encoding)
+    XMLSource(x, function(tree) XML::xmlChildren(XML::xmlRoot(tree)), readReut21578XML, encoding)
 
 # XML
 XMLSource <- function(x, parser, reader, encoding = "UTF-8") {

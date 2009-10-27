@@ -2,7 +2,7 @@
 \alias{getSources}
 \title{List Available Sources}
 \description{
-  Listt available sources.
+  List available sources.
 }
 \usage{
 getSources()

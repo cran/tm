@@ -20,7 +20,7 @@ preprocessReut21578XML <- function(input, output, fixEnc = TRUE) {
         XML::xmlApply(XML::xmlRoot(tree),
                  function(article) {
                      output.file <- file.path(output,
-                                              sprintf("reut-%s.xml", formatC(counter, width = 5, flag = "0")))
+                                              sprintf("reut-%s.xml", formatC(counter, width = 5, format ="d", flag = "0")))
                      counter <<- counter + 1
                      con <- file(output.file, "w")
                      XML::saveXML(article, file = con)

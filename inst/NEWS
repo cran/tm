@@ -1,5 +1,11 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.5-1
+
+BUG FIXES
+
+    o   preprocessReut21578XML() no longer generates invalid file names.
+
                 CHANGES IN tm VERSION 0.5
 
 SIGNIFICANT USER-VISIBLE CHANGES

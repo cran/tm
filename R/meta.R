@@ -99,21 +99,22 @@ meta.TextRepository <- function(x, tag, type = NULL) {
 # Simple Dublin Core to tm meta data mappings
 # http://en.wikipedia.org/wiki/Dublin_core#Simple_Dublin_Core
 Dublin_Core_tm <-
-function(DCElem = c("Title", "Creator", "Description", "Date", "Identifier", "Language", "Subject",
-         "Publisher", "Contributor", "Type", "Format", "Source", "Relation", "Coverage", "Rights"))
+function(DCElem = c("title", "creator", "description", "date", "identifier", "language", "subject",
+         "publisher", "contributor", "type", "format", "source", "relation", "coverage", "rights"))
 {
+    DCElem <- tolower(DCElem)
     DCElem <- match.arg(DCElem)
-    if (identical(DCElem, "Title")) return(list(tag = "Heading", type = "local"))
-    if (identical(DCElem, "Creator")) return(list(tag = "Author", type = "local"))
-    if (identical(DCElem, "Description")) return(list(tag = "Description", type = "local"))
-    if (identical(DCElem, "Date")) return(list(tag = "DateTimeStamp", type = "local"))
-    if (identical(DCElem, "Identifier")) return(list(tag = "ID", type = "local"))
-    if (identical(DCElem, "Language")) return(list(tag = "Language", type = "local"))
+    if (identical(DCElem, "title")) return(list(tag = "Heading", type = "local"))
+    if (identical(DCElem, "creator")) return(list(tag = "Author", type = "local"))
+    if (identical(DCElem, "description")) return(list(tag = "Description", type = "local"))
+    if (identical(DCElem, "date")) return(list(tag = "DateTimeStamp", type = "local"))
+    if (identical(DCElem, "identifier")) return(list(tag = "ID", type = "local"))
+    if (identical(DCElem, "language")) return(list(tag = "Language", type = "local"))
     # Source -> Origin ?
 
-    if (identical(DCElem, "Subject") || identical(DCElem, "Publisher") || identical(DCElem, "Contributor") ||
-        identical(DCElem, "Type") || identical(DCElem, "Format") || identical(DCElem, "Source") ||
-        identical(DCElem, "Relation") || identical(DCElem, "Coverage") || identical(DCElem, "Rights"))
+    if (identical(DCElem, "subject") || identical(DCElem, "publisher") || identical(DCElem, "contributor") ||
+        identical(DCElem, "type") || identical(DCElem, "format") || identical(DCElem, "source") ||
+        identical(DCElem, "relation") || identical(DCElem, "coverage") || identical(DCElem, "rights"))
         return(list(tag = DCElem, type = "extended"))
 
     stop("invalid simple Dublin Core meta data element")

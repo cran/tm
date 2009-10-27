@@ -100,7 +100,7 @@ as.PlainTextDocument.Reuters21578Document <- function(x) {
     x
 }
 
-convert_UTF_8 <- function(x, from = "", sub = NA, ...)
+convert_UTF_8 <- function(x, from = "", sub = NA)
     iconv(x, from = from, to = "UTF-8", sub = sub)
 
 removeNumbers <- function(x) UseMethod("removeNumbers", x)
@@ -110,16 +110,9 @@ removePunctuation <- function(x) UseMethod("removePunctuation", x)
 removePunctuation.PlainTextDocument <- function(x)  gsub("[[:punct:]]+", "", x)
 
 removeWords <- function(x, words) UseMethod("removeWords", x)
-removeWords.PlainTextDocument <- function(x, words) {
-    x <- gsub(paste("([[:blank:]]|^)",
-                    paste(words, collapse = "([[:blank:]]|$)|([[:blank:]]|^)"),
-                    "([[:blank:]]|$)", sep = ""),
-              " ",
-              # Add blank so that adjacent words can be matched
-              gsub("([[:blank:]])", "\\1 ", x))
-    # Remove doubled blanks
-    gsub("([[:blank:]]) ", "\\1", x)
-}
+# Improvements by Kurt Hornik
+removeWords.PlainTextDocument <- function(x, words)
+    gsub(sprintf("[[:blank:]]+((%s)[[:blank:]])+", paste(words, collapse = "|")), " ", x)
 
 stemDocument <- function(x, language = "english") UseMethod("stemDocument", x)
 stemDocument.PlainTextDocument <- function(x, language = "english") {

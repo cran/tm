@@ -57,9 +57,9 @@ DublinCore(x, tag = NULL)
     \item{x = "TextDocument", tag = NULL}{Returns or sets the
       Simple Dublin Core meta datum named \code{tag} for
       \code{x}. \code{tag} must be a valid Simple Dublin Core
-      element name (i.e, Title, Creator, Subject, Description,
-      Publisher, Contributor, Date, Type, Format, Identifier, Source,
-      Language, Relation, Coverage, or Rights) or \code{NULL}. For the
+      element name (i.e, title, creator, subject, description,
+      publisher, contributor, date, type, format, identifier, source,
+      language, relation, coverage, or rights) or \code{NULL}. For the
       latter all Dublin Core meta data are printed.}
   }
 }
@@ -74,7 +74,7 @@ DublinCore(crude[[1]])
 meta(crude[[1]], tag = "Topics")
 meta(crude[[1]], tag = "Comment") <- "A short comment."
 meta(crude[[1]], tag = "Topics") <- NULL
-DublinCore(crude[[1]], tag = "Creator") <- "Ano Nymous"
+DublinCore(crude[[1]], tag = "creator") <- "Ano Nymous"
 DublinCore(crude[[1]], tag = "Format") <- "XML"
 DublinCore(crude[[1]])
 meta(crude[[1]])
