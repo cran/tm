@@ -31,8 +31,10 @@
   Visualization requires that package \pkg{Rgraphviz} is available.
 }
 \examples{
+\dontrun{
 data(crude)
 tdm <- TermDocumentMatrix(crude)
 set.seed(1234)
 plot(tdm, corThreshold = 0.2, weighting = TRUE)
+}
 }

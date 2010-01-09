@@ -50,6 +50,12 @@ PCorpus <- function(x,
     x
 }
 
+# Register S3 corpus classes to be recognized by S4 methods. This is
+# mainly a fix to be compatible with packages which were originally
+# developed to cooperate with corresponding S4 tm classes. Necessary
+# since tm's class architecture was changed to S3 since tm version 0.5.
+setOldClass(c("VCorpus", "Corpus", "list"))
+
 # The "..." are additional arguments for the FunctionGenerator reader
 VCorpus <- Corpus <- function(x,
                     readerControl = list(reader = x$DefaultReader, language = "eng"),
@@ -102,7 +108,7 @@ VCorpus <- Corpus <- function(x,
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     counter <- 1
     for (id in unclass(x)[i]) {
-        if (identical(length(value), 1)) db[[id]] <- value
+        if (identical(length(value), 1L)) db[[id]] <- value
         else db[[id]] <- value[[counter]]
         counter <- counter + 1
     }
@@ -218,7 +224,7 @@ function(x, ..., recursive = FALSE)
 {
     args <- list(...)
 
-    if (identical(length(args), 0))
+    if (identical(length(args), 0L))
         return(x)
 
     if (!all(unlist(lapply(args, inherits, class(x)))))
@@ -233,7 +239,7 @@ function(x, ..., recursive = FALSE)
 c.TextDocument <- function(x, ..., recursive = FALSE) {
     args <- list(...)
 
-    if (identical(length(args), 0))
+    if (identical(length(args), 0L))
         return(x)
 
     if (!all(unlist(lapply(args, inherits, class(x)))))

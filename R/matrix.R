@@ -1,7 +1,12 @@
 # Author: Ingo Feinerer
 
-TermDocMatrix <- function(x, control = list()) {
-    .Defunct("DocumentTermMatrix", package = "tm")
+.TermDocumentMatrix <-
+function(i = integer(0), j = integer(0), v = numeric(0),
+         nrow = 0, ncol = 0, dimnames = list(Terms = character(0), Docs = character(0)))
+{
+    structure(list(i = i, j = j, v = v, nrow = nrow, ncol = ncol, dimnames = dimnames,
+                   Weighting = c("term frequency", "tf")),
+              class = c("TermDocumentMatrix", "simple_triplet_matrix"))
 }
 
 TermDocumentMatrix <- function(x, control = list()) UseMethod("TermDocumentMatrix", x)
@@ -14,6 +19,8 @@ TermDocumentMatrix.PCorpus <- TermDocumentMatrix.VCorpus <- function(x, control 
     if (!is.null(lazyTmMap))
         .Call("copyCorpus", x, materialize(x))
 
+    names(x) <- NULL
+
     tflist <- if (clusterAvailable())
         snow::parLapply(snow::getMPIcluster(), x, termFreq, control)
     else
@@ -22,15 +29,13 @@ TermDocumentMatrix.PCorpus <- TermDocumentMatrix.VCorpus <- function(x, control 
 
     v <- unlist(tflist)
     i <- names(v)
-    v <- as.numeric(v)
     allTerms <- sort(unique(i))
     i <- match(i, allTerms)
     j <- rep(seq_along(x), sapply(tflist, length))
 
-    tdm <- structure(list(i = i, j = j, v = v, nrow = length(allTerms), ncol = length(x),
-                          dimnames = list(Terms = allTerms, Docs = unlist(lapply(x, ID))),
-                          Weighting = c(attr(weight, "Name"), attr(weight, "Acronym"))),
-                     class = c("TermDocumentMatrix", "simple_triplet_matrix"))
+    tdm <- .TermDocumentMatrix(i = i, j = j, v = as.numeric(v), nrow = length(allTerms), ncol = length(x),
+                               dimnames = list(Terms = allTerms, Docs = unlist(lapply(x, ID))))
+
     weight(tdm)
 }
 
@@ -55,10 +60,19 @@ termFreq <- function(doc, control = list()) {
     if (is.null(tolower) || tolower)
         txt <- tolower(txt)
 
+    # Punctuation removal
+    if (isTRUE(control$removePunctuation))
+        txt <- gsub("[[:punct:]]+", "", txt)
+
     # Tokenize the corpus
     tokenize <- control$tokenize
     if (is.null(tokenize))
-        tokenize <- RWeka::AlphabeticTokenizer
+        tokenize <- function(x) {
+            con <- textConnection(x)
+            tokens <- scan(con, what = "character", quiet = TRUE)
+            close(con)
+            tokens
+        }
     txt <- tokenize(txt)
 
     # Number removal
@@ -111,7 +125,7 @@ print.TermDocumentMatrix <- print.DocumentTermMatrix <- function(x, ...) {
     cat(sprintf("A %s-%s matrix (%d %ss, %d %ss)\n",
                 format[1], format[2], nrow(x), format[1], ncol(x), format[2]))
     cat(sprintf("\nNon-/sparse entries: %d/%d\n", length(x$v), prod(dim(x)) - length(x$v)))
-    sparsity <- if (identical(prod(dim(x)), 0)) 100 else round((1 - length(x$v)/prod(dim(x))) * 100)
+    sparsity <- if (identical(prod(dim(x)), 0L)) 100 else round((1 - length(x$v)/prod(dim(x))) * 100)
     cat(sprintf("Sparsity           : %s%%\n", sparsity))
     cat("Maximal term length:", max(nchar(Terms(x), type = "chars"), 0), "\n")
     cat(sprintf("Weighting          : %s (%s)\n", x$Weighting[1], x$Weighting[2]))
@@ -138,6 +152,31 @@ nTerms <- function(x) if (inherits(x, "DocumentTermMatrix")) x$ncol else x$nrow
 
 Docs <- function(x) if (inherits(x, "DocumentTermMatrix")) x$dimnames[[1]] else x$dimnames[[2]]
 Terms <- function(x) if (inherits(x, "DocumentTermMatrix")) x$dimnames[[2]] else x$dimnames[[1]]
+
+c.TermDocumentMatrix <- function(x, ..., recursive = FALSE) {
+    args <- list(...)
+
+    if (identical(length(args), 0L))
+        return(x)
+
+    if (!all(unlist(lapply(args, inherits, "TermDocumentMatrix"))))
+        stop("not all arguments are term-document matrices")
+
+    m <- base::c(list(x), args)
+    allTerms <- unique(unlist(lapply(m, Terms)))
+    allDocs <- unlist(lapply(m, Docs))
+
+    cs <- cumsum(lapply(m, nDocs))
+    cs <- c(0, cs[-length(cs)])
+    j <- lapply(m, "[[", "j")
+
+    .TermDocumentMatrix(i = match(unlist(lapply(m, function(x) Terms(x)[x$i])), allTerms),
+                        j = unlist(j) + rep.int(cs, sapply(j, length)),
+                        v = unlist(lapply(m, "[[", "v")),
+                        nrow = length(allTerms),
+                        ncol = length(allDocs),
+                        dimnames = list(Terms = allTerms, Docs = allDocs))
+}
 
 findFreqTerms <- function(x, lowfreq = 0, highfreq = Inf) {
     if (inherits(x, "DocumentTermMatrix")) x <- t(x)

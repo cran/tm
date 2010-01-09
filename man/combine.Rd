@@ -1,18 +1,21 @@
 \name{tm_combine}
 \alias{c.Corpus}
 \alias{c.TextDocument}
-\title{Combine Corpora and Documents}
+\alias{c.TermDocumentMatrix}
+\title{Combine Corpora, Documents, and Term-Document Matrices}
 \description{
-  Combine serveral corpora into a single one or combine multiple
-  documents into a corpus.
+  Combine serveral corpora into a single one, combine multiple
+  documents into a corpus, or combine multiple term-document matrices
+  into a single one.
 }
 \usage{
 \method{c}{Corpus}(x, \dots, recursive = FALSE)
 \method{c}{TextDocument}(x, \dots, recursive = FALSE)
+\method{c}{TermDocumentMatrix}(x, \dots, recursive = FALSE)
 }
 \arguments{
-  \item{x}{A corpus or a text document.}
-  \item{\dots}{Corpora or text documents.}
+  \item{x}{A corpus, a text document, or a term-document matrix.}
+  \item{\dots}{Corpora, text documents, or term-document matrices.}
   \item{recursive}{Logical. Provided by generic function definition but
     not used.}
 }
@@ -32,4 +35,5 @@ data("acq")
 data("crude")
 summary(c(acq,crude))
 summary(c(acq[[30]],crude[[10]]))
+c(TermDocumentMatrix(acq), TermDocumentMatrix(crude))
 }

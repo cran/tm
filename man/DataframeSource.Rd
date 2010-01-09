@@ -1,5 +1,4 @@
 \name{DataframeSource}
-\alias{CSVSource}
 \alias{DataframeSource}
 \title{Data Frame Source}
 \description{

@@ -21,10 +21,6 @@ VectorSource <- function(x, encoding = "UTF-8") {
     s
 }
 
-CSVSource <- function(x, encoding = "UTF-8")
-    .Defunct("DataframeSource", package = "tm",
-             msg = "'CSVSource' is defunct.\nUse 'DataframeSource(read.csv(..., stringsAsFactors = FALSE))' instead.\nSee help(\"Defunct\")")
-
 # A data frame where each row is interpreted as document
 DataframeSource <- function(x, encoding = "UTF-8") {
     s <- .Source(readPlain, encoding, nrow(x), FALSE, 0, TRUE)
@@ -34,13 +30,18 @@ DataframeSource <- function(x, encoding = "UTF-8") {
 }
 
 # A directory with files
-DirSource <- function(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) {
+DirSource <- function(directory = ".", encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE) {
     d <- dir(directory, full.names = TRUE, pattern = pattern, recursive = recursive, ignore.case = ignore.case)
-    isdir <- sapply(d, file.info)["isdir",]
-    files <- d[isdir == FALSE]
 
-    s <- .Source(readPlain, encoding, length(files), TRUE, 0, TRUE)
-    s$FileList <- files
+    if (length(d) == 0)
+        stop("Empty directory")
+
+    isfile <- logical(length(d))
+    for (i in seq_along(d))
+      isfile[i] <- !file.info(d[i])["isdir"]
+
+    s <- .Source(readPlain, encoding, sum(isfile), TRUE, 0, TRUE)
+    s$FileList <- d[isfile]
     class(s) = c("DirSource", "Source")
     s
 }
@@ -85,7 +86,7 @@ getElem.DirSource <- function(x) {
     encoding <- x$Encoding
     list(content = readLines(filename, encoding = encoding), uri = filename)
 }
-getElem.URISource <- function(x) list(content = readLines(eval(x$URI)), uri = x$URI)
+getElem.URISource <- function(x) list(content = readLines(eval(x$URI), encoding = x$Encoding), uri = x$URI)
 getElem.VectorSource <- function(x) list(content = x$Content[x$Position], uri = match.call()$x)
 getElem.XMLSource <- function(x) {
     # Construct a character representation from the XMLNode

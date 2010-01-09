@@ -5,10 +5,10 @@
   Constructs a directory source.
 }
 \usage{
-DirSource(directory, encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
+DirSource(directory = ".", encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
 }
 \arguments{
-  \item{directory}{A directory.}
+  \item{directory}{A character vector of full path names; the default corresponds to the working directory \code{getwd()}.}
   \item{encoding}{A character giving the encoding of the files in \code{directory}.}
   \item{pattern}{An optional regular expression. Only file names which match the regular expression will be returned.}
   \item{recursive}{Logical. Should the listing recurse into directories?}

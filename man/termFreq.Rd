@@ -12,12 +12,12 @@ termFreq(doc, control = list())
   \item{control}{A list of control options. Possible settings are
     \describe{
       \item{\code{tolower}}{A function converting characters to lower
-	case. Defaults to \code{base::tolower}.}
-      \item{\code{tokenize}}{A function tokenizing documents to single
-	tokens. Defaults to
-	\link[RWeka:Weka_tokenizers]{AlphabeticTokenizer} (package
-	\pkg{RWeka}), where tokens are to be formed only from contiguous
-	alphabetic sequences.}
+	case. Defaults to \code{\link{tolower}}.}
+      \item{\code{removePunctuation}}{A logical value indicating whether
+	punctuation characters should be removed from
+	\code{doc}. Defaults to \code{FALSE}.}
+      \item{\code{tokenize}}{A function tokenizing documents into single
+	tokens. Defaults to \code{scan(\dots, what = "character")}.}
       \item{\code{removeNumbers}}{A logical value indicating whether
 	numbers should be removed from \code{doc}. Defaults to \code{FALSE}.}
       \item{\code{stemming}}{Either a Boolean value indicating whether tokens
@@ -46,6 +46,6 @@ termFreq(doc, control = list())
 \examples{
 data("crude")
 termFreq(crude[[1]])
-termFreq(crude[[1]], control = list(stemming = TRUE, minWordLength = 4))
+termFreq(crude[[1]], control = list(removePunctuation = TRUE, stemming = TRUE, minWordLength = 4))
 }
 \keyword{math}

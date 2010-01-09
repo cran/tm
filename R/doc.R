@@ -1,3 +1,9 @@
+# Register S3 document classes to be recognized by S4 methods. This is
+# mainly a fix to be compatible with packages which were originally
+# developed to cooperate with corresponding S4 tm classes. Necessary
+# since tm's class architecture was changed to S3 since tm version 0.5.
+setOldClass(c("PlainTextDocument", "TextDocument", "character"))
+
 .TextDocument <-
     function(x, author, datetimestamp, description, heading, id, origin, language, localmetadata)
 {
