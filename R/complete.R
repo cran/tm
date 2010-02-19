@@ -1,19 +1,39 @@
 # Author: Ingo Feinerer
 
-stemCompletion <- function(x, words, type = c("prevalent", "first")) {
-    # Get a list of all terms from the corpus
-    terms <- unlist(lapply(x, strsplit, "[^[:alnum:]]+"))
+stemCompletion <- function(x, words, type = c("prevalent", "first", "longest", "none", "random", "shortest")) {
+    terms <- if (inherits(x, "Corpus"))
+        unlist(lapply(x, strsplit, "[^[:alnum:]]+"))
+    else
+        x
 
     type <- match.arg(type)
+    possibleCompletions <- lapply(words, function(w) grep(sprintf("^%s", w), terms, value = TRUE))
     switch(type,
-           # As heuristics just take the first found completion
-           first = na.omit(sapply(words, function(w) grep(sprintf("^%s", w), unique(terms), value = TRUE)[1])),
-           # As heuristics take the most frequent completion
+           first = {
+               structure(sapply(possibleCompletions, "[", 1), names = words)
+           },
+           longest = {
+               ordering <- lapply(possibleCompletions, function(x) order(nchar(x), decreasing = TRUE))
+               possibleCompletions <- mapply(function(x, id) x[id], possibleCompletions, ordering, SIMPLIFY = FALSE)
+               structure(sapply(possibleCompletions, "[", 1), names = words)
+           },
+           none = {
+               structure(words, names = words)
+           },
            prevalent = {
-               possibleCompletions <- lapply(words, function(w) grep(sprintf("^%s", w), terms, value = TRUE))
-               possibleCompletions <- lapply(possibleCompletions, table)
-               possibleCompletions <- lapply(possibleCompletions, sort, decreasing = TRUE)
-               s <- structure(names(sapply(possibleCompletions, "[", 1)), names = words)
-               s[nchar(s) > 0]}
+               possibleCompletions <- lapply(possibleCompletions, function(x) sort(table(x), decreasing = TRUE))
+               structure(names(sapply(possibleCompletions, "[", 1)), names = words)
+           },
+           random = {
+               structure(sapply(possibleCompletions, function(x) {
+                   if (length(x) >= 1) sample(x, 1)
+                   else NA
+               }), names = words)
+           },
+           shortest = {
+               ordering <- lapply(possibleCompletions, function(x) order(nchar(x)))
+               possibleCompletions <- mapply(function(x, id) x[id], possibleCompletions, ordering, SIMPLIFY = FALSE)
+               structure(sapply(possibleCompletions, "[", 1), names = words)
+           }
            )
 }

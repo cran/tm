@@ -33,8 +33,7 @@
 \examples{
 \dontrun{
 data(crude)
-tdm <- TermDocumentMatrix(crude)
-set.seed(1234)
+tdm <- TermDocumentMatrix(crude, control = list(removePunctuation = TRUE, removeNumbers = TRUE, stopwords = TRUE))
 plot(tdm, corThreshold = 0.2, weighting = TRUE)
 }
 }

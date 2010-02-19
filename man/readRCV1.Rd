@@ -1,11 +1,13 @@
 \name{readRCV1}
 \alias{readRCV1}
+\alias{readRCV1asPlain}
 \title{Read In a Reuters Corpus Volume 1 Document}
 \description{
   Read in a Reuters Corpus Volume 1 \acronym{XML} document.
 }
 \usage{
 readRCV1(elem, language, id)
+readRCV1asPlain(elem, language, id)
 }
 \arguments{
   \item{elem}{A \code{list} with the two named elements \code{content}
@@ -17,7 +19,8 @@ readRCV1(elem, language, id)
     string for the returned text document.}
 }
 \value{
-  An \code{RCV1Document}.
+  An \code{RCV1Document} for \code{readRCV1}, or a
+  \code{PlainTextDocument} for \code{readRCV1asPlain}.
 }
 \seealso{
   Use \code{\link{getReaders}} to list available reader functions.

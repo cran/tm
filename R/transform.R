@@ -115,9 +115,10 @@ removeWords.PlainTextDocument <- function(x, words)
     gsub(sprintf("\\b(%s)\\b", paste(words, collapse = "|")), "", x)
 
 stemDocument <- function(x, language = "english") UseMethod("stemDocument", x)
+stemDocument.character <- function(x, language = "english")
+    Snowball::SnowballStemmer(x, RWeka::Weka_control(S = language))
 stemDocument.PlainTextDocument <- function(x, language = "english") {
-    stemLine <- function(x) Snowball::SnowballStemmer(x, RWeka::Weka_control(S = language))
-    s <- unlist(lapply(x, function(x) paste(stemLine(unlist(strsplit(x, "[[:blank:]]"))), collapse = " ")))
+    s <- unlist(lapply(x, function(x) paste(stemDocument.character(unlist(strsplit(x, "[[:blank:]]"))), collapse = " ")))
     Content(x) <- if (is.character(s)) s else ""
     x
 }

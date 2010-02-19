@@ -82,7 +82,7 @@ termFreq <- function(doc, control = list()) {
     # Stemming
     stemming <- control$stemming
     if (isTRUE(stemming))
-        stemming <- function(x) Snowball::SnowballStemmer(x, RWeka::Weka_control(S = map_ISO_639_2(Language(doc))))
+        stemming <- function(x) stemDocument(x, language = map_ISO_639_2(Language(doc)))
     if (is.function(stemming))
         txt <- stemming(txt)
 
@@ -124,7 +124,7 @@ print.TermDocumentMatrix <- print.DocumentTermMatrix <- function(x, ...) {
     if (inherits(x, "DocumentTermMatrix")) format <- rev(format)
     cat(sprintf("A %s-%s matrix (%d %ss, %d %ss)\n",
                 format[1], format[2], nrow(x), format[1], ncol(x), format[2]))
-    cat(sprintf("\nNon-/sparse entries: %d/%d\n", length(x$v), prod(dim(x)) - length(x$v)))
+    cat(sprintf("\nNon-/sparse entries: %d/%.0f\n", length(x$v), prod(dim(x)) - length(x$v)))
     sparsity <- if (identical(prod(dim(x)), 0L)) 100 else round((1 - length(x$v)/prod(dim(x))) * 100)
     cat(sprintf("Sparsity           : %s%%\n", sparsity))
     cat("Maximal term length:", max(nchar(Terms(x), type = "chars"), 0), "\n")
@@ -163,14 +163,15 @@ c.TermDocumentMatrix <- function(x, ..., recursive = FALSE) {
         stop("not all arguments are term-document matrices")
 
     m <- base::c(list(x), args)
-    allTerms <- unique(unlist(lapply(m, Terms)))
+    allTermsNonUnique <- unlist(lapply(m, function(x) Terms(x)[x$i]))
+    allTerms <- unique(allTermsNonUnique)
     allDocs <- unlist(lapply(m, Docs))
 
     cs <- cumsum(lapply(m, nDocs))
     cs <- c(0, cs[-length(cs)])
     j <- lapply(m, "[[", "j")
 
-    .TermDocumentMatrix(i = match(unlist(lapply(m, function(x) Terms(x)[x$i])), allTerms),
+    .TermDocumentMatrix(i = match(allTermsNonUnique, allTerms),
                         j = unlist(j) + rep.int(cs, sapply(j, length)),
                         v = unlist(lapply(m, "[[", "v")),
                         nrow = length(allTerms),

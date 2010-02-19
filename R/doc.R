@@ -23,13 +23,13 @@ Content <- function(x) UseMethod("Content", x)
 `Content<-.default` <- function(x, value) {
     attrs <- attributes(x)
     x <- value
-    attributes(x) <- attrs
+    mostattributes(x) <- attrs
     x
 }
 `Content<-.XMLDocument` <- function(x, value) {
     attrs <- attributes(x)
     x <- value
-    attributes(x) <- attrs
+    mostattributes(x) <- attrs
     attr(x, "names") <- attr(value, "names")
     x
 }

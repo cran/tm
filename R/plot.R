@@ -10,8 +10,8 @@ plot.TermDocumentMatrix <- plot.DocumentTermMatrix <- function(x,
         stop("could not find (bioconductor.org) Rgraphviz package")
 
     m <- if (inherits(x, "TermDocumentMatrix")) t(x) else x
-    m <- as.matrix(m)
-    c <- cor(m[seq_len(nrow(m)), terms])
+    m <- as.matrix(m[, terms])
+    c <- cor(m)
     c[c < corThreshold] <- 0
     diag(c) <- 0
     g <- as(c, "graphNEL")
