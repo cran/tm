@@ -12,6 +12,11 @@ getFilters()
   A character vector with available filters.
 }
 \author{Ingo Feinerer}
+\seealso{
+  \code{\link{searchFullText}},
+  \code{\link{sFilter}},
+  \code{\link{tm_intersect}}.
+}
 \examples{
 getFilters()
 }

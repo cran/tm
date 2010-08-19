@@ -41,7 +41,9 @@ change \R's standard evaluation semantics.
 \examples{
 data("crude")
 tm_map(crude, stemDocument)
-## Generate a custom transformation function which takes the heading as new content
-headings <- function(x) PlainTextDocument(Heading(x), id = ID(x), language = Language(x))
+## Generate a custom transformation function which takes the heading
+## as new content
+headings <- function(x)
+    PlainTextDocument(Heading(x), id = ID(x), language = Language(x))
 inspect(tm_map(crude, headings))
 }

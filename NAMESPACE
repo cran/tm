@@ -3,9 +3,9 @@ import(slam)
 export("as.PlainTextDocument",
        "Author",
        "CMetaData",
-       "convert_UTF_8",
        "Content",
        "Content<-",
+       "content_meta<-",
        "Corpus", # alias to VCorpus
        "DataframeSource",
        "DateTimeStamp",
@@ -25,6 +25,7 @@ export("as.PlainTextDocument",
        "getElem",
        "GmaneSource",
        "Heading",
+       "Heaps_plot",
        "findAssocs",
        "findFreqTerms",
        "getFilters",
@@ -83,6 +84,7 @@ export("as.PlainTextDocument",
        "tm_reduce",
        "tm_startCluster",
        "tm_stopCluster",
+       "tm_tag_score",
        "URISource",
        "VCorpus",
        "VectorSource",
@@ -90,10 +92,13 @@ export("as.PlainTextDocument",
        "weightTf",
        "weightTfIdf",
        "weightBin",
+#       "weightSMART",
        "writeCorpus",
-       "XMLSource")
+       "XMLSource",
+       "Zipf_plot")
 
 S3method("Dictionary", "character")
+S3method("stemCompletion", "character")
 S3method("stemDocument", "character")
 
 S3method("c", "Corpus")
@@ -124,6 +129,8 @@ S3method("t", "DocumentTermMatrix")
 
 S3method("findAssocs", "matrix")
 
+S3method("tm_tag_score", "numeric")
+
 S3method("print", "MetaDataNode")
 
 S3method("[", "PCorpus")
@@ -144,9 +151,11 @@ S3method("removeNumbers", "PlainTextDocument")
 S3method("removePunctuation", "PlainTextDocument")
 S3method("removeWords", "PlainTextDocument")
 S3method("searchFullText", "PlainTextDocument")
+S3method("stemCompletion", "PlainTextDocument")
 S3method("stemDocument", "PlainTextDocument")
 S3method("stripWhitespace", "PlainTextDocument")
 S3method("tm_intersect", "PlainTextDocument")
+S3method("tm_tag_score", "PlainTextDocument")
 
 S3method("as.PlainTextDocument", "RCV1Document")
 
@@ -163,6 +172,7 @@ S3method("inspect", "TermDocumentMatrix")
 S3method("plot", "TermDocumentMatrix")
 S3method("print", "TermDocumentMatrix")
 S3method("t", "TermDocumentMatrix")
+S3method("tm_tag_score", "TermDocumentMatrix")
 
 S3method("c", "TextDocument")
 S3method("meta", "TextDocument")

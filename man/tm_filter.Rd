@@ -8,8 +8,10 @@
   Interface to apply filter and index functions to corpora.
 }
 \usage{
-\method{tm_filter}{Corpus}(x, \dots, FUN = searchFullText, doclevel = TRUE, useMeta = FALSE)
-\method{tm_index}{Corpus}(x, \dots, FUN = searchFullText, doclevel = TRUE, useMeta = FALSE)
+\method{tm_filter}{Corpus}(x, \dots, FUN = searchFullText,
+          doclevel = TRUE, useMeta = FALSE)
+\method{tm_index}{Corpus}(x, \dots, FUN = searchFullText,
+          doclevel = TRUE, useMeta = FALSE)
 }
 \arguments{
   \item{x}{A corpus.}

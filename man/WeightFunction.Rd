@@ -20,6 +20,7 @@ WeightFunction(x, name, acronym)
   \code{function} representing a weighting function.
 }
 \examples{
-weightCutBin <- WeightFunction(function(m, cutoff) m > cutoff, "binary with cutoff", "bincut")
+weightCutBin <- WeightFunction(function(m, cutoff) m > cutoff,
+                               "binary with cutoff", "bincut")
 }
 \author{Ingo Feinerer}

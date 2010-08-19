@@ -85,7 +85,7 @@ meta.TextRepository <- function(x, tag, type = NULL) {
     x
 }
 `meta<-.TextDocument` <- function(x, tag, type = NULL, value) {
-    if (tag %in% setdiff(names(attributes(x)), ".Data"))
+    if (tag %in% setdiff(names(attributes(x)), "Content"))
         attr(x, tag) <- value
     else
         attr(x, "LocalMetaData")[[tag]] <- value
@@ -93,6 +93,14 @@ meta.TextRepository <- function(x, tag, type = NULL) {
 }
 `meta<-.TextRepository` <- function(x, tag, type = NULL, value) {
     attr(x, "RepoMetaData")[[tag]] <- value
+    x
+}
+
+`content_meta<-` <- function(x, tag, value) {
+    if (identical(tag, "Content"))
+        Content(x) <- value
+    else
+        meta(x, tag) <- value
     x
 }
 

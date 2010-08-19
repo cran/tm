@@ -23,7 +23,7 @@ URISource(x, encoding = "UTF-8")
   \code{\link{getSources}} to list available sources.
 }
 \examples{
-loreipsum <- system.file("texts", "loremipsum.txt", package = "tm")
-us <- URISource(loreipsum)
+loremipsum <- system.file("texts", "loremipsum.txt", package = "tm")
+us <- URISource(loremipsum)
 inspect(Corpus(us))
 }

@@ -10,7 +10,7 @@
 }
 \arguments{
   \item{x}{A text document.}
-  \item{words}{A character vector list the words to be removed.}
+  \item{words}{A character vector listing the words to be removed.}
 }
 \value{
   The text document with the specified words in it removed.

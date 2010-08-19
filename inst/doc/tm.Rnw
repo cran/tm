@@ -300,12 +300,12 @@ implementing such a dictionary concept. It can be created via the
 <<>>=
 (d <- Dictionary(c("prices", "crude", "oil")))
 @
-and may be passed over to the \code{DocumentTermMatrix()} constructor. Then
-the created matrix is tabulated against the dictionary, i.e., only
-terms from the dictionary appear in the matrix (terms not occurring in
-the document are skipped for performance reasons). This allows to
-restrict the dimension of the matrix a priori and to focus on specific
-terms for distinct text mining contexts, e.g.,
+and may be passed over to the \code{DocumentTermMatrix()}
+constructor. Then the created matrix is tabulated against the
+dictionary, i.e., only terms from the dictionary appear in the
+matrix. This allows to restrict the dimension of the matrix a priori
+and to focus on specific terms for distinct text mining contexts,
+e.g.,
 <<>>=
 inspect(DocumentTermMatrix(reuters, list(dictionary = d)))
 @

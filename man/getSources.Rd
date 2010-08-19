@@ -11,6 +11,14 @@ getSources()
   A character vector with available sources.
 }
 \author{Ingo Feinerer}
+\seealso{
+  \code{\link{DataframeSource}},
+  \code{\link{DirSource}},
+  \code{\link{GmaneSource}},
+  \code{\link{ReutersSource}},
+  \code{\link{URISource}},
+  \code{\link{VectorSource}}.
+}
 \examples{
 getSources()
 }

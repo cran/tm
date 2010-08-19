@@ -33,8 +33,15 @@ DocumentTermMatrix(x, control = list())
 }
 \examples{
 data("crude")
-tdm <- TermDocumentMatrix(crude, control = list(weighting = weightTfIdf, stopwords = TRUE))
-dtm <- DocumentTermMatrix(crude, control = list(weighting = weightTfIdf, stopwords = TRUE))
+tdm <- TermDocumentMatrix(crude,
+                          control = list(weighting = weightTfIdf,
+                                         stopwords = TRUE))
+dtm <- DocumentTermMatrix(crude,
+                          control = list(weighting =
+                                         function(x)
+                                         weightTfIdf(x, normalize =
+                                                     FALSE),
+                                         stopwords = TRUE))
 inspect(tdm[155:160,1:5])
 inspect(dtm[1:5,155:160])
 }

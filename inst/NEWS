@@ -1,13 +1,33 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.5-4
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Use IETF language tags for language codes (instead of ISO 639-2).
+
+NEW FEATURES
+
+    o   The function tm_tag_score() provides functionality to score
+        documents based on the number of tags found. This is useful for
+        sentiment analysis.
+
+    o   The weighting function for term frequency-inverse document
+        frequency weightTfIdf() has now an option for term
+        normalization.
+
+    o   Plotting functions to test for Zipf's and Heaps' law on a
+        term-document matrix were added: Zipf_plot() and
+        Heaps_plot(). Contributed by Kurt Hornik.
+
                 CHANGES IN tm VERSION 0.5-3
 
 NEW FEATURES
 
-    o The reader function readRCV1asPlain() was added and combines the
-      functionality of readRCV1() and as.PlainTextDocument().
+    o   The reader function readRCV1asPlain() was added and combines the
+        functionality of readRCV1() and as.PlainTextDocument().
 
-    o The function stemCompletion() has a set of new heuristics.
+    o   The function stemCompletion() has a set of new heuristics.
 
                 CHANGES IN tm VERSION 0.5-2
 

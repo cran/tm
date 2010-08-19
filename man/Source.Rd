@@ -55,6 +55,8 @@
       cannot be determined in advance it is set to zero.}
     \item{\code{LoDSupport}}{Object of class \code{logical} indicating
       whether this source supports load on demand.}
+    \item{\code{Names}}{Object of class \code{character} storing
+      document names.}
     \item{\code{Position}}{object of class \code{numeric} indicating
       the position in the source.}
     \item{\code{Vectorized}}{object of class \code{logical} indicating

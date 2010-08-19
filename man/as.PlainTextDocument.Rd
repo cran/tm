@@ -20,7 +20,8 @@
 }
 \examples{
 reut21578 <- system.file("texts", "crude", package = "tm")
-r <- Corpus(DirSource(reut21578), readerControl = list(reader = readReut21578XML))
+r <- Corpus(DirSource(reut21578),
+                      readerControl = list(reader = readReut21578XML))
 r[[1]]
 as.PlainTextDocument(r[[1]])
 }

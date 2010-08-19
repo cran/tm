@@ -2,7 +2,7 @@
 ## Reader
 
 getReaders <- function()
-    c("readDOC", "readGmane", "readPDF", "readReut21578XML", "readReut21578XMLasPlain", "readPlain", "readRCV1", "readRCV1asPlain", "readTabular")
+    c("readDOC", "readGmane", "readPDF", "readReut21578XML", "readReut21578XMLasPlain", "readPlain", "readRCV1", "readRCV1asPlain", "readTabular", "readXML")
 
 prepareReader <- function(readerControl, defaultReader = NULL, ...) {
     if (is.null(readerControl$reader))
@@ -10,7 +10,7 @@ prepareReader <- function(readerControl, defaultReader = NULL, ...) {
     if (inherits(readerControl$reader, "FunctionGenerator"))
         readerControl$reader <- readerControl$reader(...)
     if (is.null(readerControl$language))
-        readerControl$language <- "eng"
+        readerControl$language <- "en"
     readerControl
 }
 
@@ -55,6 +55,10 @@ readReut21578XML <- readXML(spec = list(Author = list("node", "/REUTERS/TEXT/AUT
                             Description = list("unevaluated", ""),
                             Heading = list("node", "/REUTERS/TEXT/TITLE"),
                             ID = list("attribute", "/REUTERS/@NEWID"),
+                            TOPICS = list("attribute", "/REUTERS/@TOPICS"),
+                            LEWISSPLIT = list("attribute", "/REUTERS/@LEWISSPLIT"),
+                            CGISPLIT = list("attribute", "/REUTERS/@CGISPLIT"),
+                            OLDID = list("attribute", "/REUTERS/@OLDID"),
                             Origin = list("unevaluated", "Reuters-21578 XML"),
                             Topics = list("node", "/REUTERS/TOPICS/D"),
                             Places = list("node", "/REUTERS/PLACES/D"),
@@ -72,6 +76,10 @@ readReut21578XMLasPlain <- readXML(spec = list(Author = list("node", "/REUTERS/T
                                    Description = list("unevaluated", ""),
                                    Heading = list("node", "/REUTERS/TEXT/TITLE"),
                                    ID = list("attribute", "/REUTERS/@NEWID"),
+                                   TOPICS = list("attribute", "/REUTERS/@TOPICS"),
+                                   LEWISSPLIT = list("attribute", "/REUTERS/@LEWISSPLIT"),
+                                   CGISPLIT = list("attribute", "/REUTERS/@CGISPLIT"),
+                                   OLDID = list("attribute", "/REUTERS/@OLDID"),
                                    Origin = list("unevaluated", "Reuters-21578 XML"),
                                    Topics = list("node", "/REUTERS/TOPICS/D"),
                                    Places = list("node", "/REUTERS/PLACES/D"),
@@ -140,10 +148,8 @@ readTabular <- FunctionGenerator(function(mapping, ...) {
     mapping <- mapping
     function(elem, language, id) {
         doc <- PlainTextDocument(id = id, language = language)
-        for (n in setdiff(names(mapping), "Content"))
-            meta(doc, n) <- elem$content[, mapping[[n]]]
-        if ("Content" %in% names(mapping))
-            Content(doc) <- elem$content[, mapping[["Content"]]]
+        for (n in names(mapping))
+            content_meta(doc, n) <- elem$content[, mapping[[n]]]
         doc
     }
 })

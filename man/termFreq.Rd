@@ -27,10 +27,9 @@ termFreq(doc, control = list())
 	with this package or a character vector holding custom
 	stopwords. Defaults to \code{FALSE}.}
       \item{\code{dictionary}}{A character vector to be tabulated
-	against. No other terms will be listed in the result. Terms from
-	the dictionary not occurring in the document at all will be
-	skipped for performance reasons. Defaults to no action (i.e., all
-	terms are considered).}
+	against. No other terms will be listed in the result. Defaults
+	to \code{NULL} which means that all terms in \code{doc} are
+	listed.}
       \item{\code{minDocFreq}}{An integer value. Words that appear less
 	often in \code{doc} than this number are discarded. Defaults to
 	\code{1} (i.e., every token will be used).}
@@ -46,6 +45,8 @@ termFreq(doc, control = list())
 \examples{
 data("crude")
 termFreq(crude[[1]])
-termFreq(crude[[1]], control = list(removePunctuation = TRUE, stemming = TRUE, minWordLength = 4))
+termFreq(crude[[1]],
+         control = list(removePunctuation = TRUE, stemming = TRUE,
+                        minWordLength = 4))
 }
 \keyword{math}

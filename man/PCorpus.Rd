@@ -9,7 +9,10 @@
   Construct a permanent corpus.
 }
 \usage{
-PCorpus(x, readerControl = list(reader = x$DefaultReader, language = "eng"), dbControl = list(dbName = "", dbType = "DB1"), \dots)
+PCorpus(x,
+        readerControl = list(reader = x$DefaultReader, language = "en"),
+        dbControl = list(dbName = "", dbType = "DB1"),
+        \dots)
 DBControl(x)
 \method{DMetaData}{PCorpus}(x)
 }
@@ -19,7 +22,7 @@ DBControl(x)
   \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
     found in \code{x}, and \code{language} giving the text's language
-    (preferably in \acronym{ISO} 639-2 format).}
+    (preferably as \acronym{IETF} language tags).}
   \item{dbControl}{A list with the named components \code{dbName}
     giving the filename holding the sourced out documents (i.e., the
     database), and \code{dbType} holding a valid database type as
@@ -60,6 +63,9 @@ DBControl(x)
 }
 \examples{
 txt <- system.file("texts", "txt", package = "tm")
-\dontrun{PCorpus(DirSource(txt), dbControl = list(dbName = "myDB.db", dbType = "DB1"))}
+\dontrun{
+PCorpus(DirSource(txt),
+        dbControl = list(dbName = "myDB.db", dbType = "DB1"))
+}
 }
 \author{Ingo Feinerer}

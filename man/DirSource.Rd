@@ -5,7 +5,8 @@
   Constructs a directory source.
 }
 \usage{
-DirSource(directory = ".", encoding = "UTF-8", pattern = NULL, recursive = FALSE, ignore.case = FALSE)
+DirSource(directory = ".", encoding = "UTF-8", pattern = NULL,
+          recursive = FALSE, ignore.case = FALSE)
 }
 \arguments{
   \item{directory}{A character vector of full path names; the default corresponds to the working directory \code{getwd()}.}
@@ -20,3 +21,9 @@ DirSource(directory = ".", encoding = "UTF-8", pattern = NULL, recursive = FALSE
   considered to be a document.
 }
 \author{Ingo Feinerer}
+\seealso{
+  \code{\link{getSources}} to list available sources.
+}
+\examples{
+DirSource(system.file("texts", "txt", package = "tm"))
+}

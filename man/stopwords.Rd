@@ -5,7 +5,7 @@
   Return stopwords in different languages.
 }
 \usage{
-stopwords(language = "eng")
+stopwords(language = "en")
 }
 \arguments{
   \item{language}{A \code{character} giving the desired language.}
@@ -15,11 +15,11 @@ stopwords(language = "eng")
   \code{dutch}, \code{english}, \code{finnish}, \code{french},
   \code{german}, \code{hungarian}, \code{italian}, \code{norwegian},
   \code{portuguese}, \code{russian}, \code{spanish}, and
-  \code{swedish}. Alternatively, their \acronym{ISO} 639-2 code may be
-  used.
+  \code{swedish}. Alternatively, their \acronym{IETF} language tags may
+  be used.
 }
 \value{A character vector containing the requested stopwords.}
 \examples{
-stopwords("eng")
+stopwords("en")
 }
 \keyword{file}

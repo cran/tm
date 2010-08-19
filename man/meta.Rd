@@ -1,4 +1,5 @@
 \name{meta}
+\alias{content_meta<-}
 \alias{DublinCore}
 \alias{DublinCore<-}
 \alias{meta}
@@ -19,6 +20,7 @@
 \method{meta}{Corpus}(x, tag, type = c("indexed", "corpus", "local"))
 \method{meta}{TextDocument}(x, tag, type = NULL)
 \method{meta}{TextRepository}(x, tag, type = NULL)
+content_meta(x, tag) <- value
 DublinCore(x, tag = NULL)
 }
 \arguments{
@@ -26,10 +28,11 @@ DublinCore(x, tag = NULL)
   \item{tag}{A character identifying the name of the meta datum.}
   \item{type}{A character specifying which meta data of a corpus should
     be considered.}
+  \item{value}{Replacement value.}
 }
 \details{
   In general this function can be used to display meta information but
-  also to modifiy individual meta data:
+  also to modify individual meta data:
   \describe{
     \item{x = "TextDocument", tag = NULL}{If no \code{tag} is given, this
       method pretty prints all \code{x}'s meta data. If \code{tag}
@@ -62,6 +65,9 @@ DublinCore(x, tag = NULL)
       language, relation, coverage, or rights) or \code{NULL}. For the
       latter all Dublin Core meta data are printed.}
   }
+
+  \code{content_meta} is a convenience wrapper which calls
+  \code{Content} if \code{tag = "Content"} and \code{meta} otherwise. 
 }
 \references{
   Dublin Core Metadata Initiative.

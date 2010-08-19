@@ -29,7 +29,7 @@ TermDocumentMatrix.PCorpus <- TermDocumentMatrix.VCorpus <- function(x, control 
 
     v <- unlist(tflist)
     i <- names(v)
-    allTerms <- sort(unique(i))
+    allTerms <- sort(unique(if (is.null(control$dictionary)) i else control$dictionary))
     i <- match(i, allTerms)
     j <- rep(seq_along(x), sapply(tflist, length))
 
@@ -67,12 +67,7 @@ termFreq <- function(doc, control = list()) {
     # Tokenize the corpus
     tokenize <- control$tokenize
     if (is.null(tokenize))
-        tokenize <- function(x) {
-            con <- textConnection(x)
-            tokens <- scan(con, what = "character", quiet = TRUE)
-            close(con)
-            tokens
-        }
+        tokenize <- scan_tokenizer
     txt <- tokenize(txt)
 
     # Number removal
@@ -82,16 +77,16 @@ termFreq <- function(doc, control = list()) {
     # Stemming
     stemming <- control$stemming
     if (isTRUE(stemming))
-        stemming <- function(x) stemDocument(x, language = map_ISO_639_2(Language(doc)))
+        stemming <- function(x) stemDocument(x, language = tm:::map_IETF(Language(doc)))
     if (is.function(stemming))
         txt <- stemming(txt)
 
     # Stopword filtering
     stopwords <- control$stopwords
     if (isTRUE(stopwords))
-        txt <- txt[!txt %in% stopwords(Language(doc))]
+        txt <- txt[is.na(match(txt, stopwords(Language(doc))))]
     else if (is.character(stopwords))
-        txt <- txt[!txt %in% stopwords]
+        txt <- txt[is.na(match(txt, stopwords))]
 
     # Check if the document content is NULL
     if (is.null(txt))

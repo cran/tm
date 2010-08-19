@@ -10,7 +10,7 @@
 DBControl <- function(x) attr(x, "DBControl")
 
 PCorpus <- function(x,
-                    readerControl = list(reader = x$DefaultReader, language = "eng"),
+                    readerControl = list(reader = x$DefaultReader, language = "en"),
                     dbControl = list(dbName = "", dbType = "DB1"),
                     ...) {
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
@@ -29,12 +29,13 @@ PCorpus <- function(x,
     while (!eoi(x)) {
         x <- stepNext(x)
         elem <- getElem(x)
-        doc <- readerControl$reader(elem, readerControl$language, as.character(counter))
+        doc <- readerControl$reader(elem, readerControl$language, if (is.null(x$Names)) as.character(counter) else x$Names[counter])
         filehash::dbInsert(db, ID(doc), doc)
         if (x$Length > 0) tdl[[counter]] <- ID(doc)
         else tdl <- c(tdl, ID(doc))
         counter <- counter + 1
     }
+    names(tdl) <- x$Names
 
     df <- data.frame(MetaID = rep(0, length(tdl)), stringsAsFactors = FALSE)
     filehash::dbInsert(db, "DMetaData", df)
@@ -58,8 +59,8 @@ setOldClass(c("VCorpus", "Corpus", "list"))
 
 # The "..." are additional arguments for the FunctionGenerator reader
 VCorpus <- Corpus <- function(x,
-                    readerControl = list(reader = x$DefaultReader, language = "eng"),
-                    ...) {
+                              readerControl = list(reader = x$DefaultReader, language = "en"),
+                              ...) {
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
 
     # Allocate memory in advance if length is known
@@ -71,14 +72,14 @@ VCorpus <- Corpus <- function(x,
     if (x$Vectorized)
         tdl <- mapply(function(x, id) readerControl$reader(x, readerControl$language, id),
                       pGetElem(x),
-                      id = as.character(seq_len(x$Length)),
+                      id = if (is.null(x$Names)) as.character(seq_len(x$Length)) else x$Names,
                       SIMPLIFY = FALSE)
     else {
         counter <- 1
         while (!eoi(x)) {
             x <- stepNext(x)
             elem <- getElem(x)
-            doc <- readerControl$reader(elem, readerControl$language, as.character(counter))
+            doc <- readerControl$reader(elem, readerControl$language, if (is.null(x$Names)) as.character(counter) else x$Names[counter])
             if (x$Length > 0)
                 tdl[[counter]] <- doc
             else
@@ -86,7 +87,7 @@ VCorpus <- Corpus <- function(x,
             counter <- counter + 1
         }
     }
-
+    names(tdl) <- x$Names
     df <- data.frame(MetaID = rep(0, length(tdl)), stringsAsFactors = FALSE)
     .VCorpus(tdl, .MetaDataNode(), df)
 }

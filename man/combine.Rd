@@ -4,7 +4,7 @@
 \alias{c.TermDocumentMatrix}
 \title{Combine Corpora, Documents, and Term-Document Matrices}
 \description{
-  Combine serveral corpora into a single one, combine multiple
+  Combine several corpora into a single one, combine multiple
   documents into a corpus, or combine multiple term-document matrices
   into a single one.
 }

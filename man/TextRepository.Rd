@@ -8,7 +8,9 @@
   the same underlying texts but at different preprocessing stages.
 }
 \usage{
-TextRepository(x, meta = list(created = as.POSIXlt(Sys.time(), tz = "GMT")))
+TextRepository(x,
+               meta = list(created =
+                           as.POSIXlt(Sys.time(), tz = "GMT")))
 }
 \arguments{
   \item{x}{A corpus.}

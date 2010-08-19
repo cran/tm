@@ -84,7 +84,7 @@ tm_reduce <- function(x, tmFuns, ...)
     Reduce(function(f, ...) f(...), tmFuns, x, right = TRUE)
 
 getTransformations <- function()
-    c("as.PlainTextDocument", "convert_UTF_8", "removeNumbers", "removePunctuation",
+    c("as.PlainTextDocument", "removeNumbers", "removePunctuation",
       "removeWords", "stemDocument", "stripWhitespace")
 
 as.PlainTextDocument <- function(x) UseMethod("as.PlainTextDocument", x)
@@ -99,9 +99,6 @@ as.PlainTextDocument.Reuters21578Document <- function(x) {
     class(x) <- c("PlainTextDocument", "TextDocument", "character")
     x
 }
-
-convert_UTF_8 <- function(x, from = "", sub = NA)
-    iconv(x, from = from, to = "UTF-8", sub = sub)
 
 removeNumbers <- function(x) UseMethod("removeNumbers", x)
 removeNumbers.PlainTextDocument <- function(x) gsub("[[:digit:]]+", "", x)

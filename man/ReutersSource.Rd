@@ -23,9 +23,12 @@ ReutersSource(x, encoding = "UTF-8")
   Luz, Saturnino \emph{\acronym{XML}-encoded version of Reuters-21578}.
   \url{http://modnlp.berlios.de/reuters21578.html}
 }
+\author{Ingo Feinerer}
+\seealso{
+  \code{\link{getSources}} to list available sources.
+}
 \examples{
 reuters21578 <- system.file("texts", "reuters-21578.xml", package = "tm")
 rs <- ReutersSource(reuters21578)
 inspect(Corpus(rs)[1:2])
 }
-\author{Ingo Feinerer}

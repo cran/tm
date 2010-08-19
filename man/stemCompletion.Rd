@@ -1,15 +1,22 @@
 \name{stemCompletion}
 \alias{stemCompletion}
+\alias{stemCompletion.character}
+\alias{stemCompletion.PlainTextDocument}
 \title{Complete Stems}
 \description{
   Heuristically complete stemmed words.
 }
 \usage{
-stemCompletion(x, words, type = c("prevalent", "first", "longest", "none", "random", "shortest"))
+\method{stemCompletion}{character}(x, dictionary,
+               type = c("prevalent", "first", "longest",
+                        "none", "random", "shortest"))
+\method{stemCompletion}{PlainTextDocument}(x, dictionary,
+               type = c("prevalent", "first", "longest",
+                        "none", "random", "shortest"))
 }
 \arguments{
-  \item{x}{A \code{Corpus} to be searched for possible completions.}
-  \item{words}{A \code{character} vector of stems to be completed.}
+  \item{x}{A \code{\link{PlainTextDocument}} or \code{character} vector of stems to be completed.}
+  \item{dictionary}{A \code{\link{Corpus}} or \code{character} vector to be searched for possible completions.}
   \item{type}{A \code{character} naming the heuristics to be used:
     \describe{
       \item{\code{prevalent}}{Default. Takes the most frequent match as
@@ -25,10 +32,12 @@ stemCompletion(x, words, type = c("prevalent", "first", "longest", "none", "rand
   }
 }
 \value{
-  A character vector with completed \code{words}.
+  A plain text document or character vector with completed words.
 }
 \examples{
 data("crude")
-stemCompletion(crude, c("compan", "entit", "suppl"))
+stemCompletion(c("compan", "entit", "suppl"), crude)
+(s <- stemDocument(crude[[1]]))
+stemCompletion(s, crude)
 }
 \author{Ingo Feinerer}

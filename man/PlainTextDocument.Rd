@@ -6,7 +6,11 @@
   meta information.
 }
 \usage{
-PlainTextDocument(x = character(0), author = character(0), datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"), description = character(0), heading = character(0), id = character(0), origin = character(0), language = character(0), localmetadata = list())
+PlainTextDocument(x = character(0), author = character(0),
+                  datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
+                  description = character(0), heading = character(0),
+                  id = character(0), origin = character(0),
+                  language = character(0), localmetadata = list())
 }
 \arguments{
   \item{x}{Object of class \code{character} containing the
@@ -24,8 +28,8 @@ PlainTextDocument(x = character(0), author = character(0), datetimestamp = as.PO
   \item{origin}{Object of class \code{character} containing
     information on the source and origin of the text.}
   \item{language}{Object of class \code{character} containing
-    the language of the text (preferably in \acronym{ISO} 639-2
-    format).}
+    the language of the text (preferably as \acronym{IETF} language
+    tags).}
   \item{localmetadata}{Object of class \code{list} containing
     local meta data in form of tag-value pairs.}
 }

@@ -17,5 +17,8 @@ writeCorpus(x, path = ".", filenames = NULL)
 }
 \examples{
 data("crude")
-\dontrun{writeCorpus(crude, path = ".", filenames = paste(seq_along(crude), ".txt", sep = ""))}
+\dontrun{
+writeCorpus(crude, path = ".",
+            filenames = paste(seq_along(crude), ".txt", sep = ""))
+}
 }

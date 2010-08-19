@@ -12,6 +12,14 @@ getTransformations()
   A character vector with available transformations.
 }
 \author{Ingo Feinerer}
+\seealso{
+  \code{\link{as.PlainTextDocument}},
+  \code{\link{removeNumbers}},
+  \code{\link{removePunctuation}},
+  \code{\link{removeWords}},
+  \code{\link{stemDocument}},
+  \code{\link{stripWhitespace}}.
+}  
 \examples{
 getTransformations()
 }
