@@ -34,7 +34,7 @@ function(x,
 Zipf_plot <-
 function(x, type = "l", ...)
 {
-    if(inherits(m, "TermDocumentMatrix"))
+    if(inherits(x, "TermDocumentMatrix"))
         x <- t(x)
     y <- log(sort(slam::col_sums(x), decreasing = TRUE))
     x <- log(seq_along(y))
@@ -79,7 +79,7 @@ function(m)
 Heaps_plot <-
 function(x, type = "l", ...)
 {
-    if(inherits(m, "TermDocumentMatrix"))
+    if(inherits(x, "TermDocumentMatrix"))
         x <- t(x)
     y <- log(cum_vocabulary_size(x))
     x <- log(cumsum(slam::row_sums(x)))

@@ -16,19 +16,19 @@
 \arguments{
   \item{x}{A corpus, a text document, or a term-document matrix.}
   \item{\dots}{Corpora, text documents, or term-document matrices.}
-  \item{recursive}{Logical. Provided by generic function definition but
-    not used.}
+  \item{recursive}{Logical. If \code{recursive = TRUE} existing corpus
+    meta data is also merged, otherwise discarded.}
 }
 \details{
-  Meta data from input objects (corpora or documents) is preserved
-  during concatenation and intelligently merged into the newly created
-  corpus. Although we use a sophisticated merging strategy (by using a
-  binary tree for corpus specific meta data and by joining document
-  level specific meta data in data frames) you should check the newly
-  created meta data for consistency when merging corpora with (partly)
-  identical meta data. However, in most cases the meta data merging
-  strategy will produce validly combined and arranged meta data
-  structures.
+  If \code{recursive = TRUE}, meta data from input objects (corpora or
+  documents) is preserved during concatenation and intelligently merged
+  into the newly created corpus. Although we use a sophisticated merging
+  strategy (by using a binary tree for corpus specific meta data and by
+  joining document level specific meta data in data frames) you should
+  check the newly created meta data for consistency when merging corpora
+  with (partly) identical meta data. However, in most cases the meta
+  data merging strategy will produce validly combined and arranged meta
+  data structures.
 }
 \examples{
 data("acq")

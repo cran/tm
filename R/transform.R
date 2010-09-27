@@ -106,6 +106,21 @@ removeNumbers.PlainTextDocument <- function(x) gsub("[[:digit:]]+", "", x)
 removePunctuation <- function(x) UseMethod("removePunctuation", x)
 removePunctuation.PlainTextDocument <- function(x) gsub("[[:punct:]]+", "", x)
 
+## <NOTYET>
+## removePunctuation <-
+## function(x, preserve_intra_word_dashes = FALSE)
+## {
+##     if(!preserve_intra_word_dashes)
+##         gsub("[[:punct:]]+", "", x)
+##     else {
+##         ## Assume there are no ASCII 1 characters.
+##         x <- gsub("(\\w)-(\\w)", "\\1\1\\2", x)
+##         x <- gsub("[[:punct:]]+", "", x)
+##         gsub("\1", "-", x, fixed = TRUE)
+##     }
+## }
+## </NOTYET>
+
 removeWords <- function(x, words) UseMethod("removeWords", x)
 # Improvements by Kurt Hornik
 removeWords.PlainTextDocument <- function(x, words)

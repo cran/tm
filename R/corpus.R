@@ -234,7 +234,15 @@ function(x, ..., recursive = FALSE)
     if (inherits(x, "PCorpus"))
         stop("concatenation of corpora with underlying databases is not supported")
 
-    Reduce(c2, base::c(list(x), args))
+    l <- base::c(list(x), args)
+    if (recursive)
+        Reduce(c2, l)
+    else {
+        l <- do.call("c", lapply(l, unclass))
+        .VCorpus(l,
+                 cmeta = .MetaDataNode(),
+                 dmeta = data.frame(MetaID = rep(0, length(l)), stringsAsFactors = FALSE))
+    }
 }
 
 c.TextDocument <- function(x, ..., recursive = FALSE) {
