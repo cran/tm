@@ -1,5 +1,18 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.5-5
+
+NEW FEATURES
+
+    o   Access documents in a corpus by names (fallback to IDs if names are
+        not set), i.e., allow a string for the corpus operator `[[`.
+
+BUG FIXES
+
+    o   The function findFreqTerms() now checks bounds on a global level
+        (to comply with the manual page) instead per document. Reported
+        and fixed by Thomas Zapf-Schramm.
+
                 CHANGES IN tm VERSION 0.5-4
 
 SIGNIFICANT USER-VISIBLE CHANGES

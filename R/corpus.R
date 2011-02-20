@@ -15,6 +15,12 @@ PCorpus <- function(x,
                     ...) {
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
 
+    if (is.function(readerControl$init))
+        readerControl$init()
+
+    if (is.function(readerControl$exit))
+        on.exit(readerControl$exit())
+
     if (!filehash::dbCreate(dbControl$dbName, dbControl$dbType))
         stop("error in creating database")
     db <- filehash::dbInit(dbControl$dbName, dbControl$dbType)
@@ -62,6 +68,12 @@ VCorpus <- Corpus <- function(x,
                               readerControl = list(reader = x$DefaultReader, language = "en"),
                               ...) {
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
+
+    if (is.function(readerControl$init))
+        readerControl$init()
+
+    if (is.function(readerControl$exit))
+        on.exit(readerControl$exit())
 
     # Allocate memory in advance if length is known
     tdl <- if (x$Length > 0)
@@ -116,11 +128,23 @@ VCorpus <- Corpus <- function(x,
     x
 }
 
+.map_name_index <- function(x, i) {
+    if (is.character(i)) {
+        if (is.null(names(x)))
+            match(i, meta(x, "ID", type = "local"))
+        else
+            match(i, names(x))
+    }
+    i
+}
+
 `[[.PCorpus` <-  function(x, i) {
+    i <- .map_name_index(x, i)
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     filehash::dbFetch(db, NextMethod("[["))
 }
 `[[.VCorpus` <-  function(x, i) {
+    i <- .map_name_index(x, i)
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
         .Call("copyCorpus", x, materialize(x, i))
@@ -128,12 +152,14 @@ VCorpus <- Corpus <- function(x,
 }
 
 `[[<-.PCorpus` <-  function(x, i, value) {
+    i <- .map_name_index(x, i)
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     index <- unclass(x)[[i]]
     db[[index]] <- value
     x
 }
 `[[<-.VCorpus` <-  function(x, i, value) {
+    i <- .map_name_index(x, i)
     # Mark new objects as not active for lazy mapping
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap)) {

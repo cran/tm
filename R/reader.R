@@ -115,11 +115,35 @@ readRCV1asPlain <- readXML(spec = list(Author = list("unevaluated", ""),
                            Countries = list("attribute", "/newsitem/metadata/codes[@class='bip:countries:1.0']/code/@code")),
                            doc = PlainTextDocument())
 
-# # readDOC needs antiword installed to be able to extract the text
+# readOOO needs unoconv (which in turn needs OpenOffice) installed
+readOOO <- FunctionGenerator(function(unoconvOptions = "", ...) {
+    unoconvOptions <- unoconvOptions
+    function(elem, language, id) {
+        tmp <- tempfile()
+        # Unfortunately unoconv does not have an output file option and writes the output to the same directory as the input
+        # In addition conversion to stdout may corrupt the zip file (odt) if writing it out via writeLines()
+        if (!all(file.copy(elem$uri, sprintf("%s.oo", tmp))))
+            stop(sprintf("cannot copy %s", elem$uri))
+        system(paste("unoconv -f odt", sprintf("%s.oo", tmp)))
+        meta.xml <- unzip(sprintf("%s.odt", tmp), "meta.xml", exdir = dirname(tmp))[1]
+
+        on.exit(file.remove(sprintf("%s.oo", tmp), sprintf("%s.odt", tmp), meta.xml))
+
+        root <- XML::xmlRoot(XML::xmlParse(meta.xml))
+
+        content <- system(paste("unoconv -f txt --stdout", shQuote(elem$uri)), intern = TRUE)
+        author <- XML::xpathSApply(root, "/office:document-meta/office:meta/dc:creator", XML::xmlValue)
+        datetimestamp <- as.POSIXlt(XML::xpathSApply(root, "/office:document-meta/office:meta/dc:date", XML::xmlValue))
+
+        PlainTextDocument(content, author, datetimestamp, id = id, language = language)
+    }
+})
+
+# readDOC needs antiword installed to be able to extract the text
 readDOC <- FunctionGenerator(function(AntiwordOptions = "", ...) {
     AntiwordOptions <- AntiwordOptions
     function(elem, language, id) {
-        content <- system(paste("antiword", AntiwordOptions, shQuote(eval(elem$uri))), intern = TRUE)
+        content <- system(paste("antiword", AntiwordOptions, shQuote(elem$uri)), intern = TRUE)
         PlainTextDocument(content, id = id, language = language)
     }
 })
@@ -129,7 +153,7 @@ readPDF <- FunctionGenerator(function(PdfinfoOptions = "", PdftotextOptions = ""
     PdfinfoOptions <- PdfinfoOptions
     PdftotextOptions <- PdftotextOptions
     function(elem, language, id) {
-        meta <- system(paste("pdfinfo", PdfinfoOptions, shQuote(eval(elem$uri))), intern = TRUE)
+        meta <- system(paste("pdfinfo", PdfinfoOptions, shQuote(elem$uri)), intern = TRUE)
         heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
         author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
         datetimestamp <- strptime(gsub("CreationDate:[[:space:]]*", "",
@@ -139,7 +163,7 @@ readPDF <- FunctionGenerator(function(PdfinfoOptions = "", PdftotextOptions = ""
         description <- gsub("Subject:[[:space:]]*", "", grep("Subject:", meta, value = TRUE))
         origin <- gsub("Creator:[[:space:]]*", "", grep("Creator:", meta, value = TRUE))
 
-        content <- system(paste("pdftotext", PdftotextOptions, shQuote(eval(elem$uri)), "-"), intern = TRUE)
+        content <- system(paste("pdftotext", PdftotextOptions, shQuote(elem$uri), "-"), intern = TRUE)
         PlainTextDocument(content, author, datetimestamp, description, heading, id, origin, language)
      }
 })

@@ -25,10 +25,10 @@ weightTfIdf <-
         if (any(rs == 0))
             warning("term does not occur in the corpus")
         m <- m * log2(nDocs(m) / rs)
-        m$Weighting <- c(sprintf("%s%s",
-                                 "term frequency - inverse document frequency",
-                                 if (normalize) " (normalized)" else ""),
-                         "tf-idf")
+        attr(m, "Weighting") <- c(sprintf("%s%s",
+                                          "term frequency - inverse document frequency",
+                                          if (normalize) " (normalized)" else ""),
+                                  "tf-idf")
         if (isDTM) t(m) else m
     }, "term frequency - inverse document frequency", "tf-idf")
 
@@ -91,7 +91,7 @@ weightSMART <-
         m <- m * df
         names(norm) <- seq_len(nDocs(m))
         m$v <- m$v / norm[m$j]
-        m$Weighting <- c(paste("SMART", spec), "SMART")
+        attr(m, "Weighting") <- c(paste("SMART", spec), "SMART")
 
         if (isDTM) t(m) else m
     }, "SMART", "SMART")
@@ -99,6 +99,6 @@ weightSMART <-
 weightBin <-
     WeightFunction(function(m) {
         m$v <- rep(1, length(m$v))
-        m$Weighting <- c("binary", "bin")
+        attr(m, "Weighting") <- c("binary", "bin")
         m
     }, "binary", "bin")

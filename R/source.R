@@ -52,7 +52,7 @@ DirSource <- function(directory = ".", encoding = "UTF-8", pattern = NULL, recur
 # A single document identified by a Uniform Resource Identifier
 URISource <- function(x, encoding = "UTF-8") {
     s <- .Source(readPlain, encoding, 1, TRUE, NULL, 0, FALSE)
-    s$URI <- match.call()$x
+    s$URI <- x
     class(s) = c("URISource", "Source")
     s
 }
@@ -71,7 +71,7 @@ XMLSource <- function(x, parser, reader, encoding = "UTF-8") {
 
     s <- .Source(reader, encoding, length(content), FALSE, NULL, 0, FALSE)
     s$Content <- content
-    s$URI <- match.call()$x
+    s$URI <- x
     class(s) = c("XMLSource", "Source")
     s
 }
@@ -83,14 +83,14 @@ stepNext.Source <- function(x) {
 }
 
 getElem <- function(x) UseMethod("getElem", x)
-getElem.DataframeSource <- function(x) list(content = x$Content[x$Position, ], uri = match.call()$x)
+getElem.DataframeSource <- function(x) list(content = x$Content[x$Position, ])
 getElem.DirSource <- function(x) {
     filename <- x$FileList[x$Position]
     encoding <- x$Encoding
     list(content = readLines(filename, encoding = encoding), uri = filename)
 }
-getElem.URISource <- function(x) list(content = readLines(eval(x$URI), encoding = x$Encoding), uri = x$URI)
-getElem.VectorSource <- function(x) list(content = x$Content[x$Position], uri = match.call()$x)
+getElem.URISource <- function(x) list(content = readLines(x$URI, encoding = x$Encoding), uri = x$URI)
+getElem.VectorSource <- function(x) list(content = x$Content[x$Position])
 getElem.XMLSource <- function(x) {
     # Construct a character representation from the XMLNode
     virtual.file <- character(0)
@@ -103,11 +103,11 @@ getElem.XMLSource <- function(x) {
 
 pGetElem <- function(x) UseMethod("pGetElem", x)
 pGetElem.DataframeSource <- function(x)
-    lapply(seq_len(x$Length), function(y) list(content = x$Content[y,], uri = match.call()$x))
+    lapply(seq_len(x$Length), function(y) list(content = x$Content[y,]))
 pGetElem.DirSource <- function(x)
     lapply(x$FileList, function(y) list(content = readLines(y, encoding = x$Encoding), uri = y))
 pGetElem.VectorSource <- function(x)
-    lapply(x$Content, function(y) list(content = y, uri = match.call()$x))
+    lapply(x$Content, function(y) list(content = y))
 
 eoi <- function(x) UseMethod("eoi", x)
 eoi.DataframeSource <- function(x) nrow(x$Content) <= x$Position

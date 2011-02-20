@@ -93,6 +93,7 @@ export("as.PlainTextDocument",
        "weightTfIdf",
        "weightBin",
 #       "weightSMART",
+#       "words",
        "writeCorpus",
        "XMLSource",
        "Zipf_plot")
@@ -109,6 +110,7 @@ S3method("print", "Corpus")
 S3method("summary", "Corpus")
 S3method("tm_filter", "Corpus")
 S3method("tm_index", "Corpus")
+#S3method("words", "Corpus")
 
 S3method("eoi", "DataframeSource")
 S3method("getElem", "DataframeSource")
@@ -156,6 +158,7 @@ S3method("stemDocument", "PlainTextDocument")
 S3method("stripWhitespace", "PlainTextDocument")
 S3method("tm_intersect", "PlainTextDocument")
 S3method("tm_tag_score", "PlainTextDocument")
+#S3method("words", "PlainTextDocument")
 
 S3method("as.PlainTextDocument", "RCV1Document")
 

@@ -4,8 +4,8 @@
 function(i = integer(0), j = integer(0), v = numeric(0),
          nrow = 0, ncol = 0, dimnames = list(Terms = character(0), Docs = character(0)))
 {
-    structure(list(i = i, j = j, v = v, nrow = nrow, ncol = ncol, dimnames = dimnames,
-                   Weighting = c("term frequency", "tf")),
+    structure(list(i = i, j = j, v = v, nrow = nrow, ncol = ncol, dimnames = dimnames),
+              Weighting = c("term frequency", "tf"),
               class = c("TermDocumentMatrix", "simple_triplet_matrix"))
 }
 
@@ -44,7 +44,7 @@ DocumentTermMatrix <- function(x, control = list())
 
 t.TermDocumentMatrix <- t.DocumentTermMatrix <- function(x) {
     m <- slam:::t.simple_triplet_matrix(x)
-    m$Weighting <- x$Weighting
+    attr(m, "Weighting") <- attr(x, "Weighting")
     class(m) <- if (inherits(x, "DocumentTermMatrix"))
         c("TermDocumentMatrix", "simple_triplet_matrix")
     else
@@ -71,20 +71,15 @@ termFreq <- function(doc, control = list()) {
 
     # Tokenize the corpus
     tokenize <- control$tokenize
-    if (is.null(tokenize))
+    if(is.null(tokenize))
         tokenize <- scan_tokenizer
+    else if(identical(tokenize, "MC"))
+        tokenize <- MC_tokenizer
     txt <- tokenize(txt)
 
     # Number removal
     if (isTRUE(control$removeNumbers))
         txt <- gsub("[[:digit:]]+", "", txt)
-
-    # Stemming
-    stemming <- control$stemming
-    if (isTRUE(stemming))
-        txt <- stemDocument(txt, language = tm:::map_IETF(Language(doc)))
-    else if (is.function(stemming))
-        txt <- stemming(txt)
 
     # Stopword filtering
     stopwords <- control$stopwords
@@ -92,6 +87,13 @@ termFreq <- function(doc, control = list()) {
         txt <- txt[is.na(match(txt, stopwords(Language(doc))))]
     else if (is.character(stopwords))
         txt <- txt[is.na(match(txt, stopwords))]
+
+    # Stemming
+    stemming <- control$stemming
+    if (isTRUE(stemming))
+        txt <- stemDocument(txt, language = tm:::map_IETF(Language(doc)))
+    else if (is.function(stemming))
+        txt <- stemming(txt)
 
     # Check if the document content is NULL
     if (is.null(txt))
@@ -128,7 +130,7 @@ print.TermDocumentMatrix <- print.DocumentTermMatrix <- function(x, ...) {
     sparsity <- if (identical(prod(dim(x)), 0L)) 100 else round((1 - length(x$v)/prod(dim(x))) * 100)
     cat(sprintf("Sparsity           : %s%%\n", sparsity))
     cat("Maximal term length:", max(nchar(Terms(x), type = "chars"), 0), "\n")
-    cat(sprintf("Weighting          : %s (%s)\n", x$Weighting[1], x$Weighting[2]))
+    cat(sprintf("Weighting          : %s (%s)\n", attr(x, "Weighting")[1], attr(x, "Weighting")[2]))
 }
 
 inspect.TermDocumentMatrix <- inspect.DocumentTermMatrix <- function(x) {
@@ -139,7 +141,7 @@ inspect.TermDocumentMatrix <- inspect.DocumentTermMatrix <- function(x) {
 
 `[.TermDocumentMatrix` <- `[.DocumentTermMatrix` <- function(x, i, j, ..., drop) {
     m <- slam:::`[.simple_triplet_matrix`(x, i, j, ...)
-    m$Weighting <- x$Weighting
+    attr(m, "Weighting") <- attr(x, "Weighting")
     class(m) <- if (inherits(x, "DocumentTermMatrix"))
         c("DocumentTermMatrix", "simple_triplet_matrix")
     else
@@ -181,7 +183,8 @@ c.TermDocumentMatrix <- function(x, ..., recursive = FALSE) {
 
 findFreqTerms <- function(x, lowfreq = 0, highfreq = Inf) {
     if (inherits(x, "DocumentTermMatrix")) x <- t(x)
-    Terms(x)[unique(x$i[x$v >= lowfreq & x$v <= highfreq])]
+    rs <- slam::row_sums(x)
+    names(rs[rs >= lowfreq & rs <= highfreq])
 }
 
 findAssocs <- function(x, term, corlimit) UseMethod("findAssocs", x)
