@@ -5,10 +5,10 @@
   Weight a term-document matrix by term frequency.
 }
 \usage{
-weightTf(x)
+weightTf(m)
 }
 \arguments{
-  \item{x}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
+  \item{m}{A \code{\link{TermDocumentMatrix}} in term frequency format.}
 }
 \details{
   Formally this function is of class \code{WeightingFunction} with the

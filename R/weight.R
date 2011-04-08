@@ -8,7 +8,11 @@ WeightFunction <- function(x, name, acronym) {
 }
 
 # Actual TermDocumentMatrix weighting functions
-weightTf <- WeightFunction(identity, "term frequency", "tf")
+weightTf <-
+    WeightFunction(function(m) {
+        attr(m, "Weighting") <- c("term frequency", "tf")
+        m
+    }, "term frequency", "tf")
 
 weightTfIdf <-
     WeightFunction(function(m, normalize = TRUE) {

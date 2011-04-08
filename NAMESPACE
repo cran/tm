@@ -121,7 +121,9 @@ S3method("getElem", "DirSource")
 S3method("pGetElem", "DirSource")
 
 S3method("[", "DocumentTermMatrix")
+S3method("c", "DocumentTermMatrix")
 S3method("Dictionary", "DocumentTermMatrix")
+S3method("dimnames<-", "DocumentTermMatrix")
 S3method("dissimilarity", "DocumentTermMatrix")
 S3method("findAssocs", "DocumentTermMatrix")
 S3method("inspect", "DocumentTermMatrix")
@@ -169,6 +171,7 @@ S3method("stepNext", "Source")
 S3method("c", "TermDocumentMatrix")
 S3method("[", "TermDocumentMatrix")
 S3method("Dictionary", "TermDocumentMatrix")
+S3method("dimnames<-", "TermDocumentMatrix")
 S3method("dissimilarity", "TermDocumentMatrix")
 S3method("findAssocs", "TermDocumentMatrix")
 S3method("inspect", "TermDocumentMatrix")
@@ -206,5 +209,17 @@ S3method("Content<-", "XMLDocument")
 
 S3method("eoi", "XMLSource")
 S3method("getElem", "XMLSource")
+
+export("as.DocumentTermMatrix",
+       "as.TermDocumentMatrix")
+
+S3method("as.DocumentTermMatrix", "DocumentTermMatrix")
+S3method("as.DocumentTermMatrix", "TermDocumentMatrix")
+S3method("as.DocumentTermMatrix", "default")
+S3method("as.TermDocumentMatrix", "TermDocumentMatrix")
+S3method("as.TermDocumentMatrix", "DocumentTermMatrix")
+S3method("as.TermDocumentMatrix", "default")
+
+export("read_dtm_Blei_et_al")
 
 useDynLib("tm")

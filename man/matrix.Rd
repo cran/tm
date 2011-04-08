@@ -1,21 +1,30 @@
 \name{TermDocumentMatrix}
 \alias{TermDocumentMatrix}
 \alias{DocumentTermMatrix}
+\alias{as.TermDocumentMatrix}
+\alias{as.DocumentTermMatrix}
 \title{Term-Document Matrix}
 \description{
-  Constructs a term-document matrix or a document-term matrix.
+  Constructs or coerces to a term-document matrix or a document-term matrix.
 }
 \usage{
 TermDocumentMatrix(x, control = list())
 DocumentTermMatrix(x, control = list())
+as.TermDocumentMatrix(x, \dots)
+as.DocumentTermMatrix(x, \dots)
 }
 \arguments{
-  \item{x}{a corpus}
+  \item{x}{a corpus for the constructors and either a term-document
+    matrix or a document-term matrix or a \link[slam:matrix]{simple
+    triplet matrix} (package \pkg{slam}) for the coercing functions.}
   \item{control}{a named list of control options. The component
     \code{weighting} must be a weighting function capable of handling a
     \code{TermDocumentMatrix}. It defaults to \code{weightTf} for term
     frequency weighting. All other options are delegated internally to a
     \code{\link{termFreq}} call.}
+  \item{\dots}{the additional argument \code{weighting} (typically a
+    \code{\link{WeightFunction}}) is allowed when coercing a
+    simple triplet matrix to a term-document or document-term matrix.}
 }
 \value{
   An object of class \code{TermDocumentMatrix} or class
