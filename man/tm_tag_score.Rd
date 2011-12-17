@@ -1,6 +1,6 @@
 \name{tm_tag_score}
 \alias{tm_tag_score}
-\alias{tm_tag_score.numeric}
+\alias{tm_tag_score.term_frequency}
 \alias{tm_tag_score.PlainTextDocument}
 \alias{tm_tag_score.TermDocumentMatrix}
 \title{Compute a Tag Score}
@@ -8,12 +8,12 @@
   Compute a score based on the number of tags found in a document.
 }
 \usage{
-\method{tm_tag_score}{numeric}(x, tags, FUN)
+\method{tm_tag_score}{term_frequency}(x, tags, FUN)
 \method{tm_tag_score}{PlainTextDocument}(x, tags, FUN = function(x) sum(x, na.rm = TRUE))
 \method{tm_tag_score}{TermDocumentMatrix}(x, tags, FUN = slam::col_sums)
 }
 \arguments{
-  \item{x}{Either a \code{\link{PlainTextDocument}}, a named numeric as
+  \item{x}{Either a \code{\link{PlainTextDocument}}, a term frequency as
     returned by \code{\link{termFreq}}, or a
     \code{\link{TermDocumentMatrix}}.}
   \item{tags}{A character vector of tags to be matched.}
@@ -29,6 +29,7 @@ data("acq")
 tm_tag_score(acq[[1]], c("company", "change"))
 \dontrun{
 ## Test for positive and negative sentiments
+## install.packages("tm.plugin.tags", repos = "http://datacube.wu.ac.at")
 require("tm.plugin.tags")
 sapply(acq[1:10], tm_tag_score, tm_get_tags("Positiv"))
 sapply(acq[1:10], tm_tag_score, tm_get_tags("Negativ"))

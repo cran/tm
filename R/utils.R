@@ -15,3 +15,16 @@
     else
         as.character(sapply(XML::getNodeSet(doc, spec[[2]]), fun))
 }
+
+# Map IETF language tags to languages used by the Snowball stemmer
+# http://en.wikipedia.org/wiki/IETF_language_tag
+map_IETF_Snowball <- function(code) {
+    if (identical(code, "") || identical(code, character(0)))
+        return("porter")
+
+    codes <- c("da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ru", "es", "sv")
+    names <- c("danish", "dutch", "english", "finnish", "french", "german", "hungarian",
+               "italian", "norwegian", "portuguese", "russian", "spanish", "swedish")
+
+    names[charmatch(gsub("-.*", "", code), codes)]
+}

@@ -79,7 +79,7 @@ meta.TextRepository <- function(x, tag, type = NULL) {
         DMetaData(x)[, tag] <- value
     else if (identical(type, "local"))
         for (i in seq_along(x))
-            meta(x[[i]], tag) <- value[[i]]
+            meta(x[[i]], tag) <- value[i]
     else # (type == "corpus")
         attr(x, "CMetaData")$MetaData[[tag]] <- value
     x

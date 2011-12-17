@@ -1,25 +1,39 @@
 \name{stopwords}
 \alias{stopwords}
-\title{Multilingual Stopwords}
+\title{Stopwords}
 \description{
-  Return stopwords in different languages.
+  Return various kinds of stopwords with support for different
+  languages.
 }
 \usage{
-stopwords(language = "en")
+stopwords(kind = "en")
 }
 \arguments{
-  \item{language}{A \code{character} giving the desired language.}
+  \item{kind}{A \code{character} identifying the desired stopword list.}
 }
 \details{
-  At the moment supported languages are \code{danish},
-  \code{dutch}, \code{english}, \code{finnish}, \code{french},
-  \code{german}, \code{hungarian}, \code{italian}, \code{norwegian},
-  \code{portuguese}, \code{russian}, \code{spanish}, and
-  \code{swedish}. Alternatively, their \acronym{IETF} language tags may
+  Available stopword lists are:
+  \describe{
+    \item{\code{SMART}}{stopwords from the SMART information retrieval
+      system (obtained from
+      \url{http://jmlr.csail.mit.edu/papers/volume5/lewis04a/a11-smart-stop-list/english.stop})
+      (which coincides with the stopword list used by the MC toolkit
+      (\url{http://www.cs.utexas.edu/users/dml/software/mc/})), and}
+  }
+  and a set of generic stopword lists (of unknown origin) in different
+  languages. Supported languages are \code{danish}, \code{dutch},
+  \code{english}, \code{finnish}, \code{french}, \code{german},
+  \code{hungarian}, \code{italian}, \code{norwegian}, \code{portuguese},
+  \code{russian}, \code{spanish}, and \code{swedish}. Language names are
+  case sensitive. Alternatively, their \acronym{IETF} language tags may
   be used.
 }
-\value{A character vector containing the requested stopwords.}
+\value{A character vector containing the requested stopwords. An error
+  is raised if no stopwords are available for the requested
+  \code{kind}.}
 \examples{
 stopwords("en")
+stopwords("SMART")
+stopwords("german")
 }
 \keyword{file}

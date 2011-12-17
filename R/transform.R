@@ -101,39 +101,35 @@ as.PlainTextDocument.Reuters21578Document <- function(x) {
 }
 
 removeNumbers <- function(x) UseMethod("removeNumbers", x)
-removeNumbers.PlainTextDocument <- function(x) gsub("[[:digit:]]+", "", x)
+removeNumbers.PlainTextDocument <- removeNumbers.character <- function(x) gsub("[[:digit:]]+", "", x)
 
-removePunctuation <- function(x) UseMethod("removePunctuation", x)
-removePunctuation.PlainTextDocument <- function(x) gsub("[[:punct:]]+", "", x)
-
-## <NOTYET>
-## removePunctuation <-
-## function(x, preserve_intra_word_dashes = FALSE)
-## {
-##     if(!preserve_intra_word_dashes)
-##         gsub("[[:punct:]]+", "", x)
-##     else {
-##         ## Assume there are no ASCII 1 characters.
-##         x <- gsub("(\\w)-(\\w)", "\\1\1\\2", x)
-##         x <- gsub("[[:punct:]]+", "", x)
-##         gsub("\1", "-", x, fixed = TRUE)
-##     }
-## }
-## </NOTYET>
+removePunctuation <- function(x, preserve_intra_word_dashes = FALSE) UseMethod("removePunctuation", x)
+removePunctuation.PlainTextDocument <- removePunctuation.character <-
+function(x, preserve_intra_word_dashes = FALSE)
+{
+    if (!preserve_intra_word_dashes)
+        gsub("[[:punct:]]+", "", x)
+    else {
+        # Assume there are no ASCII 1 characters.
+        x <- gsub("(\\w)-(\\w)", "\\1\1\\2", x)
+        x <- gsub("[[:punct:]]+", "", x)
+        gsub("\1", "-", x, fixed = TRUE)
+    }
+}
 
 removeWords <- function(x, words) UseMethod("removeWords", x)
 # Improvements by Kurt Hornik
-removeWords.PlainTextDocument <- function(x, words)
+removeWords.PlainTextDocument <- removeWords.character <- function(x, words)
     gsub(sprintf("\\b(%s)\\b", paste(words, collapse = "|")), "", x)
 
 stemDocument <- function(x, language = "english") UseMethod("stemDocument", x)
 stemDocument.character <- function(x, language = "english")
     Snowball::SnowballStemmer(x, RWeka::Weka_control(S = language))
-stemDocument.PlainTextDocument <- function(x, language = map_IETF(Language(x))) {
+stemDocument.PlainTextDocument <- function(x, language = map_IETF_Snowball(Language(x))) {
     s <- unlist(lapply(x, function(x) paste(stemDocument.character(unlist(strsplit(x, "[[:blank:]]")), language), collapse = " ")))
     Content(x) <- if (is.character(s)) s else ""
     x
 }
 
 stripWhitespace <- function(x) UseMethod("stripWhitespace", x)
-stripWhitespace.PlainTextDocument <- function(x) gsub("[[:space:]]+", " ", x)
+stripWhitespace.PlainTextDocument <- stripWhitespace.character <- function(x) gsub("[[:space:]]+", " ", x)

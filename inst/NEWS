@@ -1,5 +1,26 @@
                         Dear Emacs, please make this -*-Text-*- mode!
 
+                CHANGES IN tm VERSION 0.5-7
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   The function termFreq() provides two new arguments for
+        generalized bounds checking of term frequencies and word
+        lengths. This replaces the arguments minDocFreq and
+        minWordLength.
+
+    o   The function termFreq() is now sensitive to the order of
+        control options.
+
+NEW FEATURES
+
+    o   Weighting schemata for term-document matrices in SMART notation.
+
+    o   Local and global options for term-document matrix
+        construction.
+
+    o   SMART stopword list was added.
+
                 CHANGES IN tm VERSION 0.5-5
 
 NEW FEATURES

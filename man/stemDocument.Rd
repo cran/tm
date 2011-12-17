@@ -6,7 +6,7 @@
   Stem words in a text document using Porter's stemming algorithm.
 }
 \usage{
-\method{stemDocument}{PlainTextDocument}(x, language = map_IETF(Language(x)))
+\method{stemDocument}{PlainTextDocument}(x, language = map_IETF_Snowball(Language(x)))
 }
 \arguments{
   \item{x}{A text document.}

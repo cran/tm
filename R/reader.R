@@ -148,23 +148,13 @@ readDOC <- FunctionGenerator(function(AntiwordOptions = "", ...) {
     }
 })
 
-# readPDF needs pdftotext and pdfinfo installed to be able to extract the text and meta information
-readPDF <- FunctionGenerator(function(PdfinfoOptions = "", PdftotextOptions = "", ...) {
-    PdfinfoOptions <- PdfinfoOptions
+# readPDF needs pdftotext installed to be able to extract the text
+readPDF <- FunctionGenerator(function(PdftotextOptions = "", ...) {
     PdftotextOptions <- PdftotextOptions
     function(elem, language, id) {
-        meta <- system(paste("pdfinfo", PdfinfoOptions, shQuote(elem$uri)), intern = TRUE)
-        heading <- gsub("Title:[[:space:]]*", "", grep("Title:", meta, value = TRUE))
-        author <- gsub("Author:[[:space:]]*", "", grep("Author:", meta, value = TRUE))
-        datetimestamp <- strptime(gsub("CreationDate:[[:space:]]*", "",
-                                       grep("CreationDate:", meta, value = TRUE)),
-                                  format = "%a %b %d %H:%M:%S %Y",
-                                   tz = "GMT")
-        description <- gsub("Subject:[[:space:]]*", "", grep("Subject:", meta, value = TRUE))
-        origin <- gsub("Creator:[[:space:]]*", "", grep("Creator:", meta, value = TRUE))
-
+        meta <- tools:::pdf_info(elem$uri)
         content <- system(paste("pdftotext", PdftotextOptions, shQuote(elem$uri), "-"), intern = TRUE)
-        PlainTextDocument(content, author, datetimestamp, description, heading, id, origin, language)
+        PlainTextDocument(content, meta$Author, meta$CreationDate, meta$Subject, meta$Title, id, meta$Creator, language)
      }
 })
 

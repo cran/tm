@@ -49,10 +49,6 @@ TermDocumentMatrix.PCorpus <-
 TermDocumentMatrix.VCorpus <-
 function(x, control = list())
 {
-    weighting <- control$weighting
-    if (is.null(weighting))
-        weighting <- weightTf
-
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
         .Call("copyCorpus", x, materialize(x))
@@ -78,6 +74,16 @@ function(x, control = list())
                                list(Terms = allTerms,
                                     Docs = unlist(lapply(x, ID))))
 
+    bg <- control$bounds$global
+    if (length(bg) == 2L && is.numeric(bg)) {
+        rs <- row_sums(m > 0)
+        m <- m[(rs >= bg[1]) & (rs <= bg[2]), ]
+    }
+
+    weighting <- control$weighting
+    if (is.null(weighting))
+        weighting <- weightTf
+
     .TermDocumentMatrix(m, weighting)
 }
 
@@ -94,6 +100,19 @@ function(x, ...)
 as.TermDocumentMatrix.DocumentTermMatrix <-
 function(x, ...)
     t(x)
+as.TermDocumentMatrix.term_frequency <-
+function(x, ...) {
+    m <- simple_triplet_matrix(i = seq_along(x),
+                               j = rep(1, length(x)),
+                               v = as.numeric(x),
+                               nrow = length(x),
+                               ncol = 1,
+                               dimnames =
+                               list(Terms = names(x),
+                                    Docs = NA))
+
+    .TermDocumentMatrix(m, weightTf)
+}
 as.TermDocumentMatrix.default <-
 function(x, weighting, ...)
     .TermDocumentMatrix(x, weighting)
@@ -134,43 +153,54 @@ function(doc, control = list())
 
     ## Conversion to lower characters
     tolower <- control$tolower
-    if (is.null(tolower) || tolower)
-        txt <- tolower(txt)
+    if (is.null(tolower) || isTRUE(tolower))
+        tolower <- base::tolower
 
     ## Punctuation removal
     removePunctuation <- control$removePunctuation
     if (isTRUE(removePunctuation))
-        txt <- gsub("[[:punct:]]+", "", txt)
-    else if (is.function(removePunctuation))
-        txt <- removePunctuation(txt)
+        removePunctuation <- tm::removePunctuation
     else if (is.list(removePunctuation))
-        txt <- do.call("removePunctuation", c(list(txt), removePunctuation))
+        removePunctuation <- function(x) do.call(tm::removePunctuation, c(list(x), control$removePunctuation))
+
+    ## Number removal
+    removeNumbers <- control$removeNumbers
+    if (isTRUE(removeNumbers))
+        removeNumbers <- tm::removeNumbers
 
     ## Tokenize the corpus
     tokenize <- control$tokenize
-    if(is.null(tokenize))
+    if (is.null(tokenize) || identical(tokenize, "scan"))
         tokenize <- scan_tokenizer
-    else if(identical(tokenize, "MC"))
+    else if (identical(tokenize, "MC"))
         tokenize <- MC_tokenizer
-    txt <- tokenize(txt)
-
-    ## Number removal
-    if (isTRUE(control$removeNumbers))
-        txt <- gsub("[[:digit:]]+", "", txt)
 
     ## Stopword filtering
     stopwords <- control$stopwords
+    # Remove stopwords
+    rs <- function(x, words) x[is.na(match(x, words))]
     if (isTRUE(stopwords))
-        txt <- txt[is.na(match(txt, stopwords(Language(doc))))]
+        stopwords <- function(x) rs(x, tm::stopwords(Language(doc)))
     else if (is.character(stopwords))
-        txt <- txt[is.na(match(txt, stopwords))]
+        stopwords <- function(x) rs(x, stopwords)
 
     ## Stemming
     stemming <- control$stemming
     if (isTRUE(stemming))
-        txt <- stemDocument(txt, language = tm:::map_IETF(Language(doc)))
-    else if (is.function(stemming))
-        txt <- stemming(txt)
+        stemming <- function(x) stemDocument(x, language = tm:::map_IETF_Snowball(Language(doc)))
+
+    ## Default order for options which support reordering
+    or <- c("tolower", "removePunctuation", "removeNumbers",
+            "tokenize", "stopwords", "stemming")
+
+    ## Process control options in specified order
+    nc <- names(control)
+    n <- nc[nc %in% or]
+    for (name in c(n, setdiff(or, n))) {
+        g <- get(name)
+        if (is.function(g))
+            txt <- g(txt)
+    }
 
     ## Check if the document content is NULL
     if (is.null(txt))
@@ -183,19 +213,17 @@ function(doc, control = list())
     else
         table(factor(txt, levels = dictionary))
 
-    ## Ensure minimum document frequency threshold
-    minDocFreq <- control$minDocFreq
-    if (!is.null(minDocFreq))
-        tab <- tab[tab >= minDocFreq]
+    ## Ensure local bounds
+    bl <- control$bounds$local
+    if (length(bl) == 2L && is.numeric(bl))
+        tab <- tab[(tab >= bl[1]) & (tab <= bl[2])]
 
-    ## Filter out too short terms
-    minWordLength <- control$minWordLength
-    if (is.null(minWordLength))
-        minWordLength <- 3
-    tab <- tab[nchar(names(tab), type = "chars") >= minWordLength]
+    ## Filter out too short or too long terms
+    nc <- nchar(names(tab), type = "chars")
+    tab <- tab[(nc >= max(3, control$wordLengths[1])) & (nc <= min(Inf, control$wordLengths[2]))]
 
     ## Return named integer
-    structure(as.integer(tab), names = names(tab))
+    structure(as.integer(tab), names = names(tab), class = c("term_frequency", "integer"))
 }
 
 print.TermDocumentMatrix <-
@@ -275,6 +303,18 @@ function(x)
 Terms <-
 function(x)
     if (inherits(x, "DocumentTermMatrix")) x$dimnames[[2L]] else x$dimnames[[1L]]
+
+c.term_frequency <-
+function(x, ..., recursive = FALSE)
+{
+    args <- list(...)
+    x <- as.TermDocumentMatrix(x)
+
+    if(!length(args))
+        return(x)
+
+    do.call("c", base::c(list(x), lapply(args, as.TermDocumentMatrix)))
+}
 
 c.TermDocumentMatrix <-
 function(x, ..., recursive = FALSE)
@@ -360,4 +400,23 @@ function(x, sparse)
         termIndex <- as.numeric(names(t[t]))
         if (inherits(x, "DocumentTermMatrix")) x[, termIndex] else x[termIndex,]
     }
+}
+
+CategorizedDocumentTermMatrix <-
+function(x, c)
+{
+    if(inherits(x, "TermDocumentMatrix"))
+        x <- t(x)
+    else if(!inherits(x, "DocumentTermMatrix"))
+        stop("wrong class")
+
+    if(length(c) != nDocs(x))
+        stop("invalid category ids")
+
+    attr(x, "Category") <- c
+
+    class(x) <- c("CategorizedDocumentTermMatrix",
+                  DocumentTermMatrix_classes)
+
+    x
 }

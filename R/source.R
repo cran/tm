@@ -4,7 +4,7 @@
 getSources <- function()
    c("DataframeSource", "DirSource", "GmaneSource", "ReutersSource", "URISource", "VectorSource")
 
-.Source <- function(defaultreader, encoding, length, lodsupport, names, position, vectorized) {
+.Source <- function(defaultreader, encoding, length, lodsupport, names, position, vectorized, class = NULL) {
     if (vectorized && (length <= 0))
         stop("vectorized sources must have positive length")
 
@@ -13,22 +13,20 @@ getSources <- function()
 
     structure(list(DefaultReader = defaultreader, Encoding = encoding, Length = length,
                    LoDSupport = lodsupport, Names = names, Position = position, Vectorized = vectorized),
-              class = "Source")
+              class = unique(c(class, "Source")))
 }
 
 # A vector where each component is interpreted as document
 VectorSource <- function(x, encoding = "UTF-8") {
-    s <- .Source(readPlain, encoding, length(x), FALSE, names(x), 0, TRUE)
+    s <- .Source(readPlain, encoding, length(x), FALSE, names(x), 0, TRUE, class = "VectorSource")
     s$Content <- x
-    class(s) = c("VectorSource", "Source")
     s
 }
 
 # A data frame where each row is interpreted as document
 DataframeSource <- function(x, encoding = "UTF-8") {
-    s <- .Source(readPlain, encoding, nrow(x), FALSE, row.names(x), 0, TRUE)
+    s <- .Source(readPlain, encoding, nrow(x), FALSE, row.names(x), 0, TRUE, class = "DataframeSource")
     s$Content <- x
-    class(s) = c("DataframeSource", "Source")
     s
 }
 
@@ -43,17 +41,15 @@ DirSource <- function(directory = ".", encoding = "UTF-8", pattern = NULL, recur
     for (i in seq_along(d))
       isfile[i] <- !file.info(d[i])["isdir"]
 
-    s <- .Source(readPlain, encoding, sum(isfile), TRUE, basename(d[isfile]), 0, TRUE)
+    s <- .Source(readPlain, encoding, sum(isfile), TRUE, basename(d[isfile]), 0, TRUE, class = "DirSource")
     s$FileList <- d[isfile]
-    class(s) = c("DirSource", "Source")
     s
 }
 
 # A single document identified by a Uniform Resource Identifier
 URISource <- function(x, encoding = "UTF-8") {
-    s <- .Source(readPlain, encoding, 1, TRUE, NULL, 0, FALSE)
+    s <- .Source(readPlain, encoding, 1, TRUE, NULL, 0, FALSE, class = "URISource")
     s$URI <- x
-    class(s) = c("URISource", "Source")
     s
 }
 
@@ -69,10 +65,9 @@ XMLSource <- function(x, parser, reader, encoding = "UTF-8") {
     tree <- XML::xmlTreeParse(corpus, asText = TRUE)
     content <- parser(tree)
 
-    s <- .Source(reader, encoding, length(content), FALSE, NULL, 0, FALSE)
+    s <- .Source(reader, encoding, length(content), FALSE, NULL, 0, FALSE, class = "XMLSource")
     s$Content <- content
     s$URI <- x
-    class(s) = c("XMLSource", "Source")
     s
 }
 

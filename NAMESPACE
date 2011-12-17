@@ -31,11 +31,13 @@ export("as.PlainTextDocument",
        "getFilters",
        "getReaders",
        "getSources",
+       "getTokenizers",
        "getTransformations",
        "ID",
        "inspect",
        "Language",
        "LocalMetaData",
+       "MC_tokenizer",
        "makeChunks",
        "materialize",
        "meta",
@@ -68,6 +70,7 @@ export("as.PlainTextDocument",
        "preprocessReut21578XML",
        "RCV1Document",
        "Reuters21578Document",
+       "scan_tokenizer",
        "searchFullText",
        "stemCompletion",
        "stemDocument",
@@ -92,15 +95,19 @@ export("as.PlainTextDocument",
        "weightTf",
        "weightTfIdf",
        "weightBin",
-#       "weightSMART",
+       "weightSMART",
 #       "words",
        "writeCorpus",
        "XMLSource",
        "Zipf_plot")
 
 S3method("Dictionary", "character")
+S3method("removeNumbers", "character")
+S3method("removePunctuation", "character")
+S3method("removeWords", "character")
 S3method("stemCompletion", "character")
 S3method("stemDocument", "character")
+S3method("stripWhitespace", "character")
 
 S3method("c", "Corpus")
 S3method("CMetaData", "Corpus")
@@ -115,6 +122,8 @@ S3method("tm_index", "Corpus")
 S3method("eoi", "DataframeSource")
 S3method("getElem", "DataframeSource")
 S3method("pGetElem", "DataframeSource")
+
+S3method("Content<-", "default")
 
 S3method("eoi", "DirSource")
 S3method("getElem", "DirSource")
@@ -133,7 +142,7 @@ S3method("t", "DocumentTermMatrix")
 
 S3method("findAssocs", "matrix")
 
-S3method("tm_tag_score", "numeric")
+S3method("tm_tag_score", "term_frequency")
 
 S3method("print", "MetaDataNode")
 
@@ -180,6 +189,8 @@ S3method("print", "TermDocumentMatrix")
 S3method("t", "TermDocumentMatrix")
 S3method("tm_tag_score", "TermDocumentMatrix")
 
+S3method("c", "term_frequency")
+
 S3method("c", "TextDocument")
 S3method("meta", "TextDocument")
 S3method("meta<-", "TextDocument")
@@ -219,6 +230,7 @@ S3method("as.DocumentTermMatrix", "default")
 S3method("as.TermDocumentMatrix", "TermDocumentMatrix")
 S3method("as.TermDocumentMatrix", "DocumentTermMatrix")
 S3method("as.TermDocumentMatrix", "default")
+S3method("as.TermDocumentMatrix", "term_frequency")
 
 export("read_dtm_Blei_et_al")
 

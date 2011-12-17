@@ -1,13 +1,6 @@
 getTokenizers <- function()
     c("MC_tokenizer", "scan_tokenizer")
 
-scan_tokenizer <- function(x) {
-    con <- textConnection(x)
-    tokens <- scan(con, what = "character", quiet = TRUE)
-    close(con)
-    tokens
-}
-
 # http://www.cs.utexas.edu/users/dml/software/mc/
 MC_tokenizer <- function(x) {
     ASCII_letters <- "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -28,4 +21,11 @@ MC_tokenizer <- function(x) {
     c(extract(x, http_or_email),
       unlist(strsplit(gsub(http_or_email, "", x),
                       sprintf("[^%s]", ASCII_letters))))
+}
+
+scan_tokenizer <- function(x) {
+    con <- textConnection(x)
+    tokens <- scan(con, what = "character", quiet = TRUE)
+    close(con)
+    tokens
 }

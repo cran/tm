@@ -2,20 +2,25 @@
 \alias{c.Corpus}
 \alias{c.TextDocument}
 \alias{c.TermDocumentMatrix}
-\title{Combine Corpora, Documents, and Term-Document Matrices}
+\alias{c.term_frequency}
+\title{Combine Corpora, Documents, Term-Document Matrices, and Term Frequency Vectors}
 \description{
   Combine several corpora into a single one, combine multiple
-  documents into a corpus, or combine multiple term-document matrices
-  into a single one.
+  documents into a corpus, combine multiple term-document matrices
+  into a single one, or combine multiple term frequency vectors into a
+  single term-document matrix.
 }
 \usage{
 \method{c}{Corpus}(x, \dots, recursive = FALSE)
 \method{c}{TextDocument}(x, \dots, recursive = FALSE)
 \method{c}{TermDocumentMatrix}(x, \dots, recursive = FALSE)
+\method{c}{term_frequency}(x, \dots, recursive = FALSE)
 }
 \arguments{
-  \item{x}{A corpus, a text document, or a term-document matrix.}
-  \item{\dots}{Corpora, text documents, or term-document matrices.}
+  \item{x}{A corpus, a text document, a term-document matrix, or a term
+    frequency vector.}
+  \item{\dots}{Corpora, text documents, term-document matrices, or term
+    frequency vectors.}
   \item{recursive}{Logical. If \code{recursive = TRUE} existing corpus
     meta data is also merged, otherwise discarded.}
 }
@@ -29,6 +34,10 @@
   with (partly) identical meta data. However, in most cases the meta
   data merging strategy will produce validly combined and arranged meta
   data structures.
+}
+\seealso{
+  \code{\link{Corpus}}, \code{\link{TextDocument}},
+  \code{\link{TermDocumentMatrix}}, and \code{\link{termFreq}}.
 }
 \examples{
 data("acq")
