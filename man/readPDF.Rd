@@ -38,8 +38,7 @@ readPDF(PdftotextOptions = "", \dots)
 }
 \examples{
 if(file.exists(Sys.which("pdftotext"))) {
-    f <- system.file("doc", "tm.pdf", package = "tm")
-    pdf <- readPDF(PdftotextOptions = "-layout")(elem = list(uri = f),
+    pdf <- readPDF(PdftotextOptions = "-layout")(elem = list(uri = vignette("tm")$pdf),
                                                  language = "en",
                                                  id = "id1")
     pdf[1:13]

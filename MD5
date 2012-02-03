@@ -1,4 +1,4 @@
-d098b528d0e158c46cebd504843ef783 *DESCRIPTION
+8f2bc7e14f53b234e0d3c59b777a4121 *DESCRIPTION
 94ff51f39a7efa508cfabcd1803d28e6 *NAMESPACE
 43ff1ec653f44596ee52f86cf8eceb01 *R/chunks.R
 2eabc7b0811db525431cdcc185a51c0a *R/cluster.R
@@ -10,13 +10,13 @@ a75ce37d5ad5cf6a3fb0ffb230e0840e *R/distmeasure.R
 ce63a6b5e41acf61fedae3fae2f87580 *R/filter.R
 93afc93dce2bc22f7c0649d9d53d932b *R/foreign.R
 2c6818a5d3eb0fd603f284cb8c605501 *R/fungen.R
-7597cae19b8c50408c5160a2b15d943c *R/matrix.R
+3ca14e56b97b880d9f9fb8a6047187dc *R/matrix.R
 cc717fc7f1a6795a7d43908b175ef867 *R/meta.R
 94be63d38ea09301c824ffc7831a52b2 *R/plot.R
 30ba72ea8f1db11c0005aa229dc2c02d *R/preprocess.R
-b8b032e285090a017ac82e33868a538b *R/reader.R
+4ee7cf99f34c912f1354f8afb218d079 *R/reader.R
 f9fd17a52db871c60549a88131dc14e4 *R/score.R
-1c9f3ace8d231f8f37f598be8b64438e *R/source.R
+ac363ddaf65d47f401d0649da11eae33 *R/source.R
 2257adc3341207718e0318299806a8f0 *R/stopwords.R
 bfb00e7bd41c1e0f5ad640448d5c535d *R/textrepo.R
 a7ace9adb54cb44c2dfdf84200aa5b51 *R/tokenizer.R
@@ -27,13 +27,13 @@ d18a023231db1537a02b3e32ace65236 *R/words.R
 6b65570eef5bfae6036c59f9e62777dc *data/acq.rda
 567ad27028a4a3d1470f1ebe88f88c7d *data/crude.rda
 c1042718a820693897fd8adca46995a3 *inst/CITATION
-5967cee5832c28dafac977cca4390652 *inst/NEWS
+0d360f25868ab47210e25a6b823bb682 *inst/NEWS.Rd
 01cba03edbb5cdd83d238671811cde1d *inst/doc/extensions.Rnw
-bc40def2b818fac2cd0064bc6f261543 *inst/doc/extensions.pdf
-3641da272a48168ad7b4ffef9fbf7d21 *inst/doc/references.bib
+12959ee5aa22ac62cf46330f320b61d7 *inst/doc/extensions.pdf
 a693a88957419c92baf8c2b2f227c6a4 *inst/doc/tm.Rnw
-a8f79407e0ce47ddbe8ac79ce7121cff *inst/doc/tm.pdf
+ec95dd2a02f9af2943757c891c93e66e *inst/doc/tm.pdf
 7ec7b5de9c642afedf1159021c89f12a *inst/stopwords/SMART.dat
+4c8fb2c1404c10540c267425fcc005f0 *inst/stopwords/catalan.dat
 567063cb77b9fde3a1b2d8dabd0c3aa5 *inst/stopwords/danish.dat
 841df405cb49ea51ab51a6e1fe2300e1 *inst/stopwords/dutch.dat
 f5e7e44d6f78810f78e98ebf558f66eb *inst/stopwords/english.dat
@@ -131,7 +131,7 @@ bcc732cc1870ffcdf07506f4ef5584d4 *man/Dictionary.Rd
 40e2a24a24330b7e1987f7d3188852ef *man/DirSource.Rd
 40b9d397ae04f1dddc42cce3a8892112 *man/FunctionGenerator.Rd
 8e27ad848f096f8d84d82bd619e4c87a *man/GmaneSource.Rd
-4117669d52895c0e7b7bbf024b97402a *man/PCorpus.Rd
+16e1122b67b1890f8de94c16a7a78bab *man/PCorpus.Rd
 7bebf4bc0a714b0bbfae4083013eed06 *man/PlainTextDocument.Rd
 72f82217de97cde5fcf4098b493ac0b3 *man/RCV1Document.Rd
 1f713eab6f7ba2ffd65dd237c34acba0 *man/Reuters21578Document.Rd
@@ -140,7 +140,7 @@ c997e50cd7c5189bc33390c4c7192447 *man/Source.Rd
 2f3361ac8f2e0a2a04659dbcb3618958 *man/TextDocument.Rd
 df26739a446bbbce4df16d5b9a6286b2 *man/TextRepository.Rd
 48a039ca5aa632559b3c110d44a5fab8 *man/URISource.Rd
-cffe68cae5a04c54f68ae86da616f53c *man/VCorpus.Rd
+f78a8e1c8684f7380322577b19cfb05b *man/VCorpus.Rd
 4ad446c67d34a96d864215c1fa27a67b *man/VectorSource.Rd
 bdc63343735699d349619f43afd7823a *man/WeightFunction.Rd
 3faa2b3ba2d83179eae546c4f5d27825 *man/XMLSource.Rd
@@ -171,7 +171,7 @@ df4739af9f1b17e6da4e911779eb9821 *man/preprocessReut21578XML.Rd
 fb4ace19ee5834043c5d7f3f796b6241 *man/prescindMeta.Rd
 252da2a02d01f42f2cb2b71c7073c655 *man/readDOC.Rd
 09829d210ebe8ef67fe49091c785f7cd *man/readGmane.Rd
-08617bc81a8a38238f88c1489c8d396f *man/readPDF.Rd
+d6d2111832d3d1d1b217f38082408a69 *man/readPDF.Rd
 07336b6649c8a64742b1c5cb53db6f78 *man/readPlain.Rd
 d2220b37b5b8670b4f4af422af17a8f3 *man/readRCV1.Rd
 db9135ac71394d8969a8dc007dc1f3c5 *man/readReut21578XML.Rd
@@ -185,9 +185,9 @@ eea05f58352b8f5391e7820c58866594 *man/removeSparseTerms.Rd
 795c858c1812dbbf6aa6e4fa74969ee9 *man/searchFullText.Rd
 5508e66b1379947d6f0041fedb1a3466 *man/stemCompletion.Rd
 542615b94ac73ecd3d782295be6f7833 *man/stemDocument.Rd
-f81f57516cec0aa316ab0943e0cec668 *man/stopwords.Rd
+821e3ae9c42011d3fd4285a362aa296e *man/stopwords.Rd
 1855f7d1ca3916ba922bc6b395764791 *man/stripWhitespace.Rd
-236a71ef5c41cf3614d47b6f83a55634 *man/termFreq.Rd
+c5c24980230f6c33ceaef352138a3ecb *man/termFreq.Rd
 126d17d458aa32a2dfa8ac73d4c252f3 *man/tm_filter.Rd
 e4dbe7be993dd1fba94560610d2d42c0 *man/tm_intersect.Rd
 e7fe9e28007bb31e0d2e3f6d78e76cc6 *man/tm_map.Rd
@@ -200,3 +200,6 @@ e8872b6d6ee1f2c4661d0072b601ec51 *man/weightBin.Rd
 417dd932acf3a62d27d3a43febed40e8 *man/weightTfIdf.Rd
 f9f6eb0927192fd476d9ca25d8827dff *man/writeCorpus.Rd
 3beaf090fd16c0fd698f9c5596965227 *src/lazyTmMap.c
+01cba03edbb5cdd83d238671811cde1d *vignettes/extensions.Rnw
+3641da272a48168ad7b4ffef9fbf7d21 *vignettes/references.bib
+a693a88957419c92baf8c2b2f227c6a4 *vignettes/tm.Rnw

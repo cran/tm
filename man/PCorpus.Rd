@@ -22,7 +22,10 @@ DBControl(x)
   \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
     found in \code{x}, and \code{language} giving the text's language
-    (preferably as \acronym{IETF} language tags).}
+    (preferably as \acronym{IETF} language tags). The default language
+    is assumed to be English (\code{"en"}). Use \code{NA} to avoid
+    internal assumptions (e.g., when the language is unknown or is
+    deliberately not set).}
   \item{dbControl}{A list with the named components \code{dbName}
     giving the filename holding the sourced out documents (i.e., the
     database), and \code{dbType} holding a valid database type as

@@ -155,6 +155,17 @@ function(doc, control = list())
     tolower <- control$tolower
     if (is.null(tolower) || isTRUE(tolower))
         tolower <- base::tolower
+    if (is.function(tolower))
+        txt <- tolower(txt)
+
+    ## Tokenize the corpus
+    tokenize <- control$tokenize
+    if (is.null(tokenize) || identical(tokenize, "scan"))
+        tokenize <- scan_tokenizer
+    else if (identical(tokenize, "MC"))
+        tokenize <- MC_tokenizer
+    if (is.function(tokenize))
+        txt <- tokenize(txt)
 
     ## Punctuation removal
     removePunctuation <- control$removePunctuation
@@ -168,21 +179,16 @@ function(doc, control = list())
     if (isTRUE(removeNumbers))
         removeNumbers <- tm::removeNumbers
 
-    ## Tokenize the corpus
-    tokenize <- control$tokenize
-    if (is.null(tokenize) || identical(tokenize, "scan"))
-        tokenize <- scan_tokenizer
-    else if (identical(tokenize, "MC"))
-        tokenize <- MC_tokenizer
-
     ## Stopword filtering
     stopwords <- control$stopwords
     # Remove stopwords
     rs <- function(x, words) x[is.na(match(x, words))]
     if (isTRUE(stopwords))
         stopwords <- function(x) rs(x, tm::stopwords(Language(doc)))
-    else if (is.character(stopwords))
-        stopwords <- function(x) rs(x, stopwords)
+    else if (is.character(stopwords)) {
+        words <- stopwords
+        stopwords <- function(x) rs(x, words)
+    }
 
     ## Stemming
     stemming <- control$stemming
@@ -190,8 +196,7 @@ function(doc, control = list())
         stemming <- function(x) stemDocument(x, language = tm:::map_IETF_Snowball(Language(doc)))
 
     ## Default order for options which support reordering
-    or <- c("tolower", "removePunctuation", "removeNumbers",
-            "tokenize", "stopwords", "stemming")
+    or <- c("removePunctuation", "removeNumbers", "stopwords", "stemming")
 
     ## Process control options in specified order
     nc <- names(control)
@@ -220,7 +225,10 @@ function(doc, control = list())
 
     ## Filter out too short or too long terms
     nc <- nchar(names(tab), type = "chars")
-    tab <- tab[(nc >= max(3, control$wordLengths[1])) & (nc <= min(Inf, control$wordLengths[2]))]
+    wl <- control$wordLengths
+    lb <- if (is.numeric(wl[1])) wl[1] else 3
+    ub <- if (is.numeric(wl[2])) wl[2] else Inf
+    tab <- tab[(nc >= lb) & (nc <= ub)]
 
     ## Return named integer
     structure(as.integer(tab), names = names(tab), class = c("term_frequency", "integer"))

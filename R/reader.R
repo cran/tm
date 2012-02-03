@@ -30,7 +30,8 @@ readXML <- FunctionGenerator(function(spec, doc, ...) {
         for (n in setdiff(names(spec), "Content"))
             meta(doc, n) <- .xml_content(tree, spec[[n]])
         XML::free(tree)
-        attr(doc, "Language") <- language
+        if (!is.na(language))
+            attr(doc, "Language") <- language
         doc
     }
 })

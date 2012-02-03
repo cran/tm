@@ -27,7 +27,10 @@ VCorpus(x,
   \item{readerControl}{A list with the named components \code{reader}
     representing a reading function capable of handling the file format
     found in \code{x}, and \code{language} giving the text's language
-    (preferably as \acronym{IETF} language tags).}
+    (preferably as \acronym{IETF} language tags). The default language
+    is assumed to be English (\code{"en"}). Use \code{NA} to avoid
+    internal assumptions (e.g., when the language is unknown or is
+    deliberately not set).}
   \item{\dots}{Optional arguments for the \code{reader}.}
 }
 \value{

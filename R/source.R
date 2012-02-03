@@ -61,8 +61,7 @@ ReutersSource <- function(x, encoding = "UTF-8")
 
 # XML
 XMLSource <- function(x, parser, reader, encoding = "UTF-8") {
-    corpus <- readLines(x, encoding = encoding)
-    tree <- XML::xmlTreeParse(corpus, asText = TRUE)
+    tree <- XML::xmlTreeParse(x, encoding = encoding)
     content <- parser(tree)
 
     s <- .Source(reader, encoding, length(content), FALSE, NULL, 0, FALSE, class = "XMLSource")
@@ -86,15 +85,7 @@ getElem.DirSource <- function(x) {
 }
 getElem.URISource <- function(x) list(content = readLines(x$URI, encoding = x$Encoding), uri = x$URI)
 getElem.VectorSource <- function(x) list(content = x$Content[x$Position])
-getElem.XMLSource <- function(x) {
-    # Construct a character representation from the XMLNode
-    virtual.file <- character(0)
-    con <- textConnection("virtual.file", "w", local = TRUE)
-    XML::saveXML(x$Content[[x$Position]], con)
-    close(con)
-
-    list(content = virtual.file, uri = x$URI)
-}
+getElem.XMLSource <- function(x) list(content = XML::saveXML(x$Content[[x$Position]]), uri = x$URI)
 
 pGetElem <- function(x) UseMethod("pGetElem", x)
 pGetElem.DataframeSource <- function(x)

@@ -12,25 +12,12 @@ termFreq(doc, control = list())
   \item{control}{A list of control options which override default
     settings.
 
-    The following options are sensitive to the order of occurrence in
-    the \code{control} list. Options are processed in the same order as
-    specified. User-specified options have precedence over the default
-    ordering so that first all user-specified options and then all
-    remaining options (with the default settings and in the order as
-    listed below) are processed.
+    First, following two options are processed.
     \describe{
       \item{\code{tolower}}{Either a logical value indicating whether
 	characters should be translated to lower case or a custom function
 	converting characters to lower case. Defaults to
 	\code{\link{tolower}}.}
-      \item{\code{removePunctuation}}{A logical value indicating whether
-	punctuation characters should be removed from
-	\code{doc}, a custom function which performs punctuation
-	removal, or a list of arguments for
-	\code{\link{removePunctuation}}. Defaults to \code{FALSE}.}
-      \item{\code{removeNumbers}}{A logical value indicating whether
-	numbers should be removed from \code{doc} or a custom function
-	for number removal. Defaults to \code{FALSE}.}
       \item{\code{tokenize}}{A function tokenizing documents into single
 	tokens or a string matching one of the predefined tokenization
 	functions:
@@ -39,6 +26,22 @@ termFreq(doc, control = list())
 	  \item{\code{MC}}{for \code{\link{MC_tokenizer}}.}
 	}
 	Defaults to \code{\link{scan_tokenizer}}.}
+    }  
+    Next, a set of options which are sensitive to the order of
+    occurrence in the \code{control} list. Options are processed in the
+    same order as specified. User-specified options have precedence over
+    the default ordering so that first all user-specified options and
+    then all remaining options (with the default settings and in the
+    order as listed below) are processed.
+    \describe{
+      \item{\code{removePunctuation}}{A logical value indicating whether
+	punctuation characters should be removed from
+	\code{doc}, a custom function which performs punctuation
+	removal, or a list of arguments for
+	\code{\link{removePunctuation}}. Defaults to \code{FALSE}.}
+      \item{\code{removeNumbers}}{A logical value indicating whether
+	numbers should be removed from \code{doc} or a custom function
+	for number removal. Defaults to \code{FALSE}.}
       \item{\code{stopwords}}{Either a Boolean value indicating stopword
 	removal using default language specific stopword lists shipped
 	with this package, a character vector holding custom
@@ -48,7 +51,7 @@ termFreq(doc, control = list())
 	should be stemmed or a custom stemming function. Defaults to
 	\code{FALSE}.}
     }
-    The remaining options are processed afterwards in the given order.
+    Finally, following options are processed in the given order.
     \describe{
       \item{\code{dictionary}}{A character vector to be tabulated
 	against. No other terms will be listed in the result. Defaults
@@ -79,9 +82,11 @@ termFreq(doc, control = list())
 data("crude")
 termFreq(crude[[14]])
 strsplit_space_tokenizer <- function(x) unlist(strsplit(x, "[[:space:]]+"))
-ctrl <- list(removePunctuation = list(preserve_intra_word_dashes = TRUE),
-             tokenize = strsplit_space_tokenizer,
-             stemming = TRUE, wordLengths = c(4, Inf))
+ctrl <- list(tokenize = strsplit_space_tokenizer,
+             removePunctuation = list(preserve_intra_word_dashes = TRUE),
+             stopwords = c("reuter", "that"),
+             stemming = TRUE,
+             wordLengths = c(4, Inf))
 termFreq(crude[[14]], control = ctrl)
 }
 \keyword{math}

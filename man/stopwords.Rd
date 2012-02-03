@@ -18,7 +18,9 @@ stopwords(kind = "en")
       system (obtained from
       \url{http://jmlr.csail.mit.edu/papers/volume5/lewis04a/a11-smart-stop-list/english.stop})
       (which coincides with the stopword list used by the MC toolkit
-      (\url{http://www.cs.utexas.edu/users/dml/software/mc/})), and}
+      (\url{http://www.cs.utexas.edu/users/dml/software/mc/})),}
+    \item{\code{catalan}}{Catalan stopwords (obtained from
+      \url{http://latel.upf.edu/morgana/altres/pub/ca_stop.htm}), and}
   }
   and a set of generic stopword lists (of unknown origin) in different
   languages. Supported languages are \code{danish}, \code{dutch},
