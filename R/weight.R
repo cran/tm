@@ -21,14 +21,16 @@ weightTfIdf <-
         if (normalize) {
             cs <- col_sums(m)
             if (any(cs == 0))
-                warning("empty document")
+                warning("empty document(s): ", paste(Docs(m)[cs == 0], collapse = " "))
             names(cs) <- seq_len(nDocs(m))
             m$v <- m$v / cs[m$j]
         }
         rs <- row_sums(m > 0)
         if (any(rs == 0))
-            warning("term does not occur in the corpus")
-        m <- m * log2(nDocs(m) / rs)
+            warning("unreferenced term(s): ", paste(Terms(m)[rs == 0], collapse = " "))
+        lnrs <- log2(nDocs(m) / rs)
+        lnrs[!is.finite(lnrs)] <- 0
+        m <- m * lnrs
         attr(m, "Weighting") <- c(sprintf("%s%s",
                                           "term frequency - inverse document frequency",
                                           if (normalize) " (normalized)" else ""),
@@ -84,7 +86,7 @@ weightSMART <-
         ## Document frequency
         rs <- row_sums(m > 0)
         if (any(rs == 0))
-            warning("term does not occur in the corpus")
+            warning("unreferenced term(s): ", paste(Terms(m)[rs == 0], collapse = " "))
         df <- switch(document_frequency,
                      ## natural
                      n = 1,
@@ -92,8 +94,12 @@ weightSMART <-
                      t = log2(nDocs(m) / rs),
                      ## prob idf
                      p = max(0, log2((nDocs(m) - rs) / rs)))
+        df[!is.finite(df)] <- 0
 
         ## Normalization
+        cs <- col_sums(m)
+        if (any(cs == 0))
+            warning("empty document(s): ", paste(Docs(m)[cs == 0], collapse = " "))
         norm <- switch(normalization,
                        ## none
                        n = rep(1, nDocs(m)),

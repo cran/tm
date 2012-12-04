@@ -1,6 +1,7 @@
 \documentclass[a4paper]{article}
 
 \usepackage[margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
 \usepackage[round]{natbib}
 \usepackage{url}
 
@@ -92,7 +93,7 @@ So e.g., plain text files in the directory \code{txt} containing Latin
 following code:
 <<Ovid,keep.source=TRUE>>=
 txt <- system.file("texts", "txt", package = "tm")
-(ovid <- Corpus(DirSource(txt),
+(ovid <- Corpus(DirSource(txt, encoding = "UTF-8"),
                 readerControl = list(language = "lat")))
 @
 

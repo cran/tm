@@ -5,11 +5,13 @@
   Constructs a source for a vector as input.
 }
 \usage{
-VectorSource(x, encoding = "UTF-8")
+VectorSource(x, encoding = "unknown")
 }
 \arguments{
   \item{x}{A vector.}
-  \item{encoding}{A character giving the encoding of \code{x}.}
+  \item{encoding}{encoding to be assumed for input strings.  It is used to mark
+    character strings as known to be in Latin-1 or UTF-8: it is not used to
+    re-encode the input.}
 }
 \value{
   An object of class \code{VectorSource} which extends the class
@@ -17,7 +19,7 @@ VectorSource(x, encoding = "UTF-8")
   a document.
 }
 \seealso{
-  \code{\link{getSources}} to list available sources.
+  \code{\link{getSources}} to list available sources. \code{\link{Encoding}} on encodings in \R.
 }
 \examples{
 docs <- c("This is a text.", "This another one.")

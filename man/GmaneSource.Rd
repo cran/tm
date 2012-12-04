@@ -6,11 +6,13 @@
   Construct a source for a Gmane mailing list \acronym{RSS} feed.
 }
 \usage{
-GmaneSource(x, encoding = "UTF-8")
+GmaneSource(x, encoding = "unknown")
 }
 \arguments{
   \item{x}{Either a character identifying the file or a connection.}
-  \item{encoding}{A character giving the encoding of \code{x}.}
+  \item{encoding}{encoding to be assumed for input strings.  It is used to mark
+    character strings as known to be in Latin-1 or UTF-8: it is not used to
+    re-encode the input.}
 }
 \value{
   An object of class \code{GmaneSource} which extends the class
@@ -18,7 +20,7 @@ GmaneSource(x, encoding = "UTF-8")
 }
 \author{Ingo Feinerer}
 \seealso{
-  \code{\link{getSources}} to list available sources.
+  \code{\link{getSources}} to list available sources. \code{\link{Encoding}} on encodings in \R.
 }
 \examples{
 \dontrun{

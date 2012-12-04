@@ -390,7 +390,8 @@ function(x, term, corlimit)
 findAssocs.DocumentTermMatrix <-
 function(x, term, corlimit)
 {
-    suppressWarnings(x.cor <- cor(as.matrix(x)))
+    ind <- term == Terms(x)
+    suppressWarnings(x.cor <- cor(as.matrix(x[, ind]), as.matrix(x[, !ind])))
     findAssocs(x.cor, term, corlimit)
 }
 findAssocs.matrix <-

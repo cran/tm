@@ -16,7 +16,7 @@ preprocessReut21578XML <- function(input, output, fixEnc = TRUE) {
     # Write out each article in a seperate file
     counter <- 1
     for (f in files) {
-        tree <- XML::xmlTreeParse(f)
+        tree <- XML::xmlParse(f)
         XML::xmlApply(XML::xmlRoot(tree),
                  function(article) {
                      output.file <- file.path(output,
@@ -26,5 +26,6 @@ preprocessReut21578XML <- function(input, output, fixEnc = TRUE) {
                      XML::saveXML(article, file = con)
                      close(con)
                  })
+        XML::free(tree)
     }
 }

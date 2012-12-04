@@ -1,9 +1,9 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.5-7.1
-Date: 2012-02-03
-Authors@R: person("Ingo", "Feinerer", role = c("aut", "cre"), email =
-        "feinerer@logic.at")
+Version: 0.5-8
+Date: 2012-12-04
+Authors@R: c(person("Ingo", "Feinerer", role = c("aut", "cre"), email =
+        "feinerer@logic.at"), person("Kurt", "Hornik", role = "aut"))
 Depends: R (>= 2.14.0), methods
 Imports: slam (>= 0.1-22)
 Suggests: filehash, proxy, Rgraphviz, Rmpi, RWeka, snow, Snowball, XML
@@ -13,8 +13,11 @@ SystemRequirements: Antiword (http://www.winfield.demon.nl/) for
 Description: A framework for text mining applications within R.
 License: GPL (>= 2)
 URL: http://tm.r-forge.r-project.org/
-Packaged: 2012-02-03 10:21:26 UTC; hornik
-Author: Ingo Feinerer [aut, cre]
+Author: Ingo Feinerer [aut, cre], Kurt Hornik [aut]
 Maintainer: Ingo Feinerer <feinerer@logic.at>
 Repository: CRAN
-Date/Publication: 2012-02-03 10:54:57
+Repository/R-Forge/Project: tm
+Repository/R-Forge/Revision: 1198
+Repository/R-Forge/DateTimeStamp: 2012-12-04 13:19:31
+Date/Publication: 2012-12-06 10:21:50
+Packaged: 2012-12-04 15:17:01 UTC; rforge

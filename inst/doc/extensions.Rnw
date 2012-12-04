@@ -136,7 +136,7 @@ E.g., a custom source which can cope with our custom \acronym{XML}
 format could be:
 <<mySource,keep.source=TRUE>>=
 mySource <- function(x, encoding = "UTF-8")
-    XMLSource(x, function(tree) XML::xmlRoot(tree)$children, myXMLReader, encoding)
+    XMLSource(x, function(tree) XML::xmlChildren(XML::xmlRoot(tree)), myXMLReader, encoding)
 @
 As you notice in this example we also provide a custom reader function
 (\code{myXMLReader}). See the next section for details.

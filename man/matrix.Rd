@@ -50,6 +50,9 @@ as.DocumentTermMatrix(x, \dots)
   attribute \code{Weighting} contains the weighting applied to the
   matrix.
 }
+\seealso{
+  \code{\link{termFreq}} for available local control options.
+}
 \examples{
 data("crude")
 tdm <- TermDocumentMatrix(crude,

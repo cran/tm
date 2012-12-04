@@ -120,7 +120,7 @@ function(x, preserve_intra_word_dashes = FALSE)
 removeWords <- function(x, words) UseMethod("removeWords", x)
 # Improvements by Kurt Hornik
 removeWords.PlainTextDocument <- removeWords.character <- function(x, words)
-    gsub(sprintf("\\b(%s)\\b", paste(words, collapse = "|")), "", x)
+    gsub(sprintf("\\b(%s)\\b", paste(words, collapse = "|")), "", x, perl = TRUE)
 
 stemDocument <- function(x, language = "english") UseMethod("stemDocument", x)
 stemDocument.character <- function(x, language = "english")

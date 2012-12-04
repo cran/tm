@@ -8,14 +8,14 @@ setOldClass(c("PlainTextDocument", "TextDocument", "character"))
     function(x, author, datetimestamp, description, heading, id, origin, language, localmetadata)
 {
     doc <- x
-    attr(doc, "Author") <- author
-    attr(doc, "DateTimeStamp") <- datetimestamp
-    attr(doc, "Description") <- description
-    attr(doc, "Heading") <- heading
-    attr(doc, "ID") <- id
-    attr(doc, "Language") <- language
-    attr(doc, "LocalMetaData") <- localmetadata
-    attr(doc, "Origin") <- origin
+    attr(doc, "Author") <- as.character(author)
+    attr(doc, "DateTimeStamp") <- as.POSIXlt(datetimestamp, tz = "GMT")
+    attr(doc, "Description") <- as.character(description)
+    attr(doc, "Heading") <- as.character(heading)
+    attr(doc, "ID") <- as.character(id)
+    attr(doc, "Language") <- as.character(language)
+    attr(doc, "LocalMetaData") <- as.list(localmetadata)
+    attr(doc, "Origin") <- as.character(origin)
     doc
 }
 Content <- function(x) UseMethod("Content", x)

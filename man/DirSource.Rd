@@ -5,12 +5,14 @@
   Constructs a directory source.
 }
 \usage{
-DirSource(directory = ".", encoding = "UTF-8", pattern = NULL,
+DirSource(directory = ".", encoding = "unknown", pattern = NULL,
           recursive = FALSE, ignore.case = FALSE)
 }
 \arguments{
   \item{directory}{A character vector of full path names; the default corresponds to the working directory \code{getwd()}.}
-  \item{encoding}{A character giving the encoding of the files in \code{directory}.}
+  \item{encoding}{encoding to be assumed for input strings. It is used to mark
+    character strings as known to be in Latin-1 or UTF-8: it is not used to
+    re-encode the input.}
   \item{pattern}{An optional regular expression. Only file names which match the regular expression will be returned.}
   \item{recursive}{Logical. Should the listing recurse into directories?}
   \item{ignore.case}{Logical. Should pattern-matching be case-insensitive?}
@@ -22,7 +24,7 @@ DirSource(directory = ".", encoding = "UTF-8", pattern = NULL,
 }
 \author{Ingo Feinerer}
 \seealso{
-  \code{\link{getSources}} to list available sources.
+  \code{\link{getSources}} to list available sources. \code{\link{Encoding}} on encodings in \R.
 }
 \examples{
 DirSource(system.file("texts", "txt", package = "tm"))
