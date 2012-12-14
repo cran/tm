@@ -71,8 +71,8 @@ function(x, control = list())
                                nrow = length(allTerms),
                                ncol = length(x),
                                dimnames =
-                               list(Terms = allTerms,
-                                    Docs = unlist(lapply(x, ID))))
+                                 list(Terms = allTerms,
+                                      Docs = as.character(unlist(lapply(x, ID)))))
 
     bg <- control$bounds$global
     if (length(bg) == 2L && is.numeric(bg)) {

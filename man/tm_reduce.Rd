@@ -13,7 +13,8 @@ tm_reduce(x, tmFuns, \dots)
   \item{\dots}{Arguments to the individual transformations.}
 }
 \value{
-  A single \pkg{tm} transformation function.
+  A single \pkg{tm} transformation function obtained by folding \code{tmFuns}
+  from right to left (via \code{Reduce(\dots, right = TRUE)}).
 }
 \author{Ingo Feinerer}
 \seealso{
@@ -25,6 +26,6 @@ tm_reduce(x, tmFuns, \dots)
 data(crude)
 crude[[1]]
 skipWords <- function(x) removeWords(x, c("it", "the"))
-funs <- list(tolower, removePunctuation, skipWords, stripWhitespace)
+funs <- list(stripWhitespace, skipWords, removePunctuation, tolower)
 tm_map(crude, FUN = tm_reduce, tmFuns = funs)[[1]]
 }

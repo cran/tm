@@ -1,4 +1,4 @@
-dfe4e228e08afe3e9a71b19ae47e1391 *DESCRIPTION
+365fe5132af86b4b60f17a3be7641f6b *DESCRIPTION
 94ff51f39a7efa508cfabcd1803d28e6 *NAMESPACE
 43ff1ec653f44596ee52f86cf8eceb01 *R/chunks.R
 2eabc7b0811db525431cdcc185a51c0a *R/cluster.R
@@ -10,7 +10,7 @@ a75ce37d5ad5cf6a3fb0ffb230e0840e *R/distmeasure.R
 f6d5ffb425f83d370eca83c139605115 *R/filter.R
 93afc93dce2bc22f7c0649d9d53d932b *R/foreign.R
 2c6818a5d3eb0fd603f284cb8c605501 *R/fungen.R
-e18ca6d7c09c63d891f8fdb235a83279 *R/matrix.R
+b52f8b9430d814777b55b96a6faf98eb *R/matrix.R
 cc717fc7f1a6795a7d43908b175ef867 *R/meta.R
 94be63d38ea09301c824ffc7831a52b2 *R/plot.R
 105fee0ffedb406de3d9e2bf55dd14cc *R/preprocess.R
@@ -29,9 +29,9 @@ eec76f34ddfac809d22a85a4749b6fef *data/crude.rda
 1393d9426c77569eca1c952136019d84 *inst/CITATION
 0d360f25868ab47210e25a6b823bb682 *inst/NEWS.Rd
 792fab07c18afc85b45656e4fcccb8ec *inst/doc/extensions.Rnw
-65b1462f3651dc3acbfd64af7aaf36bf *inst/doc/extensions.pdf
+ccaaffeebf1803fe9c87e75ab187a7f9 *inst/doc/extensions.pdf
 5e02a19b13a421a0eb3c4c5b4a725913 *inst/doc/tm.Rnw
-a2fc47827ed25a643f9dc8c2ab217f66 *inst/doc/tm.pdf
+d4bc30a7a6a64082a56b8a6e30b2a36d *inst/doc/tm.pdf
 7ec7b5de9c642afedf1159021c89f12a *inst/stopwords/SMART.dat
 4c8fb2c1404c10540c267425fcc005f0 *inst/stopwords/catalan.dat
 567063cb77b9fde3a1b2d8dabd0c3aa5 *inst/stopwords/danish.dat
@@ -191,7 +191,7 @@ c5c24980230f6c33ceaef352138a3ecb *man/termFreq.Rd
 126d17d458aa32a2dfa8ac73d4c252f3 *man/tm_filter.Rd
 e4dbe7be993dd1fba94560610d2d42c0 *man/tm_intersect.Rd
 e7fe9e28007bb31e0d2e3f6d78e76cc6 *man/tm_map.Rd
-3da7139197063b15258d817dd1c152f7 *man/tm_reduce.Rd
+8419aa9475fe9145008d2c9fbf253db8 *man/tm_reduce.Rd
 0b914ba4d8bf46320b29b88e324da756 *man/tm_tag_score.Rd
 97e090d5150c4ddf764969f9baba96ed *man/tokenizer.Rd
 e8872b6d6ee1f2c4661d0072b601ec51 *man/weightBin.Rd

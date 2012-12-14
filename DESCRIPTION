@@ -1,7 +1,7 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.5-8
-Date: 2012-12-04
+Version: 0.5-8.1
+Date: 2012-12-14
 Authors@R: c(person("Ingo", "Feinerer", role = c("aut", "cre"), email =
         "feinerer@logic.at"), person("Kurt", "Hornik", role = "aut"))
 Depends: R (>= 2.14.0), methods
@@ -17,7 +17,7 @@ Author: Ingo Feinerer [aut, cre], Kurt Hornik [aut]
 Maintainer: Ingo Feinerer <feinerer@logic.at>
 Repository: CRAN
 Repository/R-Forge/Project: tm
-Repository/R-Forge/Revision: 1198
-Repository/R-Forge/DateTimeStamp: 2012-12-04 13:19:31
-Date/Publication: 2012-12-06 10:21:50
-Packaged: 2012-12-04 15:17:01 UTC; rforge
+Repository/R-Forge/Revision: 1201
+Repository/R-Forge/DateTimeStamp: 2012-12-14 15:08:35
+Date/Publication: 2012-12-15 16:19:32
+Packaged: 2012-12-14 19:17:38 UTC; rforge
