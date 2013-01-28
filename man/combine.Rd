@@ -11,14 +11,12 @@
   single term-document matrix.
 }
 \usage{
-\method{c}{Corpus}(x, \dots, recursive = FALSE)
-\method{c}{TextDocument}(x, \dots, recursive = FALSE)
-\method{c}{TermDocumentMatrix}(x, \dots, recursive = FALSE)
-\method{c}{term_frequency}(x, \dots, recursive = FALSE)
+\method{c}{Corpus}(\dots, recursive = FALSE)
+\method{c}{TextDocument}(\dots, recursive = FALSE)
+\method{c}{TermDocumentMatrix}(\dots, recursive = FALSE)
+\method{c}{term_frequency}(\dots, recursive = FALSE)
 }
 \arguments{
-  \item{x}{A corpus, a text document, a term-document matrix, or a term
-    frequency vector.}
   \item{\dots}{Corpora, text documents, term-document matrices, or term
     frequency vectors.}
   \item{recursive}{Logical. If \code{recursive = TRUE} existing corpus
@@ -42,7 +40,7 @@
 \examples{
 data("acq")
 data("crude")
-summary(c(acq,crude))
-summary(c(acq[[30]],crude[[10]]))
+summary(c(acq, crude))
+summary(c(acq[[30]], crude[[10]]))
 c(TermDocumentMatrix(acq), TermDocumentMatrix(crude))
 }

@@ -139,6 +139,7 @@ S3method("inspect", "DocumentTermMatrix")
 S3method("plot", "DocumentTermMatrix")
 S3method("print", "DocumentTermMatrix")
 S3method("t", "DocumentTermMatrix")
+S3method("tm_tag_score", "DocumentTermMatrix")
 
 S3method("findAssocs", "matrix")
 
@@ -227,11 +228,23 @@ export("as.DocumentTermMatrix",
 S3method("as.DocumentTermMatrix", "DocumentTermMatrix")
 S3method("as.DocumentTermMatrix", "TermDocumentMatrix")
 S3method("as.DocumentTermMatrix", "default")
+S3method("as.DocumentTermMatrix", "term_frequency")
+S3method("as.DocumentTermMatrix", "textcnt")
 S3method("as.TermDocumentMatrix", "TermDocumentMatrix")
 S3method("as.TermDocumentMatrix", "DocumentTermMatrix")
 S3method("as.TermDocumentMatrix", "default")
 S3method("as.TermDocumentMatrix", "term_frequency")
+S3method("as.TermDocumentMatrix", "textcnt")
 
 export("read_dtm_Blei_et_al")
+
+S3method("Docs", "DocumentTermMatrix")
+S3method("Docs", "TermDocumentMatrix")
+S3method("Terms", "DocumentTermMatrix")
+S3method("Terms", "TermDocumentMatrix")
+S3method("nDocs", "DocumentTermMatrix")
+S3method("nDocs", "TermDocumentMatrix")
+S3method("nTerms", "DocumentTermMatrix")
+S3method("nTerms", "TermDocumentMatrix")
 
 useDynLib("tm")

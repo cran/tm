@@ -1,18 +1,25 @@
 # Author: Ingo Feinerer
 
-.PCorpus <- function(x, cmeta, dmeta, dbcontrol) {
+.PCorpus <-
+function(x, cmeta, dmeta, dbcontrol)
+{
     attr(x, "CMetaData") <- cmeta
     attr(x, "DMetaData") <- dmeta
     attr(x, "DBControl") <- dbcontrol
     class(x) <- c("PCorpus", "Corpus", "list")
     x
 }
-DBControl <- function(x) attr(x, "DBControl")
 
-PCorpus <- function(x,
-                    readerControl = list(reader = x$DefaultReader, language = "en"),
-                    dbControl = list(dbName = "", dbType = "DB1"),
-                    ...) {
+DBControl <-
+function(x)
+    attr(x, "DBControl")
+
+PCorpus <-
+function(x,
+         readerControl = list(reader = x$DefaultReader, language = "en"),
+         dbControl = list(dbName = "", dbType = "DB1"),
+         ...)
+{
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
 
     if (is.function(readerControl$init))
@@ -50,7 +57,9 @@ PCorpus <- function(x,
     .PCorpus(tdl, .MetaDataNode(), dmeta.df, dbControl)
 }
 
-.VCorpus <- function(x, cmeta, dmeta) {
+.VCorpus <-
+function(x, cmeta, dmeta)
+{
     attr(x, "CMetaData") <- cmeta
     attr(x, "DMetaData") <- dmeta
     class(x) <- c("VCorpus", "Corpus", "list")
@@ -64,9 +73,12 @@ PCorpus <- function(x,
 setOldClass(c("VCorpus", "Corpus", "list"))
 
 # The "..." are additional arguments for the FunctionGenerator reader
-VCorpus <- Corpus <- function(x,
-                              readerControl = list(reader = x$DefaultReader, language = "en"),
-                              ...) {
+VCorpus <-
+Corpus <-
+function(x,
+         readerControl = list(reader = x$DefaultReader, language = "en"),
+         ...)
+{
     readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
 
     if (is.function(readerControl$init))
@@ -104,7 +116,9 @@ VCorpus <- Corpus <- function(x,
     .VCorpus(tdl, .MetaDataNode(), df)
 }
 
-`[.PCorpus` <- function(x, i) {
+`[.PCorpus` <-
+function(x, i)
+{
     if (missing(i)) return(x)
     index <- attr(x, "DMetaData")[[1 , "subset"]]
     attr(x, "DMetaData")[[1 , "subset"]] <- if (is.numeric(index)) index[i] else i
@@ -112,12 +126,16 @@ VCorpus <- Corpus <- function(x,
     .PCorpus(NextMethod("["), CMetaData(x), dmeta, DBControl(x))
 }
 
-`[.VCorpus` <- function(x, i) {
+`[.VCorpus` <-
+function(x, i)
+{
     if (missing(i)) return(x)
     .VCorpus(NextMethod("["), CMetaData(x), DMetaData(x)[i, , drop = FALSE])
 }
 
-`[<-.PCorpus` <- function(x, i, value) {
+`[<-.PCorpus` <-
+function(x, i, value)
+{
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     counter <- 1
     for (id in unclass(x)[i]) {
@@ -128,7 +146,9 @@ VCorpus <- Corpus <- function(x,
     x
 }
 
-.map_name_index <- function(x, i) {
+.map_name_index <-
+function(x, i)
+{
     if (is.character(i)) {
         if (is.null(names(x)))
             match(i, meta(x, "ID", type = "local"))
@@ -138,12 +158,16 @@ VCorpus <- Corpus <- function(x,
     i
 }
 
-`[[.PCorpus` <-  function(x, i) {
+`[[.PCorpus` <-
+function(x, i)
+{
     i <- .map_name_index(x, i)
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     filehash::dbFetch(db, NextMethod("[["))
 }
-`[[.VCorpus` <-  function(x, i) {
+`[[.VCorpus` <-
+function(x, i)
+{
     i <- .map_name_index(x, i)
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
@@ -151,14 +175,18 @@ VCorpus <- Corpus <- function(x,
     NextMethod("[[")
 }
 
-`[[<-.PCorpus` <-  function(x, i, value) {
+`[[<-.PCorpus` <-
+function(x, i, value)
+{
     i <- .map_name_index(x, i)
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     index <- unclass(x)[[i]]
     db[[index]] <- value
     x
 }
-`[[<-.VCorpus` <-  function(x, i, value) {
+`[[<-.VCorpus` <-
+function(x, i, value)
+{
     i <- .map_name_index(x, i)
     # Mark new objects as not active for lazy mapping
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
@@ -174,7 +202,9 @@ VCorpus <- Corpus <- function(x,
 }
 
 # Update NodeIDs of a CMetaData tree
-.update_id <- function(x, id = 0, mapping = NULL, left.mapping = NULL, level = 0) {
+.update_id <-
+function(x, id = 0, mapping = NULL, left.mapping = NULL, level = 0)
+{
     # Traversal of (binary) CMetaData tree with setup of NodeIDs
     set_id <- function(x) {
         x$NodeID <- id
@@ -199,7 +229,9 @@ VCorpus <- Corpus <- function(x,
 }
 
 # Find indices to be updated for a CMetaData tree
-.find_indices <- function(x) {
+.find_indices <-
+function(x)
+{
     indices.mapping <- NULL
     for (m in levels(as.factor(DMetaData(x)$MetaID))) {
         indices <- (DMetaData(x)$MetaID == m)
@@ -209,7 +241,9 @@ VCorpus <- Corpus <- function(x,
     indices.mapping
 }
 
-c2 <- function(x, y, ...) {
+c2 <-
+function(x, y, ...)
+{
     # Update the CMetaData tree
     cmeta <- .MetaDataNode(0, list(merge_date = as.POSIXlt(Sys.time(), tz = "GMT"), merger = Sys.getenv("LOGNAME")), list(CMetaData(x), CMetaData(y)))
     update.struct <- .update_id(cmeta)
@@ -236,10 +270,16 @@ c2 <- function(x, y, ...) {
 
     # Merge the DMetaData data frames
     labels <- setdiff(names(DMetaData(y)), names(DMetaData(x)))
-    na.matrix <- matrix(NA, nrow = nrow(DMetaData(x)), ncol = length(labels), dimnames = list(row.names(DMetaData(x)), labels))
+    na.matrix <- matrix(NA,
+                        nrow = nrow(DMetaData(x)),
+                        ncol = length(labels),
+                        dimnames = list(row.names(DMetaData(x)), labels))
     x.dmeta.aug <- cbind(DMetaData(x), na.matrix)
     labels <- setdiff(names(DMetaData(x)), names(DMetaData(y)))
-    na.matrix <- matrix(NA, nrow = nrow(DMetaData(y)), ncol = length(labels), dimnames = list(row.names(DMetaData(y)), labels))
+    na.matrix <- matrix(NA,
+                        nrow = nrow(DMetaData(y)),
+                        ncol = length(labels),
+                        dimnames = list(row.names(DMetaData(y)), labels))
     y.dmeta.aug <- cbind(DMetaData(y), na.matrix)
     DMetaData(new) <- rbind(x.dmeta.aug, y.dmeta.aug)
 
@@ -247,11 +287,12 @@ c2 <- function(x, y, ...) {
 }
 
 c.Corpus <-
-function(x, ..., recursive = FALSE)
+function(..., recursive = FALSE)
 {
     args <- list(...)
+    x <- args[[1L]]
 
-    if (identical(length(args), 0L))
+    if(length(args) == 1L)
         return(x)
 
     if (!all(unlist(lapply(args, inherits, class(x)))))
@@ -260,31 +301,37 @@ function(x, ..., recursive = FALSE)
     if (inherits(x, "PCorpus"))
         stop("concatenation of corpora with underlying databases is not supported")
 
-    l <- base::c(list(x), args)
     if (recursive)
-        Reduce(c2, l)
+        Reduce(c2, args)
     else {
-        l <- do.call("c", lapply(l, unclass))
-        .VCorpus(l,
+        args <- do.call("c", lapply(args, unclass))
+        .VCorpus(args,
                  cmeta = .MetaDataNode(),
-                 dmeta = data.frame(MetaID = rep(0, length(l)), stringsAsFactors = FALSE))
+                 dmeta = data.frame(MetaID = rep(0, length(args)),
+                                    stringsAsFactors = FALSE))
     }
 }
 
-c.TextDocument <- function(x, ..., recursive = FALSE) {
+c.TextDocument <-
+function(..., recursive = FALSE)
+{
     args <- list(...)
+    x <- args[[1L]]
 
-    if (identical(length(args), 0L))
+    if(length(args) == 1L)
         return(x)
 
     if (!all(unlist(lapply(args, inherits, class(x)))))
         stop("not all arguments are text documents")
 
-    dmeta <- data.frame(MetaID = rep(0, length(list(x, ...))), stringsAsFactors = FALSE)
-    .VCorpus(list(x, ...), .MetaDataNode(), dmeta)
+    dmeta <- data.frame(MetaID = rep(0, length(args)),
+                        stringsAsFactors = FALSE)
+    .VCorpus(args, .MetaDataNode(), dmeta)
 }
 
-print.Corpus <- function(x, ...) {
+print.Corpus <-
+function(x, ...)
+{
     cat(sprintf(ngettext(length(x),
                          "A corpus with %d text document\n",
                          "A corpus with %d text documents\n"),
@@ -292,7 +339,9 @@ print.Corpus <- function(x, ...) {
     invisible(x)
 }
 
-summary.Corpus <- function(object, ...) {
+summary.Corpus <-
+function(object, ...)
+{
     print(object)
     if (length(DMetaData(object)) > 0) {
         cat(sprintf(ngettext(length(attr(CMetaData(object), "MetaData")),
@@ -306,31 +355,43 @@ summary.Corpus <- function(object, ...) {
     }
 }
 
-inspect <- function(x) UseMethod("inspect", x)
-inspect.PCorpus <- function(x) {
+inspect <-
+function(x)
+    UseMethod("inspect", x)
+inspect.PCorpus <-
+function(x)
+{
     summary(x)
     cat("\n")
     db <- filehash::dbInit(DBControl(x)[["dbName"]], DBControl(x)[["dbType"]])
     show(filehash::dbMultiFetch(db, unlist(x)))
 }
-inspect.VCorpus <- function(x) {
+inspect.VCorpus <-
+function(x)
+{
     summary(x)
     cat("\n")
     print(noquote(lapply(x, identity)))
 }
 
-lapply.PCorpus <- function(X, FUN, ...) {
+lapply.PCorpus <-
+function(X, FUN, ...)
+{
     db <- filehash::dbInit(DBControl(X)[["dbName"]], DBControl(X)[["dbType"]])
     lapply(filehash::dbMultiFetch(db, unlist(X)), FUN, ...)
 }
-lapply.VCorpus <- function(X, FUN, ...) {
+lapply.VCorpus <-
+function(X, FUN, ...)
+{
     lazyTmMap <- meta(X, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
         .Call("copyCorpus", X, materialize(X))
     base::lapply(X, FUN, ...)
 }
 
-writeCorpus <-  function(x, path = ".", filenames = NULL) {
+writeCorpus <-
+function(x, path = ".", filenames = NULL)
+{
     filenames <- file.path(path,
                            if (is.null(filenames)) unlist(lapply(x, function(x) sprintf("%s.txt", ID(x))))
                            else filenames)

@@ -101,7 +101,9 @@ as.TermDocumentMatrix.DocumentTermMatrix <-
 function(x, ...)
     t(x)
 as.TermDocumentMatrix.term_frequency <-
-function(x, ...) {
+as.TermDocumentMatrix.textcnt <-    
+function(x, ...)
+{
     m <- simple_triplet_matrix(i = seq_along(x),
                                j = rep(1, length(x)),
                                v = as.numeric(x),
@@ -109,7 +111,7 @@ function(x, ...) {
                                ncol = 1,
                                dimnames =
                                list(Terms = names(x),
-                                    Docs = NA))
+                                    Docs = NA_character_))
 
     .TermDocumentMatrix(m, weightTf)
 }
@@ -126,6 +128,10 @@ function(x, ...)
 as.DocumentTermMatrix.TermDocumentMatrix <-
 function(x, ...)
     t(x)
+as.DocumentTermMatrix.term_frequency <-
+as.DocumentTermMatrix.textcnt <-    
+function(x, ...)
+    t(as.TermDocumentMatrix(x))
 as.DocumentTermMatrix.default <-
 function(x, weighting, ...)
 {
@@ -300,41 +306,66 @@ function(x, value)
 
 nDocs <-
 function(x)
-    if (inherits(x, "DocumentTermMatrix")) x$nrow else x$ncol
+    UseMethod("nDocs")
+
 nTerms <-
 function(x)
-    if (inherits(x, "DocumentTermMatrix")) x$ncol else x$nrow
+    UseMethod("nTerms")
+
+nDocs.DocumentTermMatrix <-
+nTerms.TermDocumentMatrix <-    
+function(x)
+    x$nrow
+
+nDocs.TermDocumentMatrix <-
+nTerms.DocumentTermMatrix <-    
+function(x)
+    x$ncol
 
 Docs <-
 function(x)
-    if (inherits(x, "DocumentTermMatrix")) x$dimnames[[1L]] else x$dimnames[[2L]]
+    UseMethod("Docs")
+
 Terms <-
 function(x)
-    if (inherits(x, "DocumentTermMatrix")) x$dimnames[[2L]] else x$dimnames[[1L]]
+    UseMethod("Terms")
 
-c.term_frequency <-
-function(x, ..., recursive = FALSE)
+Docs.DocumentTermMatrix <-
+Terms.TermDocumentMatrix <-
+function(x)
 {
-    args <- list(...)
-    x <- as.TermDocumentMatrix(x)
+    s <- x$dimnames[[1L]]
+    if(is.null(s))
+        s <- rep.int(NA_character_, x$nrow)
+    s
+}
 
-    if(!length(args))
-        return(x)
-
-    do.call("c", base::c(list(x), lapply(args, as.TermDocumentMatrix)))
+Docs.TermDocumentMatrix <-
+Terms.DocumentTermMatrix <-
+function(x)    
+{
+    s <- x$dimnames[[2L]]
+    if(is.null(s))
+        s <- rep.int(NA_character_, x$ncol)
+    s
+}
+    
+c.term_frequency <-
+function(..., recursive = FALSE)
+{
+    do.call("c", lapply(list(...), as.TermDocumentMatrix))
 }
 
 c.TermDocumentMatrix <-
-function(x, ..., recursive = FALSE)
+function(..., recursive = FALSE)
 {
-    args <- list(...)
+    m <- lapply(list(...), as.TermDocumentMatrix)
 
-    if(!length(args))
-        return(x)
+    if(length(m) == 1L)
+        return(m[[1L]])
 
-    args <- lapply(args, as.TermDocumentMatrix)
+    weighting <- attr(m[[1L]], "Weighting")
 
-    m <- base::c(list(x), args)
     allTermsNonUnique <- unlist(lapply(m, function(x) Terms(x)[x$i]))
     allTerms <- unique(allTermsNonUnique)
     allDocs <- unlist(lapply(m, Docs))
@@ -357,20 +388,13 @@ function(x, ..., recursive = FALSE)
     ##   to take additional steps (e.g., normalization for tf-idf or check for
     ##   (0,1)-range for binary tf)
     ## </NOTE>
-    .TermDocumentMatrix(m, attr(x, "Weighting"))
+    .TermDocumentMatrix(m, weighting)
 }
 
 c.DocumentTermMatrix <-
-function(x, ..., recursive = FALSE)
+function(..., recursive = FALSE)
 {
-    args <- list(...)
-
-    if(!length(args))
-        return(x)
-
-    t(do.call("c",
-              lapply(base::c(list(x), args),
-                     as.TermDocumentMatrix)))
+    t(do.call("c", lapply(list(...), as.TermDocumentMatrix)))
 }
 
 findFreqTerms <-
