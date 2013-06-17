@@ -10,17 +10,10 @@ tm_index.Corpus <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMe
     if (!is.null(attr(FUN, "doclevel")))
         doclevel <- attr(FUN, "doclevel")
     if (doclevel) {
-        if (clusterAvailable()) {
-            if (useMeta)
-                return(snow::parSapply(snow::getMPIcluster(), x, FUN, ..., DMetaData = DMetaData(x)))
-            else
-                return(snow::parSapply(snow::getMPIcluster(), x, FUN, ...))
-        } else {
-            if (useMeta)
-                return(sapply(x, FUN, ..., DMetaData = DMetaData(x)))
-            else
-                return(sapply(x, FUN, ...))
-        }
+        if (useMeta)
+            return(unlist(parallel::mclapply(x, FUN, ..., DMetaData = DMetaData(x))))
+        else
+            return(unlist(parallel::mclapply(x, FUN, ...)))
     }
     else
         return(FUN(x, ...))

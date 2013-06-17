@@ -14,6 +14,7 @@ function(x,
     m <- as.matrix(m[, terms])
     c <- cor(m)
     c[c < corThreshold] <- 0
+    c[is.na(c)] <- 0
     diag(c) <- 0
     g <- as(c, "graphNEL")
     p <- plot(g, attrs = attrs, ...)

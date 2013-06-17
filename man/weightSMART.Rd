@@ -78,6 +78,10 @@ weightSMART(m, spec = "nnn", control = list())
 }
 \examples{
 data("crude")
-TermDocumentMatrix(crude, control = list(removePunctuation = TRUE, stopwords = TRUE, weighting = function(x) weightSMART(x, spec = "ntc")))
+TermDocumentMatrix(crude,
+                   control = list(removePunctuation = TRUE,
+                                  stopwords = TRUE,
+                                  weighting = function(x)
+                                  weightSMART(x, spec = "ntc")))
 }
 \author{Ingo Feinerer}

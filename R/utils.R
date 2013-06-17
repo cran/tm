@@ -16,7 +16,7 @@
         as.character(sapply(XML::getNodeSet(doc, spec[[2]]), fun))
 }
 
-# Map IETF language tags to languages used by the Snowball stemmer
+# Map IETF language tags to languages used by the Snowball stemmer project
 # http://en.wikipedia.org/wiki/IETF_language_tag
 map_IETF_Snowball <- function(code) {
     if (identical(code, "") || identical(code, character(0)))

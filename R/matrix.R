@@ -55,10 +55,7 @@ function(x, control = list())
 
     names(x) <- NULL
 
-    tflist <- if (clusterAvailable())
-        snow::parLapply(snow::getMPIcluster(), x, termFreq, control)
-    else
-        lapply(x, termFreq, control)
+    tflist <- parallel::mclapply(x, termFreq, control)
     tflist <- lapply(tflist, function(y) y[y > 0])
 
     v <- unlist(tflist)
@@ -66,13 +63,18 @@ function(x, control = list())
     allTerms <- sort(unique(if (is.null(control$dictionary)) i else control$dictionary))
     i <- match(i, allTerms)
     j <- rep(seq_along(x), sapply(tflist, length))
+    docs <- as.character(unlist(lapply(x, ID)))
+    if (length(docs) != length(x)) {
+        warning("invalid document identifiers")
+        docs <- NULL
+    }
 
     m <- simple_triplet_matrix(i = i, j = j, v = as.numeric(v),
                                nrow = length(allTerms),
                                ncol = length(x),
                                dimnames =
                                  list(Terms = allTerms,
-                                      Docs = as.character(unlist(lapply(x, ID)))))
+                                      Docs = docs))
 
     bg <- control$bounds$global
     if (length(bg) == 2L && is.numeric(bg)) {
@@ -199,7 +201,7 @@ function(doc, control = list())
     ## Stemming
     stemming <- control$stemming
     if (isTRUE(stemming))
-        stemming <- function(x) stemDocument(x, language = tm:::map_IETF_Snowball(Language(doc)))
+        stemming <- function(x) stemDocument(x, language = Language(doc))
 
     ## Default order for options which support reordering
     or <- c("removePunctuation", "removeNumbers", "stopwords", "stemming")

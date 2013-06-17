@@ -26,17 +26,10 @@ tm_map.VCorpus <- function(x, FUN, ..., useMeta = FALSE, lazy = FALSE) {
         }
     }
     else {
-        Content(result) <- if (clusterAvailable()) {
-            if (useMeta)
-                snow::parLapply(snow::getMPIcluster(), x, FUN, ..., DMetaData = DMetaData(x))
+        Content(result) <- if (useMeta)
+                parallel::mclapply(x, FUN, ..., DMetaData = DMetaData(x))
             else
-                snow::parLapply(snow::getMPIcluster(), x, FUN, ...)
-        } else {
-            if (useMeta)
-                lapply(x, FUN, ..., DMetaData = DMetaData(x))
-            else
-                lapply(x, FUN, ...)
-        }
+                parallel::mclapply(x, FUN, ...)
     }
     result
 }
@@ -120,12 +113,12 @@ function(x, preserve_intra_word_dashes = FALSE)
 removeWords <- function(x, words) UseMethod("removeWords", x)
 # Improvements by Kurt Hornik
 removeWords.PlainTextDocument <- removeWords.character <- function(x, words)
-    gsub(sprintf("\\b(%s)\\b", paste(words, collapse = "|")), "", x, perl = TRUE)
+    gsub(sprintf("(*UCP)\\b(%s)\\b", paste(words, collapse = "|")), "", x, perl = TRUE)
 
 stemDocument <- function(x, language = "english") UseMethod("stemDocument", x)
 stemDocument.character <- function(x, language = "english")
-    Snowball::SnowballStemmer(x, RWeka::Weka_control(S = language))
-stemDocument.PlainTextDocument <- function(x, language = map_IETF_Snowball(Language(x))) {
+    SnowballC::wordStem(x, language)
+stemDocument.PlainTextDocument <- function(x, language = Language(x)) {
     s <- unlist(lapply(x, function(x) paste(stemDocument.character(unlist(strsplit(x, "[[:blank:]]")), language), collapse = " ")))
     Content(x) <- if (is.character(s)) s else ""
     x

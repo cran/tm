@@ -6,7 +6,7 @@
   Stem words in a text document using Porter's stemming algorithm.
 }
 \usage{
-\method{stemDocument}{PlainTextDocument}(x, language = map_IETF_Snowball(Language(x)))
+\method{stemDocument}{PlainTextDocument}(x, language = Language(x))
 }
 \arguments{
   \item{x}{A text document.}
@@ -14,8 +14,8 @@
 }
 \details{
   The argument \code{language} is passed over to
-  \code{\link[Snowball:SnowballStemmer]{SnowballStemmer}} as the name of
-  the snowball stemmer.
+  \code{\link[SnowballC:wordStem]{wordStem}} as the name of
+  the Snowball stemmer.
 }
 \examples{
 data("crude")
