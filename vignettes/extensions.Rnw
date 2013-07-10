@@ -113,7 +113,7 @@ print(readLines(custom.xml), quote = FALSE)
 As you see there is a top-level tag stating that there is a corpus,
 and several document tags below. In fact, this structure is very
 common in \acronym{XML} files found in text mining applications (e.g.,
-both the Reuters-21578 and the Reuter Corpus Volume 1 data sets follow
+both the Reuters-21578 and the Reuters Corpus Volume 1 data sets follow
 this general scheme). In \pkg{tm} we expect a source to deliver
 self-contained blocks of information to a reader function, each block
 containing all information necessary such that the reader can

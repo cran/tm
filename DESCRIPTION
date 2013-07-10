@@ -1,21 +1,23 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.5-9
-Date: 2013-06-17
-Authors@R: c(person("Ingo", "Feinerer", role = c("aut", "cre"), email =
-        "feinerer@logic.at"), person("Kurt", "Hornik", role = "aut"))
+Version: 0.5-9.1
+Date: 2013-07-10
+Authors@R: c(person("Ingo", "Feinerer", role = c("aut", "cre"),
+                    email = "feinerer@logic.at"),
+             person("Kurt", "Hornik", role = "aut"))
 Depends: R (>= 2.14.0), methods
 Imports: parallel, slam (>= 0.1-22)
 Suggests: filehash, proxy, Rgraphviz, SnowballC, XML
 SystemRequirements: Antiword (http://www.winfield.demon.nl/) for
-        reading MS Word files, pdftotext from Poppler
+        reading MS Word files, pdfinfo and pdftotext from Poppler
         (http://poppler.freedesktop.org/) for reading PDF
 Description: A framework for text mining applications within R.
 License: GPL (>= 2)
 URL: http://tm.r-forge.r-project.org/
-Packaged: 2013-06-18 09:35:09 UTC; hornik
-Author: Ingo Feinerer [aut, cre], Kurt Hornik [aut]
+Packaged: 2013-07-10 09:35:43 UTC; hornik
+Author: Ingo Feinerer [aut, cre],
+  Kurt Hornik [aut]
 Maintainer: Ingo Feinerer <feinerer@logic.at>
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-06-18 12:14:27
+Date/Publication: 2013-07-10 15:01:47

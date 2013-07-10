@@ -1,5 +1,5 @@
-3eb1eee4e16e51094ccc3e3aee4c12d4 *DESCRIPTION
-7b0d3f8c2b87cc056b8259f796f65f55 *NAMESPACE
+3e4c9e3b2d5c41ceab8eb07a7dbbe664 *DESCRIPTION
+c6da1cbdbe36cc820e2d7fe1968d360c *NAMESPACE
 43ff1ec653f44596ee52f86cf8eceb01 *R/chunks.R
 5d8ac705a7fd140d28106fed32d233df *R/complete.R
 878dfbb6d36d07832ef00c607ec66336 *R/corpus.R
@@ -13,14 +13,14 @@ a7e266f91f054091331503294bf12f13 *R/matrix.R
 cc717fc7f1a6795a7d43908b175ef867 *R/meta.R
 149e9d0b52fa2bd4fab7549f5ea6f69b *R/plot.R
 105fee0ffedb406de3d9e2bf55dd14cc *R/preprocess.R
-1b5799ff5242616053167c0d02826f2c *R/reader.R
+15b9200462210f2343245417de157df1 *R/reader.R
 761ce7a12f209576f6378928dcb6c880 *R/score.R
 449c7fb23c48c392055a5fd975e95cad *R/source.R
 2257adc3341207718e0318299806a8f0 *R/stopwords.R
 bfb00e7bd41c1e0f5ad640448d5c535d *R/textrepo.R
 32d26a5e0cb7988b0110f8b8dc7a1d0b *R/tokenizer.R
 5cb1873683c943e95f7278e23ed02fda *R/transform.R
-a91a0d1ffdeb51117df87273c7f7adef *R/utils.R
+40a727d842318933d04c171f3d0d6bf0 *R/utils.R
 b9161a166b84aaa557f2c4d2562bbbd6 *R/weight.R
 d18a023231db1537a02b3e32ace65236 *R/words.R
 09941a1c1e9ee98bff19f6a605264f20 *data/acq.rda
@@ -28,11 +28,11 @@ d18a023231db1537a02b3e32ace65236 *R/words.R
 1393d9426c77569eca1c952136019d84 *inst/CITATION
 7d7df42ccce741ff909d922ef6311ac8 *inst/NEWS.Rd
 5593e85c1784389f333abcc65f2f2ce7 *inst/doc/extensions.R
-792fab07c18afc85b45656e4fcccb8ec *inst/doc/extensions.Rnw
-9aa7d591afdc8eae01f0901bc3827e2c *inst/doc/extensions.pdf
+b765a31cccfd4ec39c190c067e8ec9a6 *inst/doc/extensions.Rnw
+6328bb01bb77e76a35bb9bdf9c989ed3 *inst/doc/extensions.pdf
 f5980fcf5371fd9e4e32c5323d1b57ca *inst/doc/tm.R
 5e02a19b13a421a0eb3c4c5b4a725913 *inst/doc/tm.Rnw
-13f27054c8d941abce729c7227bd3ac4 *inst/doc/tm.pdf
+efe34352b07e87baea16cf477428ba9f *inst/doc/tm.pdf
 7ec7b5de9c642afedf1159021c89f12a *inst/stopwords/SMART.dat
 4c8fb2c1404c10540c267425fcc005f0 *inst/stopwords/catalan.dat
 4e8d44fa90d87908846a2d92c2618b31 *inst/stopwords/danish.dat
@@ -171,7 +171,7 @@ df4739af9f1b17e6da4e911779eb9821 *man/preprocessReut21578XML.Rd
 fb4ace19ee5834043c5d7f3f796b6241 *man/prescindMeta.Rd
 252da2a02d01f42f2cb2b71c7073c655 *man/readDOC.Rd
 09829d210ebe8ef67fe49091c785f7cd *man/readGmane.Rd
-d6d2111832d3d1d1b217f38082408a69 *man/readPDF.Rd
+ca80ef197cfdbb53865e47db5c95f14e *man/readPDF.Rd
 07336b6649c8a64742b1c5cb53db6f78 *man/readPlain.Rd
 d2220b37b5b8670b4f4af422af17a8f3 *man/readRCV1.Rd
 db9135ac71394d8969a8dc007dc1f3c5 *man/readReut21578XML.Rd
@@ -200,6 +200,6 @@ b75df7699a073c08865dc7c4ad14df6e *man/weightSMART.Rd
 417dd932acf3a62d27d3a43febed40e8 *man/weightTfIdf.Rd
 f9f6eb0927192fd476d9ca25d8827dff *man/writeCorpus.Rd
 3beaf090fd16c0fd698f9c5596965227 *src/lazyTmMap.c
-792fab07c18afc85b45656e4fcccb8ec *vignettes/extensions.Rnw
+b765a31cccfd4ec39c190c067e8ec9a6 *vignettes/extensions.Rnw
 3641da272a48168ad7b4ffef9fbf7d21 *vignettes/references.bib
 5e02a19b13a421a0eb3c4c5b4a725913 *vignettes/tm.Rnw

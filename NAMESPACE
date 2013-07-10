@@ -1,3 +1,4 @@
+import(parallel)
 import(slam)
 
 export("as.PlainTextDocument",
