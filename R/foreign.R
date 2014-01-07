@@ -12,7 +12,7 @@
 read_dtm_MC <-
 function(file, scalingtype = NULL)
 {
-    m <- slam:::read_stm_MC(file, scalingtype)
+    m <- slam::read_stm_MC(file, scalingtype)
     s <- attr(m, "scalingtype")
     as.DocumentTermMatrix(m, rep.int(s, 2L))
 }

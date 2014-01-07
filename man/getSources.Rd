@@ -14,7 +14,6 @@ getSources()
 \seealso{
   \code{\link{DataframeSource}},
   \code{\link{DirSource}},
-  \code{\link{GmaneSource}},
   \code{\link{ReutersSource}},
   \code{\link{URISource}},
   \code{\link{VectorSource}}.

@@ -1,6 +1,8 @@
 stopwords <- {
     function(kind = "en") {
-        resolved <- tm:::map_IETF_Snowball(kind)
+        stopifnot(is.character(kind))
+
+        resolved <- map_IETF_Snowball(kind)
         base <- if (is.na(resolved))
             kind
         else if (identical(resolved, "porter"))

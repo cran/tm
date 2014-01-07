@@ -87,20 +87,14 @@ tm_filter(reuters, FUN = sFilter, query)
 
 
 ###################################################
-### code chunk number 14: tm.Rnw:211-212
-###################################################
-tm_filter(reuters, pattern = "company")
-
-
-###################################################
-### code chunk number 15: DublinCore
+### code chunk number 14: DublinCore
 ###################################################
 DublinCore(crude[[1]], "Creator") <- "Ano Nymous"
 meta(crude[[1]])
 
 
 ###################################################
-### code chunk number 16: tm.Rnw:243-247
+### code chunk number 15: tm.Rnw:237-241
 ###################################################
 meta(crude, tag = "test", type = "corpus") <- "test meta"
 meta(crude, type = "corpus")
@@ -109,39 +103,34 @@ meta(crude)
 
 
 ###################################################
-### code chunk number 17: tm.Rnw:264-266
+### code chunk number 16: tm.Rnw:258-260
 ###################################################
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[1:5,100:105])
 
 
 ###################################################
-### code chunk number 18: tm.Rnw:275-276
+### code chunk number 17: tm.Rnw:269-270
 ###################################################
 findFreqTerms(dtm, 5)
 
 
 ###################################################
-### code chunk number 19: tm.Rnw:281-282
+### code chunk number 18: tm.Rnw:275-276
 ###################################################
 findAssocs(dtm, "opec", 0.8)
 
 
 ###################################################
-### code chunk number 20: tm.Rnw:294-295
+### code chunk number 19: tm.Rnw:288-289
 ###################################################
 inspect(removeSparseTerms(dtm, 0.4))
 
 
 ###################################################
-### code chunk number 21: tm.Rnw:306-307
+### code chunk number 20: tm.Rnw:303-305
 ###################################################
-(d <- Dictionary(c("prices", "crude", "oil")))
-
-
-###################################################
-### code chunk number 22: tm.Rnw:315-316
-###################################################
-inspect(DocumentTermMatrix(reuters, list(dictionary = d)))
+inspect(DocumentTermMatrix(reuters,
+                           list(dictionary = c("prices", "crude", "oil"))))
 
 

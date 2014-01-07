@@ -8,7 +8,7 @@
   a so-called mapping.
 }
 \usage{
-readTabular(mapping, \dots)
+readTabular(mapping)
 }
 \arguments{
   \item{mapping}{A named \code{list} of \code{character}s. The
@@ -17,7 +17,6 @@ readTabular(mapping, \dots)
     entry. Valid names include \code{Content} to access the document's
     content, any valid attribute name, and characters which are mapped
     to \code{\link{LocalMetaData}} entries.}
-  \item{\dots}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -27,13 +26,15 @@ readTabular(mapping, \dots)
 }
 \value{
   A \code{function} with the signature \code{elem, language, id}:
-  \item{elem}{A \code{list} with the named element \code{content} which
-    must hold the document to be read in.}
-  \item{language}{A \code{character} vector giving the text's language.}
-  \item{id}{A \code{character} vector representing a unique identification
-    string for the returned text document.}
-  The function returns a \code{PlainTextDocument} representing
-  \code{content}.
+  \describe{
+    \item{\code{elem}}{a list with the named component \code{content} which must
+      hold the document to be read in.}
+    \item{\code{language}}{a string giving the text's language.}
+    \item{\code{id}}{a unique identification string for the returned text
+      document.}
+  }
+  The function returns a \code{\link{PlainTextDocument}} representing the text
+  and meta data extracted from \code{elem$content}.
 }
 \seealso{
   Vignette 'Extensions: How to Handle Custom File Formats'.

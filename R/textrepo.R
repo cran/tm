@@ -18,7 +18,7 @@ print.TextRepository <- function(x, ...) {
 
 summary.TextRepository <- function(object, ...) {
     print(object)
-    if (length(RepoMetaData(object)) > 0) {
+    if (length(RepoMetaData(object))) {
         cat(sprintf(ngettext(length(RepoMetaData(object)),
                              "\nThe repository metadata consists of %d tag-value pair\n",
                              "\nThe repository metadata consists of %d tag-value pairs\n"),

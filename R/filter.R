@@ -1,12 +1,12 @@
 # Author: Ingo Feinerer
 # Filters
 
-tm_filter <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMeta = FALSE) UseMethod("tm_filter", x)
-tm_filter.Corpus <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMeta = FALSE)
+tm_filter <- function(x, ..., FUN, doclevel = TRUE, useMeta = FALSE) UseMethod("tm_filter", x)
+tm_filter.Corpus <- function(x, ..., FUN, doclevel = TRUE, useMeta = FALSE)
     x[tm_index(x, ..., FUN = FUN, doclevel = doclevel, useMeta = useMeta)]
 
-tm_index <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMeta = FALSE) UseMethod("tm_index", x)
-tm_index.Corpus <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMeta = FALSE) {
+tm_index <- function(x, ..., FUN, doclevel = TRUE, useMeta = FALSE) UseMethod("tm_index", x)
+tm_index.Corpus <- function(x, ..., FUN, doclevel = TRUE, useMeta = FALSE) {
     if (!is.null(attr(FUN, "doclevel")))
         doclevel <- attr(FUN, "doclevel")
     if (doclevel) {
@@ -18,12 +18,6 @@ tm_index.Corpus <- function(x, ..., FUN = searchFullText, doclevel = TRUE, useMe
     else
         return(FUN(x, ...))
 }
-
-getFilters <- function() c("searchFullText", "sFilter", "tm_intersect")
-
-searchFullText <- function(x, pattern) UseMethod("searchFullText", x)
-searchFullText.PlainTextDocument <- function(x, pattern) any(grep(pattern, x))
-attr(searchFullText, "doclevel") <- TRUE
 
 sFilter <- function(x, s) {
     con <- textConnection(s)
@@ -39,7 +33,3 @@ sFilter <- function(x, s) {
     eval(parse(text = s), envir = query.df)
 }
 attr(sFilter, "doclevel") <- FALSE
-
-tm_intersect <- function(x, y) UseMethod("tm_intersect", x)
-tm_intersect.PlainTextDocument <- function(x, y) length(intersect(names(termFreq(x)), y)) > 0
-attr(tm_intersect, "doclevel") <- TRUE

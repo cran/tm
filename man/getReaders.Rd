@@ -13,7 +13,6 @@ getReaders()
 \author{Ingo Feinerer}
 \seealso{
   \code{\link{readDOC}},
-  \code{\link{readGmane}},
   \code{\link{readPDF}},
   \code{\link{readPlain}},
   \code{\link{readRCV1}},

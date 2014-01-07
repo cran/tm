@@ -6,11 +6,10 @@
   its text.
 }
 \usage{
-readDOC(AntiwordOptions = "", \dots)
+readDOC(AntiwordOptions = "")
 }
 \arguments{
   \item{AntiwordOptions}{Options passed over to \command{antiword}.}
-  \item{\dots}{Arguments for the generator function.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -25,13 +24,15 @@ readDOC(AntiwordOptions = "", \dots)
 }
 \value{
   A \code{function} with the signature \code{elem, language, id}:
-  \item{elem}{A \code{list} with the named element \code{uri} of type
-  \code{character} which must hold a valid file name.}
-  \item{language}{A \code{character} vector giving the text's language.}
-  \item{id}{A \code{character} vector representing a unique identification
-    string for the returned text document.}
-  The function returns a \code{PlainTextDocument} representing the text
-  in \code{content}.
+  \describe{
+    \item{\code{elem}}{a list with the named component \code{uri} which must
+      hold a valid file name.}
+    \item{\code{language}}{a string giving the text's language.}
+    \item{\code{id}}{a unique identification string for the returned text
+      document.}
+  }
+  The function returns a \code{\link{PlainTextDocument}} representing the text
+  and meta data extracted from \code{elem$uri}.
 }
 \seealso{
   \code{\link{getReaders}} to list available reader functions.

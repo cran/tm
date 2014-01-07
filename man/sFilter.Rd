@@ -27,9 +27,6 @@ sFilter(x, s)
   (extended for shifted up variables) data frame as specified by the
   statement.
 }
-\seealso{
-  \code{\link{getFilters}} to list available filter functions.
-}
 \examples{
 data("crude")
 sFilter(crude, "id == '127' & heading == 'DIAMOND SHAMROCK (DIA) CUTS CRUDE PRICES'")

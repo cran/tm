@@ -11,8 +11,7 @@
 \usage{
 PCorpus(x,
         readerControl = list(reader = x$DefaultReader, language = "en"),
-        dbControl = list(dbName = "", dbType = "DB1"),
-        \dots)
+        dbControl = list(dbName = "", dbType = "DB1"))
 DBControl(x)
 \method{DMetaData}{PCorpus}(x)
 }
@@ -32,7 +31,6 @@ DBControl(x)
     supported by package \pkg{filehash}. Under activated database
     support the \code{tm} package tries to keep as few as possible
     resources in memory under usage of the database.}
-  \item{\dots}{Optional arguments for the \code{reader}.}
 }
 \value{
   An object of class \code{PCorpus} which extends the classes
@@ -66,9 +64,7 @@ DBControl(x)
 }
 \examples{
 txt <- system.file("texts", "txt", package = "tm")
-\dontrun{
-PCorpus(DirSource(txt),
-        dbControl = list(dbName = "myDB.db", dbType = "DB1"))
-}
+\dontrun{PCorpus(DirSource(txt),
+        dbControl = list(dbName = "myDB.db", dbType = "DB1"))}
 }
 \author{Ingo Feinerer}

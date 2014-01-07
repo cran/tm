@@ -12,12 +12,8 @@
   Data structures and operators for volatile corpora.
 }
 \usage{
-Corpus(x,
-       readerControl = list(reader = x$DefaultReader, language = "en"),
-       \dots)
-VCorpus(x,
-        readerControl = list(reader = x$DefaultReader, language = "en"),
-        \dots)
+Corpus(x, readerControl = list(reader = x$DefaultReader, language = "en"))
+VCorpus(x, readerControl = list(reader = x$DefaultReader, language = "en"))
 \method{DMetaData}{VCorpus}(x)
 \method{CMetaData}{Corpus}(x)
 }
@@ -31,7 +27,6 @@ VCorpus(x,
     is assumed to be English (\code{"en"}). Use \code{NA} to avoid
     internal assumptions (e.g., when the language is unknown or is
     deliberately not set).}
-  \item{\dots}{Optional arguments for the \code{reader}.}
 }
 \value{
   An object of class \code{VCorpus} which extends the classes

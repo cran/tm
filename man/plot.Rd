@@ -31,8 +31,7 @@
   Visualization requires that package \pkg{Rgraphviz} is available.
 }
 \examples{
-\dontrun{
-data(crude)
+\dontrun{data(crude)
 tdm <- TermDocumentMatrix(crude,
                           control = list(removePunctuation = TRUE,
                                          removeNumbers = TRUE,

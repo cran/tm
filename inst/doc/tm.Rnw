@@ -205,12 +205,6 @@ their heading (both are meta data attributes of the text document).
 query <- "id == '237' & heading == 'INDONESIA SEEN AT CROSSROADS OVER ECONOMIC CHANGE'"
 tm_filter(reuters, FUN = sFilter, query)
 @
-There is also a full text search filter available (which is default
-when no explicit filter function \code{FUN} is specified) accepting
-regular expressions:
-<<>>=
-tm_filter(reuters, pattern = "company")
-@
 
 \section*{Meta Data Management}
 Meta data is used to annotate text documents or whole corpora with
@@ -299,21 +293,16 @@ percentage of sparse (i.e., terms occurring 0 times in a document)
 elements.
 
 \section*{Dictionary}
-A dictionary is a (multi-)set of strings. It is often used to represent
-relevant terms in text mining. We provide a class \class{Dictionary}
-implementing such a dictionary concept. It can be created via the
-\code{Dictionary()} constructor, e.g.,
+A dictionary is a (multi-)set of strings. It is often used to denote relevant
+terms in text mining. We represent a dictionary with a character vector which
+may be passed to the \code{DocumentTermMatrix()} constructor as a control
+argument. Then the created matrix is tabulated against the dictionary, i.e.,
+only terms from the dictionary appear in the matrix. This allows to restrict
+the dimension of the matrix a priori and to focus on specific terms for
+distinct text mining contexts, e.g.,
 <<>>=
-(d <- Dictionary(c("prices", "crude", "oil")))
-@
-and may be passed over to the \code{DocumentTermMatrix()}
-constructor. Then the created matrix is tabulated against the
-dictionary, i.e., only terms from the dictionary appear in the
-matrix. This allows to restrict the dimension of the matrix a priori
-and to focus on specific terms for distinct text mining contexts,
-e.g.,
-<<>>=
-inspect(DocumentTermMatrix(reuters, list(dictionary = d)))
+inspect(DocumentTermMatrix(reuters,
+                           list(dictionary = c("prices", "crude", "oil"))))
 @
 
 \bibliographystyle{abbrvnat}

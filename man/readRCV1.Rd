@@ -10,18 +10,17 @@ readRCV1(elem, language, id)
 readRCV1asPlain(elem, language, id)
 }
 \arguments{
-  \item{elem}{A \code{list} with the named element \code{content} which
-    must hold the document to be read in.}
-  \item{language}{A \code{character} vector giving the text's language.}
-  \item{id}{A \code{character} vector representing a unique identification
-    string for the returned text document.}
+  \item{elem}{a list with the named component \code{content} which must hold
+    the document to be read in.}
+  \item{language}{a string giving the text's language.}
+  \item{id}{a unique identification string for the returned text document.}
 }
 \value{
-  An \code{RCV1Document} for \code{readRCV1}, or a
-  \code{PlainTextDocument} for \code{readRCV1asPlain}.
+  An \code{\link{RCV1Document}} for \code{readRCV1}, or a
+  \code{\link{PlainTextDocument}} for \code{readRCV1asPlain}.
 }
 \seealso{
-  Use \code{\link{getReaders}} to list available reader functions.
+  \code{\link{getReaders}} to list available reader functions.
 }
 \references{
   Lewis, D. D.; Yang, Y.; Rose, T.; and Li, F (2004).

@@ -49,6 +49,8 @@ TermDocumentMatrix.PCorpus <-
 TermDocumentMatrix.VCorpus <-
 function(x, control = list())
 {
+    stopifnot(is.list(control))
+
     lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
     if (!is.null(lazyTmMap))
         .Call("copyCorpus", x, materialize(x))
@@ -103,7 +105,7 @@ as.TermDocumentMatrix.DocumentTermMatrix <-
 function(x, ...)
     t(x)
 as.TermDocumentMatrix.term_frequency <-
-as.TermDocumentMatrix.textcnt <-    
+as.TermDocumentMatrix.textcnt <-
 function(x, ...)
 {
     m <- simple_triplet_matrix(i = seq_along(x),
@@ -131,7 +133,7 @@ as.DocumentTermMatrix.TermDocumentMatrix <-
 function(x, ...)
     t(x)
 as.DocumentTermMatrix.term_frequency <-
-as.DocumentTermMatrix.textcnt <-    
+as.DocumentTermMatrix.textcnt <-
 function(x, ...)
     t(as.TermDocumentMatrix(x))
 as.DocumentTermMatrix.default <-
@@ -145,7 +147,7 @@ t.TermDocumentMatrix <-
 t.DocumentTermMatrix <-
 function(x)
 {
-    m <- slam:::t.simple_triplet_matrix(x)
+    m <- NextMethod("t")
     attr(m, "Weighting") <- attr(x, "Weighting")
     class(m) <- if(inherits(x, "DocumentTermMatrix"))
         TermDocumentMatrix_classes
@@ -157,51 +159,51 @@ function(x)
 termFreq <-
 function(doc, control = list())
 {
+    stopifnot(inherits(doc, "TextDocument"), is.list(control))
+
     txt <- Content(doc)
 
     ## Conversion to lower characters
-    tolower <- control$tolower
-    if (is.null(tolower) || isTRUE(tolower))
-        tolower <- base::tolower
-    if (is.function(tolower))
-        txt <- tolower(txt)
+    .tolower <- control$tolower
+    if (is.null(.tolower) || isTRUE(.tolower))
+        .tolower <- tolower
+    if (is.function(.tolower))
+        txt <- .tolower(txt)
 
     ## Tokenize the corpus
-    tokenize <- control$tokenize
-    if (is.null(tokenize) || identical(tokenize, "scan"))
-        tokenize <- scan_tokenizer
-    else if (identical(tokenize, "MC"))
-        tokenize <- MC_tokenizer
-    if (is.function(tokenize))
-        txt <- tokenize(txt)
+    .tokenize <- control$tokenize
+    if (is.null(.tokenize) || identical(.tokenize, "scan"))
+        .tokenize <- scan_tokenizer
+    else if (identical(.tokenize, "MC"))
+        .tokenize <- MC_tokenizer
+    if (is.function(.tokenize))
+        txt <- .tokenize(txt)
 
     ## Punctuation removal
-    removePunctuation <- control$removePunctuation
-    if (isTRUE(removePunctuation))
-        removePunctuation <- tm::removePunctuation
-    else if (is.list(removePunctuation))
-        removePunctuation <- function(x) do.call(tm::removePunctuation, c(list(x), control$removePunctuation))
+    .removePunctuation <- control$removePunctuation
+    if (isTRUE(.removePunctuation))
+        .removePunctuation <- removePunctuation
+    else if (is.list(.removePunctuation))
+        .removePunctuation <-
+            function(x) do.call(removePunctuation,
+                                c(list(x), control$removePunctuation))
 
     ## Number removal
-    removeNumbers <- control$removeNumbers
-    if (isTRUE(removeNumbers))
-        removeNumbers <- tm::removeNumbers
+    .removeNumbers <- control$removeNumbers
+    if (isTRUE(.removeNumbers))
+        .removeNumbers <- removeNumbers
 
     ## Stopword filtering
-    stopwords <- control$stopwords
-    # Remove stopwords
-    rs <- function(x, words) x[is.na(match(x, words))]
-    if (isTRUE(stopwords))
-        stopwords <- function(x) rs(x, tm::stopwords(Language(doc)))
-    else if (is.character(stopwords)) {
-        words <- stopwords
-        stopwords <- function(x) rs(x, words)
-    }
+    .stopwords <- control$stopwords
+    if (isTRUE(.stopwords))
+        .stopwords <- function(x) x[is.na(match(x, stopwords(Language(doc))))] 
+    else if (is.character(.stopwords))
+        .stopwords <- function(x) x[is.na(match(x, control$stopwords))]
 
     ## Stemming
-    stemming <- control$stemming
-    if (isTRUE(stemming))
-        stemming <- function(x) stemDocument(x, language = Language(doc))
+    .stemming <- control$stemming
+    if (isTRUE(.stemming))
+        .stemming <- function(x) stemDocument(x, Language(doc))
 
     ## Default order for options which support reordering
     or <- c("removePunctuation", "removeNumbers", "stopwords", "stemming")
@@ -209,7 +211,7 @@ function(doc, control = list())
     ## Process control options in specified order
     nc <- names(control)
     n <- nc[nc %in% or]
-    for (name in c(n, setdiff(or, n))) {
+    for (name in sprintf(".%s", c(n, setdiff(or, n)))) {
         g <- get(name)
         if (is.function(g))
             txt <- g(txt)
@@ -275,7 +277,7 @@ function(x)
 `[.DocumentTermMatrix` <-
 function(x, i, j, ..., drop)
 {
-    m <- slam:::`[.simple_triplet_matrix`(x, i, j, ...)
+    m <- NextMethod("[")
     attr(m, "Weighting") <- attr(x, "Weighting")
     class(m) <- if (inherits(x, "DocumentTermMatrix"))
         DocumentTermMatrix_classes
@@ -315,12 +317,12 @@ function(x)
     UseMethod("nTerms")
 
 nDocs.DocumentTermMatrix <-
-nTerms.TermDocumentMatrix <-    
+nTerms.TermDocumentMatrix <-
 function(x)
     x$nrow
 
 nDocs.TermDocumentMatrix <-
-nTerms.DocumentTermMatrix <-    
+nTerms.DocumentTermMatrix <-
 function(x)
     x$ncol
 
@@ -344,14 +346,14 @@ function(x)
 
 Docs.TermDocumentMatrix <-
 Terms.DocumentTermMatrix <-
-function(x)    
+function(x)
 {
     s <- x$dimnames[[2L]]
     if(is.null(s))
         s <- rep.int(NA_character_, x$ncol)
     s
 }
-    
+
 c.term_frequency <-
 function(..., recursive = FALSE)
 {
@@ -402,39 +404,57 @@ function(..., recursive = FALSE)
 findFreqTerms <-
 function(x, lowfreq = 0, highfreq = Inf)
 {
+    stopifnot(inherits(x, c("DocumentTermMatrix", "TermDocumentMatrix")),
+              is.numeric(lowfreq), is.numeric(highfreq))
+
     if (inherits(x, "DocumentTermMatrix")) x <- t(x)
     rs <- slam::row_sums(x)
     names(rs[rs >= lowfreq & rs <= highfreq])
 }
 
 findAssocs <-
-function(x, term, corlimit)
+function(x, terms, corlimit)
     UseMethod("findAssocs", x)
 findAssocs.TermDocumentMatrix <-
-function(x, term, corlimit)
-    findAssocs(t(x), term, corlimit)
+function(x, terms, corlimit)
+    findAssocs(t(x), terms, corlimit)
 findAssocs.DocumentTermMatrix <-
-function(x, term, corlimit)
+function(x, terms, corlimit)
 {
-    ind <- term == Terms(x)
-    suppressWarnings(x.cor <- cor(as.matrix(x[, ind]), as.matrix(x[, !ind])))
-    findAssocs(x.cor, term, corlimit)
+    stopifnot(is.character(terms), is.numeric(corlimit),
+              corlimit >= 0, corlimit <= 1)
+
+    j <- match(unique(terms), Terms(x), nomatch = 0L)
+    suppressWarnings(
+        findAssocs(slam::crossapply_simple_triplet_matrix(x[, j], x[, -j], cor),
+                   terms, rep_len(corlimit, length(terms))))
 }
 findAssocs.matrix <-
-function(x, term, corlimit)
-    sort(round(x[term, which(x[term,] > corlimit)], 2), decreasing = TRUE)
+function(x, terms, corlimit)
+{
+    stopifnot(is.numeric(x))
+
+    i <- match(terms, rownames(x), nomatch = 0L)
+    names(i) <- terms
+    mapply(function(i, cl) {
+           xi <- x[i, ]
+           t <- sort(round(xi[which(xi >= cl)], 2), TRUE)
+           if (!length(t))
+               names(t) <- NULL
+           t
+           }, i, corlimit)
+}
 
 removeSparseTerms <-
 function(x, sparse)
 {
-    if ((sparse <= 0) || (sparse >= 1))
-        stop("invalid sparse factor")
-    else {
-        m <- if (inherits(x, "DocumentTermMatrix")) t(x) else x
-        t <- table(m$i) > m$ncol * (1 - sparse)
-        termIndex <- as.numeric(names(t[t]))
-        if (inherits(x, "DocumentTermMatrix")) x[, termIndex] else x[termIndex,]
-    }
+    stopifnot(inherits(x, c("DocumentTermMatrix", "TermDocumentMatrix")),
+              is.numeric(sparse), sparse > 0, sparse < 1)
+
+    m <- if (inherits(x, "DocumentTermMatrix")) t(x) else x
+    t <- table(m$i) > m$ncol * (1 - sparse)
+    termIndex <- as.numeric(names(t[t]))
+    if (inherits(x, "DocumentTermMatrix")) x[, termIndex] else x[termIndex,]
 }
 
 CategorizedDocumentTermMatrix <-

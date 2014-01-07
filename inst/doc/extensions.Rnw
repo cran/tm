@@ -21,18 +21,110 @@ library("XML")
 \maketitle
 
 \section*{Introduction}
-The possibility to handle custom file formats is a substantial feature
-in any modern text mining infrastructure. \pkg{tm} has been designed
-aware of this aspect from the beginning on, and has modular components
-which allow extensions. A general explanation of \pkg{tm}'s extension
-mechanism is described
-by~\citet[Sec.~3.3]{Feinerer_etal_2008}. However, for many cases, it
-is not necessary to define each detailed aspect of how to extend
-\pkg{tm}. Typical examples are \acronym{XML} files which are very
-common but can be rather easily handled via standard conforming
-\acronym{XML} parsers. The aim of this document is to give an overview
-on how simpler, more user-friendly, forms of extension mechanisms can
-be applied in \pkg{tm}.
+
+The possibility to handle custom file formats is a substantial feature in any
+modern text mining infrastructure. \pkg{tm} has been designed aware of this
+aspect from the beginning on, and has modular components which allow
+extensions. A general explanation of \pkg{tm}'s extension mechanism is
+described by~\citet[Sec.~3.3]{Feinerer_etal_2008}, with an updated description
+as follows.
+
+\section*{Sources}
+A source abstracts input locations and provides uniform methods for access.
+Internally a source is represented as a \code{list} with the class attribute
+\code{Source} and has the following components:
+\begin{description}
+\item[DefaultReader] a reader function suitable for processing the elements
+  delivered by the source,
+\item[Encoding] a character specifying the encoding of the elements
+  delivered by the source,
+\item[Length] a numeric denoting the number of elements delivered by the source
+  (set to \code{NA} if unknown),
+\item[Names] a character vector giving element names,
+\item[Position] a numeric indicating the position in the source, and
+\item[Vectorized] a logical indicating the ability for parallel element access.
+\end{description}
+Custom sources are required to inherit from this virtual base class
+\code{Source} and typically extend this internal list structure with additional
+named components necessary for representing and storing information for
+document access. The function \code{Source()} is a constructor with the
+signature
+\code{Source(defaultReader, encoding, length, names, position, vectorized, class)}
+and should be used when creating custom sources as it populates the
+corresponding list components and ensures the correct base class.
+
+Each source must provide implementations for following interface functions:
+\begin{description}
+\item[eoi()] returns \code{TRUE} if the end of input of the source is reached,
+\item[getElem()] fetches the element at the current position,
+\item[pGetElem()] if \code{Vectorized} is set, retrieves all elements in
+  parallel at once, and
+\item[stepNext()] increases the position in the source to the next element.
+\end{description}
+Retrieved elements must be encapsulated in a list with the named components
+\code{content} holding the document and \code{uri} pointing to the origin of
+the document (e.g., a file path or a connection; \code{NA} if not applicable or
+unavailable).
+
+E.g., a simple source which accepts an \proglang{R} vector as input could be
+defined as
+<<keep.source=TRUE>>=
+VecSource <- function(x) {
+    s <- Source(length = length(x), names = names(x), class = "VectorSource")
+    s$Content <- as.character(x)
+    s
+}
+@
+which overrides a few defaults (see \code{?Source} for defaults) and stores the
+vector in the \code{Content} list component. The functions \code{stepNext()} and
+\code{eoi()} have reasonable default methods already for the \code{Source}
+base class (basically just incrementing the \code{Position} component and
+comparing the current position with the number of available elements as claimed
+by \code{Length}, respectively), so we only need custom methods for element
+access:
+<<keep.source=TRUE>>=
+getElem.VectorSource <-
+function(x) list(content = x$Content[x$Position], uri = NA)
+pGetElem.VectorSource <-
+function(x) lapply(x$Content, function(y) list(content = y, uri = NA))
+@
+
+\section*{Readers}
+Readers are functions for extracting textual content and meta data out of
+elements delivered by a source and for constructing a text document. Each reader
+must accept following arguments in its signature:
+\begin{description}
+\item[elem] a list with the named components \code{content} and \code{uri} (as
+  delivered by a source via \code{getElem()} or \code{pGetElem()}),
+\item[language] a string giving the text's language, and
+\item[id] a unique identification string for the returned text document.
+\end{description}
+The element is typically provided by a source whereas the language and the
+identifier are normally provided by a corpus constructor (for the case that
+\code{elem\$content} does not give information on these two essential items).
+In case a reader expects configuration arguments we can use a function
+generator (see \code{?FunctionGenerator} for details). It allows us to process
+additional arguments, store them in an environment, return a reader function
+with the well-defined signature described above, and still able to access the
+additional arguments via lexical scoping. The corpus constructor \code{Corpus()}
+will check the function for being a function generator and if so apply it to
+yield the reader with the expected signature.
+
+E.g., the reader function \code{readPlain()} is defined as
+<<keep.source=TRUE>>=
+readPlain <-
+function(elem, language, id)
+    PlainTextDocument(elem$content, id = id, language = language)
+@
+For examples on readers using the function generator please have a look at
+\code{?readPDF} or \code{?readTabular}.
+
+However, for many cases, it is not necessary to define each detailed aspect of
+how to extend \pkg{tm}. Typical examples are \acronym{XML} files which are very
+common but can be rather easily handled via standard conforming \acronym{XML}
+parsers. The aim of the remainder in this document is to give an overview on
+how simpler, more user-friendly, forms of extension mechanisms can be applied
+in \pkg{tm}.
 
 \section*{Custom General Purpose Readers}
 A general situation is that you have gathered together some
@@ -183,14 +275,14 @@ Each list entry must consist of two character vectors: the first
 describes the type of the second argument, and the second is the
 specification entry. Valid combinations are:
 \begin{description}
-\item[type = "node", spec = "XPathExpression"] the XPath expression
+\item[\code{type = "node", spec = "XPathExpression"}] the XPath expression
   \code{spec} extracts information out of an \acronym{XML} node (as seen for
   \code{Author}, \code{Content}, \code{Heading}, and \code{Type} in our
   example specification).
-\item[type = "attribute", spec = "XPathExpression"] the XPath
+\item[\code{type = "attribute", spec = "XPathExpression"}] the XPath
   expression \code{spec} extracts information from an attribute
   of an \acronym{XML} node (like \code{Description} in our example).
-\item[type = "function", spec = function(tree) \ldots] The function
+\item[\code{type = "function", spec = function(tree) \ldots}] The function
   \code{spec} is called, passing over a tree representation (as
   delivered by \code{xmlInternalTreeParse()} from package \pkg{XML})
   of the read in \acronym{XML} document as first argument (as seen for
@@ -198,7 +290,7 @@ specification entry. Valid combinations are:
   nobody forces us to actually use the passed over tree, instead we
   can do anything we want (e.g., create a unique character vector via
   \code{tempfile()} to have a unique identification string).
-\item[type = "unevaluated", spec = "String"] the character vector
+\item[\code{type = "unevaluated", spec = "String"}] the character vector
   \code{spec} is returned without modification (e.g., \code{Origin} in
   our specification).
 \end{description}

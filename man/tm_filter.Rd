@@ -8,10 +8,8 @@
   Interface to apply filter and index functions to corpora.
 }
 \usage{
-\method{tm_filter}{Corpus}(x, \dots, FUN = searchFullText,
-          doclevel = TRUE, useMeta = FALSE)
-\method{tm_index}{Corpus}(x, \dots, FUN = searchFullText,
-          doclevel = TRUE, useMeta = FALSE)
+\method{tm_filter}{Corpus}(x, \dots, FUN, doclevel = TRUE, useMeta = FALSE)
+\method{tm_index}{Corpus}(x, \dots, FUN, doclevel = TRUE, useMeta = FALSE)
 }
 \arguments{
   \item{x}{A corpus.}
@@ -31,12 +29,10 @@
 }
 \seealso{
   \code{\link{sFilter}} for a filter using a simple statement query
-  language, and \code{\link{getFilters}} to list available filter and
-  index functions.
+  language.
 }
 \examples{
 data("crude")
-attr(searchFullText, "doclevel")
-tm_filter(crude, FUN = searchFullText, "company")
-tm_index(crude, FUN = searchFullText, "company")
+# Full-text search
+tm_filter(crude, FUN = function(x) any(grep("co[m]?pany", x)))
 }

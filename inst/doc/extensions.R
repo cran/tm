@@ -8,7 +8,34 @@ library("XML")
 
 
 ###################################################
-### code chunk number 2: extensions.Rnw:53-58
+### code chunk number 2: extensions.Rnw:71-76
+###################################################
+VecSource <- function(x) {
+    s <- Source(length = length(x), names = names(x), class = "VectorSource")
+    s$Content <- as.character(x)
+    s
+}
+
+
+###################################################
+### code chunk number 3: extensions.Rnw:85-89
+###################################################
+getElem.VectorSource <-
+function(x) list(content = x$Content[x$Position], uri = NA)
+pGetElem.VectorSource <-
+function(x) lapply(x$Content, function(y) list(content = y, uri = NA))
+
+
+###################################################
+### code chunk number 4: extensions.Rnw:114-117
+###################################################
+readPlain <-
+function(elem, language, id)
+    PlainTextDocument(elem$content, id = id, language = language)
+
+
+###################################################
+### code chunk number 5: extensions.Rnw:145-150
 ###################################################
 df <- data.frame(contents = c("content 1", "content 2", "content 3"),
                  title    = c("title 1"  , "title 2"  , "title 3"  ),
@@ -18,53 +45,53 @@ df <- data.frame(contents = c("content 1", "content 2", "content 3"),
 
 
 ###################################################
-### code chunk number 3: extensions.Rnw:64-65
+### code chunk number 6: extensions.Rnw:156-157
 ###################################################
 names(attributes(PlainTextDocument()))
 
 
 ###################################################
-### code chunk number 4: Mapping
+### code chunk number 7: Mapping
 ###################################################
 m <- list(Content = "contents", Heading = "title",
           Author = "authors", Topic = "topics")
 
 
 ###################################################
-### code chunk number 5: myReader
+### code chunk number 8: myReader
 ###################################################
 myReader <- readTabular(mapping = m)
 
 
 ###################################################
-### code chunk number 6: extensions.Rnw:88-89
+### code chunk number 9: extensions.Rnw:180-181
 ###################################################
 (corpus <- Corpus(DataframeSource(df), readerControl = list(reader = myReader)))
 
 
 ###################################################
-### code chunk number 7: extensions.Rnw:94-96
+### code chunk number 10: extensions.Rnw:186-188
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])
 
 
 ###################################################
-### code chunk number 8: CustomXMLFile
+### code chunk number 11: CustomXMLFile
 ###################################################
 custom.xml <- system.file("texts", "custom.xml", package = "tm")
 print(readLines(custom.xml), quote = FALSE)
 
 
 ###################################################
-### code chunk number 9: mySource
+### code chunk number 12: mySource
 ###################################################
 mySource <- function(x, encoding = "UTF-8")
     XMLSource(x, function(tree) XML::xmlChildren(XML::xmlRoot(tree)), myXMLReader, encoding)
 
 
 ###################################################
-### code chunk number 10: myXMLReader
+### code chunk number 13: myXMLReader
 ###################################################
 myXMLReader <- readXML(
     spec = list(Author = list("node", "/document/writer"),
@@ -80,13 +107,13 @@ myXMLReader <- readXML(
 
 
 ###################################################
-### code chunk number 11: extensions.Rnw:209-210
+### code chunk number 14: extensions.Rnw:301-302
 ###################################################
 corpus <- Corpus(mySource(custom.xml))
 
 
 ###################################################
-### code chunk number 12: extensions.Rnw:214-216
+### code chunk number 15: extensions.Rnw:306-308
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])

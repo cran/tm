@@ -17,10 +17,11 @@ function(x)
 PCorpus <-
 function(x,
          readerControl = list(reader = x$DefaultReader, language = "en"),
-         dbControl = list(dbName = "", dbType = "DB1"),
-         ...)
+         dbControl = list(dbName = "", dbType = "DB1"))
 {
-    readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
+    stopifnot(is.Source(x))
+
+    readerControl <- prepareReader(readerControl, x$DefaultReader)
 
     if (is.function(readerControl$init))
         readerControl$init()
@@ -42,13 +43,18 @@ function(x,
     while (!eoi(x)) {
         x <- stepNext(x)
         elem <- getElem(x)
-        doc <- readerControl$reader(elem, readerControl$language, if (is.null(x$Names)) as.character(counter) else x$Names[counter])
+        id <- if (is.null(x$Names) || is.na(x$Names))
+                as.character(counter)
+            else
+                x$Names[counter]
+        doc <- readerControl$reader(elem, readerControl$language, id)
         filehash::dbInsert(db, ID(doc), doc)
         if (x$Length > 0) tdl[[counter]] <- ID(doc)
         else tdl <- c(tdl, ID(doc))
         counter <- counter + 1
     }
-    names(tdl) <- x$Names
+    if (!is.null(x$Names) && !is.na(x$Names))
+        names(tdl) <- x$Names
 
     df <- data.frame(MetaID = rep(0, length(tdl)), stringsAsFactors = FALSE)
     filehash::dbInsert(db, "DMetaData", df)
@@ -66,20 +72,13 @@ function(x, cmeta, dmeta)
     x
 }
 
-# Register S3 corpus classes to be recognized by S4 methods. This is
-# mainly a fix to be compatible with packages which were originally
-# developed to cooperate with corresponding S4 tm classes. Necessary
-# since tm's class architecture was changed to S3 since tm version 0.5.
-setOldClass(c("VCorpus", "Corpus", "list"))
-
-# The "..." are additional arguments for the FunctionGenerator reader
 VCorpus <-
 Corpus <-
-function(x,
-         readerControl = list(reader = x$DefaultReader, language = "en"),
-         ...)
+function(x, readerControl = list(reader = x$DefaultReader, language = "en"))
 {
-    readerControl <- prepareReader(readerControl, x$DefaultReader, ...)
+    stopifnot(is.Source(x))
+
+    readerControl <- prepareReader(readerControl, x$DefaultReader)
 
     if (is.function(readerControl$init))
         readerControl$init()
@@ -96,14 +95,18 @@ function(x,
     if (x$Vectorized)
         tdl <- mapply(function(x, id) readerControl$reader(x, readerControl$language, id),
                       pGetElem(x),
-                      id = if (is.null(x$Names)) as.character(seq_len(x$Length)) else x$Names,
+                      id = if (is.null(x$Names) || is.na(x$Names)) as.character(seq_len(x$Length)) else x$Names,
                       SIMPLIFY = FALSE)
     else {
         counter <- 1
         while (!eoi(x)) {
             x <- stepNext(x)
             elem <- getElem(x)
-            doc <- readerControl$reader(elem, readerControl$language, if (is.null(x$Names)) as.character(counter) else x$Names[counter])
+            id <- if (is.null(x$Names) || is.na(x$Names))
+                as.character(counter)
+            else
+                x$Names[counter]
+            doc <- readerControl$reader(elem, readerControl$language, id)
             if (x$Length > 0)
                 tdl[[counter]] <- doc
             else
@@ -111,7 +114,8 @@ function(x,
             counter <- counter + 1
         }
     }
-    names(tdl) <- x$Names
+    if (!is.null(x$Names) && !is.na(x$Names))
+        names(tdl) <- x$Names
     df <- data.frame(MetaID = rep(0, length(tdl)), stringsAsFactors = FALSE)
     .VCorpus(tdl, .MetaDataNode(), df)
 }
@@ -210,7 +214,7 @@ function(x, id = 0, mapping = NULL, left.mapping = NULL, level = 0)
         x$NodeID <- id
         id <<- id + 1
         level <<- level + 1
-        if (length(x$Children) > 0) {
+        if (length(x$Children)) {
             mapping <<- cbind(mapping, c(x$Children[[1]]$NodeID, id))
             left <- set_id(x$Children[[1]])
             if (level == 1) {
@@ -343,7 +347,7 @@ summary.Corpus <-
 function(object, ...)
 {
     print(object)
-    if (length(DMetaData(object)) > 0) {
+    if (length(DMetaData(object))) {
         cat(sprintf(ngettext(length(attr(CMetaData(object), "MetaData")),
                              "\nThe metadata consists of %d tag-value pair and a data frame\n",
                              "\nThe metadata consists of %d tag-value pairs and a data frame\n"),

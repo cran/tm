@@ -53,7 +53,7 @@ meta.TextDocument <- function(x, tag, type = NULL) {
         cat("Available meta data pairs are:\n")
         for (a in attrs)
             cat(sprintf("  %-13s: %s\n", a, paste(as.character(attr(x, a)), collapse = " ")))
-        if (length(LocalMetaData(x)) > 0) {
+        if (length(LocalMetaData(x))) {
             cat("User-defined local meta data pairs are:\n")
             print(LocalMetaData(x))
         }

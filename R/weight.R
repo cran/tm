@@ -40,8 +40,8 @@ weightTfIdf <-
 
 weightSMART <-
     WeightFunction(function(m, spec = "nnn", control = list()) {
-        if (nchar(spec) != 3L)
-            stop("invalid spec")
+        stopifnot(inherits(m, c("DocumentTermMatrix", "TermDocumentMatrix")),
+                  is.character(spec), nchar(spec) == 3L, is.list(control))
 
         term_frequency <-
             match.arg(substr(spec, 1L, 1L),

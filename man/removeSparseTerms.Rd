@@ -2,14 +2,16 @@
 \alias{removeSparseTerms}
 \title{Remove Sparse Terms from a Term-Document Matrix}
 \description{
-  Remove sparse terms from a term-document matrix.
+  Remove sparse terms from a document-term or term-document matrix.
 }
 \usage{
 removeSparseTerms(x, sparse)
 }
 \arguments{
-  \item{x}{A term-document matrix.}
-  \item{sparse}{A numeric for the maximal allowed sparsity.}
+  \item{x}{A \code{\link{DocumentTermMatrix}} or a
+    \code{\link{TermDocumentMatrix}}.}
+  \item{sparse}{A numeric for the maximal allowed sparsity in the range from
+    bigger zero to smaller one.}
 }
 \value{
   A term-document matrix where those terms from \code{x} are
