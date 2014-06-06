@@ -1,21 +1,17 @@
-import(parallel)
+importFrom("NLP", "content", "content<-", "meta", "meta<-", "words")
+importFrom("parallel", "mclapply")
+importFrom("stats", "setNames")
+importFrom("utils", "getS3method")
+
 import(slam)
 
-export("as.PlainTextDocument",
-       "Author",
-       "CMetaData",
-       "Content",
-       "Content<-",
-       "content_meta<-",
-       "Corpus", # alias to VCorpus
+export("as.DocumentTermMatrix",
+       "as.TermDocumentMatrix",
+       "as.VCorpus",
+       "content_transformer",
+       "Corpus",
        "DataframeSource",
-       "DateTimeStamp",
-       "DBControl",
-       "Description",
        "DirSource",
-       "dissimilarity",
-       "DMetaData",
-       "DMetaData<-",
        "Docs",
        "DocumentTermMatrix",
        "DublinCore",
@@ -23,7 +19,6 @@ export("as.PlainTextDocument",
        "eoi",
        "FunctionGenerator",
        "getElem",
-       "Heading",
        "Heaps_plot",
        "findAssocs",
        "findFreqTerms",
@@ -31,19 +26,17 @@ export("as.PlainTextDocument",
        "getSources",
        "getTokenizers",
        "getTransformations",
-       "ID",
        "inspect",
-       "is.Source",
-       "Language",
-       "LocalMetaData",
        "MC_tokenizer",
-       "makeChunks",
-       "materialize",
-       "meta",
-       "meta<-",
        "nDocs",
        "nTerms",
-       "Origin",
+       "PCorpus",
+       "pGetElem",
+       "PlainTextDocument",
+       "read_dtm_Blei_et_al",
+       "read_dtm_MC",
+       "readDOC",
+       "reader",
        "readPlain",
        "readReut21578XML",
        "readReut21578XMLasPlain",
@@ -51,32 +44,21 @@ export("as.PlainTextDocument",
        "readRCV1asPlain",
        "readPDF",
        "readTabular",
-       "readDOC",
        "readXML",
        "removeNumbers",
        "removePunctuation",
        "removeSparseTerms",
        "removeWords",
-       "RepoMetaData",
-       "ReutersSource",
-       "sFilter",
-       "stepNext",
-       "PCorpus",
-       "pGetElem",
-       "PlainTextDocument",
-       "prescindMeta",
-       "RCV1Document",
-       "Reuters21578Document",
        "scan_tokenizer",
-       "Source",
+       "SimpleSource",
        "stemCompletion",
        "stemDocument",
+       "stepNext",
        "stopwords",
        "stripWhitespace",
        "TermDocumentMatrix",
        "termFreq",
        "Terms",
-       "TextRepository",
        "tm_filter",
        "tm_index",
        "tm_map",
@@ -90,32 +72,19 @@ export("as.PlainTextDocument",
        "weightTfIdf",
        "weightBin",
        "weightSMART",
-#       "words",
        "writeCorpus",
        "XMLSource",
+       "XMLTextDocument",
        "Zipf_plot")
 
 S3method("removeNumbers", "character")
 S3method("removePunctuation", "character")
 S3method("removeWords", "character")
-S3method("stemCompletion", "character")
 S3method("stemDocument", "character")
 S3method("stripWhitespace", "character")
 
-S3method("c", "Corpus")
-S3method("CMetaData", "Corpus")
-S3method("meta", "Corpus")
-S3method("meta<-", "Corpus")
-S3method("print", "Corpus")
-S3method("summary", "Corpus")
-S3method("tm_filter", "Corpus")
-S3method("tm_index", "Corpus")
-#S3method("words", "Corpus")
-
 S3method("getElem", "DataframeSource")
 S3method("pGetElem", "DataframeSource")
-
-S3method("Content<-", "default")
 
 S3method("getElem", "DirSource")
 S3method("pGetElem", "DirSource")
@@ -123,7 +92,6 @@ S3method("pGetElem", "DirSource")
 S3method("[", "DocumentTermMatrix")
 S3method("c", "DocumentTermMatrix")
 S3method("dimnames<-", "DocumentTermMatrix")
-S3method("dissimilarity", "DocumentTermMatrix")
 S3method("findAssocs", "DocumentTermMatrix")
 S3method("inspect", "DocumentTermMatrix")
 S3method("plot", "DocumentTermMatrix")
@@ -133,42 +101,43 @@ S3method("tm_term_score", "DocumentTermMatrix")
 
 S3method("tm_term_score", "term_frequency")
 
-S3method("print", "MetaDataNode")
-
 S3method("[", "PCorpus")
-S3method("[<-", "PCorpus")
 S3method("[[", "PCorpus")
 S3method("[[<-", "PCorpus")
-S3method("DMetaData", "PCorpus")
-S3method("DMetaData<-", "PCorpus")
+S3method("as.list", "PCorpus")
+S3method("content", "PCorpus")
 S3method("inspect", "PCorpus")
+S3method("length", "PCorpus")
+S3method("meta", "PCorpus")
+S3method("meta<-", "PCorpus")
+S3method("names", "PCorpus")
+S3method("names<-", "PCorpus")
+S3method("print", "PCorpus")
 S3method("TermDocumentMatrix", "PCorpus")
+S3method("tm_filter", "PCorpus")
+S3method("tm_index", "PCorpus")
 S3method("tm_map", "PCorpus")
 
-S3method("Content", "PlainTextDocument")
-S3method("Content<-", "PlainTextDocument")
-S3method("dissimilarity", "PlainTextDocument")
+S3method("as.character", "PlainTextDocument")
+S3method("content", "PlainTextDocument")
+S3method("content<-", "PlainTextDocument")
 S3method("print", "PlainTextDocument")
 S3method("removeNumbers", "PlainTextDocument")
 S3method("removePunctuation", "PlainTextDocument")
 S3method("removeWords", "PlainTextDocument")
-S3method("stemCompletion", "PlainTextDocument")
 S3method("stemDocument", "PlainTextDocument")
 S3method("stripWhitespace", "PlainTextDocument")
 S3method("tm_term_score", "PlainTextDocument")
-#S3method("words", "PlainTextDocument")
+S3method("words", "PlainTextDocument")
 
-S3method("as.PlainTextDocument", "RCV1Document")
-
-S3method("as.PlainTextDocument", "Reuters21578Document")
-
-S3method("eoi", "Source")
-S3method("stepNext", "Source")
+S3method("eoi", "SimpleSource")
+S3method("length", "SimpleSource")
+S3method("reader", "SimpleSource")
+S3method("stepNext", "SimpleSource")
 
 S3method("c", "TermDocumentMatrix")
 S3method("[", "TermDocumentMatrix")
 S3method("dimnames<-", "TermDocumentMatrix")
-S3method("dissimilarity", "TermDocumentMatrix")
 S3method("findAssocs", "TermDocumentMatrix")
 S3method("inspect", "TermDocumentMatrix")
 S3method("plot", "TermDocumentMatrix")
@@ -182,31 +151,39 @@ S3method("c", "TextDocument")
 S3method("meta", "TextDocument")
 S3method("meta<-", "TextDocument")
 
-S3method("meta", "TextRepository")
-S3method("meta<-", "TextRepository")
-S3method("print", "TextRepository")
-S3method("summary", "TextRepository")
+S3method("print", "TextDocumentMeta")
 
 S3method("getElem", "URISource")
+S3method("pGetElem", "URISource")
 
 S3method("[", "VCorpus")
 S3method("[[", "VCorpus")
 S3method("[[<-", "VCorpus")
-S3method("DMetaData", "VCorpus")
-S3method("DMetaData<-", "VCorpus")
+S3method("as.list", "VCorpus")
+S3method("as.VCorpus", "VCorpus")
+S3method("c", "VCorpus")
+S3method("content", "VCorpus")
 S3method("inspect", "VCorpus")
+S3method("length", "VCorpus")
+S3method("meta", "VCorpus")
+S3method("meta<-", "VCorpus")
+S3method("names", "VCorpus")
+S3method("names<-", "VCorpus")
+S3method("print", "VCorpus")
 S3method("TermDocumentMatrix", "VCorpus")
+S3method("tm_filter", "VCorpus")
+S3method("tm_index", "VCorpus")
 S3method("tm_map", "VCorpus")
 
 S3method("getElem", "VectorSource")
 S3method("pGetElem", "VectorSource")
 
-S3method("Content<-", "XMLDocument")
-
 S3method("getElem", "XMLSource")
 
-export("as.DocumentTermMatrix",
-       "as.TermDocumentMatrix")
+S3method("as.character", "XMLTextDocument")
+S3method("content", "XMLTextDocument")
+S3method("content<-", "XMLTextDocument")
+S3method("print", "XMLTextDocument")
 
 S3method("as.DocumentTermMatrix", "DocumentTermMatrix")
 S3method("as.DocumentTermMatrix", "TermDocumentMatrix")
@@ -219,9 +196,6 @@ S3method("as.TermDocumentMatrix", "default")
 S3method("as.TermDocumentMatrix", "term_frequency")
 S3method("as.TermDocumentMatrix", "textcnt")
 
-export("read_dtm_Blei_et_al")
-export("read_dtm_MC")
-
 S3method("Docs", "DocumentTermMatrix")
 S3method("Docs", "TermDocumentMatrix")
 S3method("Terms", "DocumentTermMatrix")
@@ -231,4 +205,4 @@ S3method("nDocs", "TermDocumentMatrix")
 S3method("nTerms", "DocumentTermMatrix")
 S3method("nTerms", "TermDocumentMatrix")
 
-useDynLib("tm")
+useDynLib(tm, copyCorpus)

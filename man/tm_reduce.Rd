@@ -9,14 +9,13 @@ tm_reduce(x, tmFuns, \dots)
 }
 \arguments{
   \item{x}{A corpus.}
-  \item{tmFuns}{A \code{list} of \pkg{tm} transformations.}
+  \item{tmFuns}{A list of \pkg{tm} transformations.}
   \item{\dots}{Arguments to the individual transformations.}
 }
 \value{
   A single \pkg{tm} transformation function obtained by folding \code{tmFuns}
   from right to left (via \code{Reduce(\dots, right = TRUE)}).
 }
-\author{Ingo Feinerer}
 \seealso{
   \code{Reduce} for \R's internal folding/accumulation mechanism, and
   \code{\link{getTransformations}} to list available transformation

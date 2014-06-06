@@ -9,16 +9,19 @@
 readPlain(elem, language, id)
 }
 \arguments{
-  \item{elem}{a list with the named component \code{content} which must hold
+  \item{elem}{a named list with the component \code{content} which must hold
     the document to be read in.}
-  \item{language}{a string giving the text's language.}
-  \item{id}{a unique identification string for the returned text document.}
+  \item{language}{a string giving the language.}
+  \item{id}{a character giving a unique identifier for the created text
+    document.}
 }
 \value{
-  A \code{\link{PlainTextDocument}} representing \code{elem$content}.
+  A \code{\link{PlainTextDocument}} representing \code{elem$content}. The
+  argument \code{id} is used as fallback if \code{elem$uri} is null.
 }
 \seealso{
-  \code{\link{getReaders}} to list available reader functions.
+  \code{\link{Reader}} for basic information on the reader infrastructure
+  employed by package \pkg{tm}.
 }
 \examples{
 docs <- c("This is a text.", "This another one.")
@@ -27,4 +30,3 @@ elem <- getElem(stepNext(vs))
 (result <- readPlain(elem, "en", "id1"))
 meta(result)
 }
-\author{Ingo Feinerer}

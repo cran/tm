@@ -1,78 +1,105 @@
-.TextDocument <-
-    function(x, author, datetimestamp, description, heading, id, origin, language, localmetadata)
+c.TextDocument <-
+function(..., recursive = FALSE)
 {
-    doc <- x
-    attr(doc, "Author") <- as.character(author)
-    attr(doc, "DateTimeStamp") <- as.POSIXlt(datetimestamp, tz = "GMT")
-    attr(doc, "Description") <- as.character(description)
-    attr(doc, "Heading") <- as.character(heading)
-    attr(doc, "ID") <- as.character(id)
-    attr(doc, "Language") <- as.character(language)
-    attr(doc, "LocalMetaData") <- as.list(localmetadata)
-    attr(doc, "Origin") <- as.character(origin)
-    doc
+    args <- list(...)
+    x <- args[[1L]]
+
+    if (length(args) == 1L)
+        return(x)
+
+    if (!all(unlist(lapply(args, inherits, class(x)))))
+        stop("not all arguments are text documents")
+
+    structure(list(content = args,
+                   meta = CorpusMeta(),
+                   dmeta = data.frame(row.names = seq_along(args))),
+              class = c("VCorpus", "Corpus"))
 }
-Content <- function(x) UseMethod("Content", x)
-`Content<-` <- function(x, value) UseMethod("Content<-", x)
-`Content<-.default` <- function(x, value) {
-    attrs <- attributes(x)
-    x <- value
-    mostattributes(x) <- attrs
-    x
-}
-`Content<-.XMLDocument` <- function(x, value) {
-    attrs <- attributes(x)
-    x <- value
-    mostattributes(x) <- attrs
-    attr(x, "names") <- attr(value, "names")
-    x
-}
-Author <- function(x) attr(x, "Author")
-DateTimeStamp <- function(x) attr(x, "DateTimeStamp")
-Description <- function(x) attr(x, "Description")
-Heading <- function(x) attr(x, "Heading")
-ID <- function(x) attr(x, "ID")
-Language <- function(x) attr(x, "Language")
-LocalMetaData <- function(x) attr(x, "LocalMetaData")
-Origin <- function(x) attr(x, "Origin")
 
 PlainTextDocument <-
-    function(x = character(0), author = character(0), datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-             description = character(0), heading = character(0), id = character(0), origin = character(0),
-             language = character(0), localmetadata = list())
+function(x = character(0),
+         author = character(0),
+         datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
+         description = character(0),
+         heading = character(0),
+         id = character(0),
+         language = character(0),
+         origin = character(0),
+         ...,
+         meta = NULL,
+         class = NULL)
 {
-    doc <- .TextDocument(as.character(x), author, datetimestamp, description, heading, id, origin, language, localmetadata)
-    class(doc) <- c("PlainTextDocument", "TextDocument", "character")
-    doc
+    structure(list(content = as.character(x),
+                   meta = TextDocumentMeta(author, datetimestamp, description,
+                                           heading, id, language, origin, ...,
+                                           meta = meta)),
+              class = unique(c(class, "PlainTextDocument", "TextDocument")))
 }
-print.PlainTextDocument <- function(x, ...) {
-    cat(noquote(as.character(x)), sep = "\n")
-    invisible(x)
-}
-Content.PlainTextDocument <- function(x) as.character(x)
-`Content<-.PlainTextDocument` <- function(x, value) {
-    attrs <- attributes(x)
-    x <- as.character(value)
-    attributes(x) <- attrs
+
+as.character.PlainTextDocument <-
+function(x, ...)
+    content(x)
+
+content.PlainTextDocument <-
+function(x)
+    x$content
+
+`content<-.PlainTextDocument` <-
+function(x, value)
+{
+    x$content <- as.character(value)
     x
 }
 
-RCV1Document <-
-    function(x = list(), author = character(0), datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-             description = character(0), heading = character(0), id = character(0), origin = character(0),
-             language = character(0), localmetadata = list())
+print.PlainTextDocument <-
+function(x, ...)
 {
-    doc <- .TextDocument(x, author, datetimestamp, description, heading, id, origin, language, localmetadata)
-    class(doc) <- c("RCV1Document", "TextDocument", "XMLDocument", "XMLAbstractDocument", "oldClass")
-    doc
+    writeLines(sprintf("<<%s (metadata: %d)>>", class(x)[1], length(x$meta)))
+    writeLines(content(x))
+    invisible(x)
 }
 
-Reuters21578Document <-
-    function(x = list(), author = character(0), datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-             description = character(0), heading = character(0), id = character(0), origin = character(0),
-             language = character(0), localmetadata = list())
+words.PlainTextDocument <-
+function(x, ...)
+    scan_tokenizer(x)
+
+XMLTextDocument <-
+function(x = list(),
+         author = character(0),
+         datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
+         description = character(0),
+         heading = character(0),
+         id = character(0),
+         language = character(0),
+         origin = character(0),
+         ...,
+         meta = NULL)
 {
-    doc <- .TextDocument(x, author, datetimestamp, description, heading, id, origin, language, localmetadata)
-    class(doc) <- c("Reuters21578Document", "TextDocument", "XMLDocument", "XMLAbstractDocument", "oldClass")
-    doc
+    structure(list(content = x,
+                   meta = TextDocumentMeta(author, datetimestamp, description,
+                                           heading, id, language, origin, ...,
+                                           meta = meta)),
+              class = c("XMLTextDocument", "TextDocument"))
+}
+
+as.character.XMLTextDocument <-
+function(x, ...)
+    as.character(unlist(content(x), use.names = FALSE))
+
+content.XMLTextDocument <-
+function(x)
+    x$content
+
+`content<-.XMLTextDocument` <-
+function(x, value)
+{
+    x$content <- value
+    x
+}
+
+print.XMLTextDocument <-
+function(x, ...)
+{
+    writeLines(sprintf("<<%s (metadata: %d)>>", class(x)[1], length(x$meta)))
+    invisible(x)
 }

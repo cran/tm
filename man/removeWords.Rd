@@ -1,22 +1,28 @@
 \name{removeWords}
 \alias{removeWords}
+\alias{removeWords.character}
 \alias{removeWords.PlainTextDocument}
 \title{Remove Words from a Text Document}
 \description{
-  Remove a set of words from a text document.
+  Remove words from a text document.
 }
 \usage{
-\method{removeWords}{PlainTextDocument}(x, words)
+\method{removeWords}{character}(x, words)
+\method{removeWords}{PlainTextDocument}(x, \dots)
 }
 \arguments{
-  \item{x}{A text document.}
-  \item{words}{A character vector listing the words to be removed.}
+  \item{x}{A character or text document.}
+  \item{words}{A character vector giving the words to be removed.}
+  \item{\dots}{passed over argument \code{words}.}
 }
 \value{
-  The text document with the specified words in it removed.
+  The character or text document without the specified words.
 }
 \seealso{
-  \code{\link{getTransformations}} to list available transformation (mapping) functions.
+  \code{\link{getTransformations}} to list available transformation (mapping)
+  functions.
+
+  \code{\link[tau]{remove_stopwords}} provided by package \pkg{tau}.
 }
 \examples{
 data("crude")

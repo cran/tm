@@ -2,15 +2,15 @@
 
 WeightFunction <- function(x, name, acronym) {
     class(x) <- c("WeightFunction", "function")
-    attr(x, "Name") <- name
-    attr(x, "Acronym") <- acronym
+    attr(x, "name") <- name
+    attr(x, "acronym") <- acronym
     x
 }
 
 # Actual TermDocumentMatrix weighting functions
 weightTf <-
     WeightFunction(function(m) {
-        attr(m, "Weighting") <- c("term frequency", "tf")
+        attr(m, "weighting") <- c("term frequency", "tf")
         m
     }, "term frequency", "tf")
 
@@ -31,7 +31,7 @@ weightTfIdf <-
         lnrs <- log2(nDocs(m) / rs)
         lnrs[!is.finite(lnrs)] <- 0
         m <- m * lnrs
-        attr(m, "Weighting") <- c(sprintf("%s%s",
+        attr(m, "weighting") <- c(sprintf("%s%s",
                                           "term frequency - inverse document frequency",
                                           if (normalize) " (normalized)" else ""),
                                   "tf-idf")
@@ -127,7 +127,7 @@ weightSMART <-
 
         m <- m * df
         m$v <- m$v / norm[m$j]
-        attr(m, "Weighting") <- c(paste("SMART", spec), "SMART")
+        attr(m, "weighting") <- c(paste("SMART", spec), "SMART")
 
         if (isDTM) t(m) else m
     }, "SMART", "SMART")
@@ -135,6 +135,6 @@ weightSMART <-
 weightBin <-
     WeightFunction(function(m) {
         m$v <- rep(1, length(m$v))
-        attr(m, "Weighting") <- c("binary", "bin")
+        attr(m, "weighting") <- c("binary", "bin")
         m
     }, "binary", "bin")

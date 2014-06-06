@@ -11,12 +11,11 @@
 readTabular(mapping)
 }
 \arguments{
-  \item{mapping}{A named \code{list} of \code{character}s. The
+  \item{mapping}{A named list of characters. The
     constructed reader will map each character entry to the content or
-    meta datum of the text document as specified by the named list
-    entry. Valid names include \code{Content} to access the document's
-    content, any valid attribute name, and characters which are mapped
-    to \code{\link{LocalMetaData}} entries.}
+    metadatum of the text document as specified by the named list
+    entry. Valid names include \code{content} to access the document's
+    content, and character strings which are mapped to metadata entries.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -25,21 +24,24 @@ readTabular(mapping)
   via lexical scoping.
 }
 \value{
-  A \code{function} with the signature \code{elem, language, id}:
+  A \code{function} with the following formals:
   \describe{
-    \item{\code{elem}}{a list with the named component \code{content} which must
+    \item{\code{elem}}{a named list with the component \code{content} which must
       hold the document to be read in.}
-    \item{\code{language}}{a string giving the text's language.}
-    \item{\code{id}}{a unique identification string for the returned text
-      document.}
+    \item{\code{language}}{a string giving the language.}
+    \item{\code{id}}{a character giving a unique identifier for the created
+      text document.}
   }
   The function returns a \code{\link{PlainTextDocument}} representing the text
-  and meta data extracted from \code{elem$content}.
+  and metadata extracted from \code{elem$content}. The arguments \code{language}
+  and \code{id} are used as fallback if no corresponding metadata entries are
+  found in \code{elem$content}.
 }
 \seealso{
-  Vignette 'Extensions: How to Handle Custom File Formats'.
+  \code{\link{Reader}} for basic information on the reader infrastructure
+  employed by package \pkg{tm}.
 
-  \code{\link{getReaders}} to list available reader functions.
+  Vignette 'Extensions: How to Handle Custom File Formats'.
 }
 \examples{
 df <- data.frame(contents = c("content 1", "content 2", "content 3"),
@@ -47,12 +49,11 @@ df <- data.frame(contents = c("content 1", "content 2", "content 3"),
                  authors  = c("author 1" , "author 2" , "author 3" ),
                  topics   = c("topic 1"  , "topic 2"  , "topic 3"  ),
                  stringsAsFactors = FALSE)
-m <- list(Content = "contents", Heading = "title",
-          Author = "authors", Topic = "topics")
+m <- list(content = "contents", heading = "title",
+          author = "authors", topic = "topics")
 myReader <- readTabular(mapping = m)
 ds <- DataframeSource(df)
 elem <- getElem(stepNext(ds))
 (result <- myReader(elem, language = "en", id = "id1"))
 meta(result)
 }
-\author{Ingo Feinerer}

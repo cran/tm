@@ -2,28 +2,28 @@
 \alias{VectorSource}
 \title{Vector Source}
 \description{
-  Constructs a source for a vector as input.
+  Create a vector source.
 }
 \usage{
-VectorSource(x, encoding = "unknown")
+VectorSource(x)
 }
 \arguments{
-  \item{x}{A vector.}
-  \item{encoding}{encoding to be assumed for input strings.  It is used to mark
-    character strings as known to be in Latin-1 or UTF-8: it is not used to
-    re-encode the input.}
+  \item{x}{A vector giving the texts.}
+}
+\details{
+  A \emph{vector source} interprets each element of the vector \code{x} as a
+  document.
 }
 \value{
-  An object of class \code{VectorSource} which extends the class
-  \code{Source} representing a vector where each entry is interpreted as
-  a document.
+  An object inheriting from \code{VectorSource}, \code{\link{SimpleSource}},
+  and \code{\link{Source}}.
 }
 \seealso{
-  \code{\link{getSources}} to list available sources. \code{\link{Encoding}} on encodings in \R.
+  \code{\link{Source}} for basic information on the source infrastructure
+  employed by package \pkg{tm}.
 }
 \examples{
 docs <- c("This is a text.", "This another one.")
 (vs <- VectorSource(docs))
-inspect(Corpus(vs))
+inspect(VCorpus(vs))
 }
-\author{Ingo Feinerer}

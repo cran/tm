@@ -39,4 +39,3 @@ weightTfIdf(m, normalize = TRUE)
   Term-weighting approaches in automatic text retrieval.
   \emph{Information Processing and Management}, \bold{24}/5, 513--523.
 }
-\author{Ingo Feinerer}

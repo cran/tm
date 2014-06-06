@@ -6,6 +6,7 @@ function()
 MC_tokenizer <-
 function(x)
 {
+    x <- as.character(x)
     ASCII_letters <- "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     id <- sprintf("[%s]+", ASCII_letters)
     http <- sprintf("(http://%s(\\.%s)*)", id, id)
@@ -19,6 +20,4 @@ function(x)
 
 scan_tokenizer <-
 function(x)
-{
-    scan(text = x, what = "character", quote = "", quiet = TRUE)
-}
+    scan(text = as.character(x), what = "character", quote = "", quiet = TRUE)

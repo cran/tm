@@ -1,33 +1,45 @@
 \name{URISource}
 \alias{URISource}
 \title{Uniform Resource Identifier Source}
-\description{  
-  Constructs a source which represents documents located by a
-  uniform resource identifier.
+\description{
+  Create a uniform resource identifier source.
 }
 \usage{
-URISource(x, encoding = "unknown")
+URISource(x, encoding = "", mode = "text")
 }
 \arguments{
-  \item{x}{A vector of Uniform Resource Identifier, i.e., either a
-    character identifying the file or a connection.}
-  \item{encoding}{encoding to be assumed for input strings.  It is used to mark
-    character strings as known to be in Latin-1 or UTF-8: it is not used to
-    re-encode the input.}
+  \item{x}{A character vector of uniform resource identifiers (\acronym{URI}s.}
+  \item{encoding}{A character string describing the current encoding. It is
+    passed to \code{\link{iconv}} to convert the input to UTF-8.}
+  \item{mode}{a character string specifying if and how \acronym{URI}s should be
+    read in. Available modes are:
+    \describe{
+      \item{\code{""}}{No read. In this case \code{\link{getElem}} and
+        \code{\link{pGetElem}} only deliver \acronym{URI}s.}
+      \item{\code{"binary"}}{\acronym{URI}s are read in binary raw mode (via
+        \code{\link{readBin}}).}
+      \item{\code{"text"}}{\acronym{URI}s are read as text (via
+        \code{\link{readLines}}).}
+    }
+  }
+}
+\details{
+  A \emph{uniform resource identifier source} interprets each \acronym{URI} as a
+  document.
 }
 \value{
-  An object of class \code{URISource} which extends the class
-  \code{Source} representing documents located by a URI.
+  An object inheriting from \code{URISource}, \code{\link{SimpleSource}},
+  and \code{\link{Source}}.
 }
-\author{Ingo Feinerer}
 \seealso{
-  \code{\link{DirSource}} for accessing a directory, and
-  \code{\link{getSources}} to list available sources.
-  \code{\link{Encoding}} on encodings in \R.
+  \code{\link{Source}} for basic information on the source infrastructure
+  employed by package \pkg{tm}.
+
+  \code{\link{Encoding}} and \code{\link{iconv}} on encodings.
 }
 \examples{
 loremipsum <- system.file("texts", "loremipsum.txt", package = "tm")
 ovid <- system.file("texts", "txt", "ovid_1.txt", package = "tm")
-us <- URISource(c(loremipsum, ovid))
-inspect(Corpus(us))
+us <- URISource(sprintf("file://\%s", c(loremipsum, ovid)))
+inspect(VCorpus(us))
 }

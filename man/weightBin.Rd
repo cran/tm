@@ -17,4 +17,3 @@ weightBin(m)
 \value{
   The weighted matrix.
 }
-\author{Ingo Feinerer}

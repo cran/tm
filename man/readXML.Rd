@@ -3,18 +3,17 @@
 \title{Read In an XML Document}
 \description{
   Return a function which reads in an \acronym{XML} document. The structure of
-  the \acronym{XML} document can be described with a specification.
+  the \acronym{XML} document is described with a specification.
 }
 \usage{
 readXML(spec, doc)
 }
 \arguments{
-  \item{spec}{A named list of lists each containing two
-    components. The constructed reader will map each list
-    entry to an attribute or meta datum corresponding to the named list
-    entry. Valid names include \code{Content} to access the document's
-    content, any valid attribute name, and characters which are mapped to
-    \code{\link{LocalMetaData}} entries.
+  \item{spec}{A named list of lists each containing two components. The
+    constructed reader will map each list entry to the content or metadatum of
+    the text document as specified by the named list entry. Valid names include
+    \code{content} to access the document's content, and character strings which
+    are mapped to metadata entries.
 
     Each list entry must consist of two components: the first must be a string
     describing the type of the second argument, and the second is the
@@ -33,7 +32,7 @@ readXML(spec, doc)
 	\code{spec} is returned without modification.}
     }
   }
-  \item{doc}{An (empty) document of some subclass of \code{TextDocument}}
+  \item{doc}{An (empty) document of some subclass of \code{TextDocument}.}
 }
 \details{
   Formally this function is a function generator, i.e., it returns a
@@ -42,36 +41,39 @@ readXML(spec, doc)
   via lexical scoping.
 }
 \value{
-  A function with the signature \code{elem, language, id}:
+  A function with the following formals:
   \describe{
-    \item{\code{elem}}{a list with the named component \code{content} which
+    \item{\code{elem}}{a named list with the component \code{content} which
       must hold the document to be read in.}
-    \item{\code{language}}{a string giving the text's language.}
-    \item{\code{id}}{a unique identification string for the returned text
-      document.}
+    \item{\code{language}}{a string giving the language.}
+    \item{\code{id}}{a character giving a unique identifier for the created
+      text document.}
   }
   The function returns \code{doc} augmented by the parsed information
   as described by \code{spec} out of the \acronym{XML} file in
-  \code{elem$content}.
+  \code{elem$content}. The arguments \code{language} and \code{id} are used as
+  fallback: \code{language} if no corresponding metadata entry is found in
+  \code{elem$content}, and \code{id} if no corresponding metadata entry is found
+  in \code{elem$content} and if \code{elem$uri} is null.
 }
 \seealso{
-  Vignette 'Extensions: How to Handle Custom File Formats',
-  \code{\link{XMLSource}}.
+  \code{\link{Reader}} for basic information on the reader infrastructure
+  employed by package \pkg{tm}.
 
-  \code{\link{getReaders}} to list available reader functions.
+  Vignette 'Extensions: How to Handle Custom File Formats', and
+  \code{\link{XMLSource}}.
 }
 \examples{
 readGmane <-
-readXML(spec = list(Author = list("node", "/item/creator"),
-                    Content = list("node", "/item/description"),
-                    DateTimeStamp = list("function", function(node)
+readXML(spec = list(author = list("node", "/item/creator"),
+                    content = list("node", "/item/description"),
+                    datetimestamp = list("function", function(node)
                     strptime(sapply(XML::getNodeSet(node, "/item/date"), XML::xmlValue),
                              format = "\%Y-\%m-\%dT\%H:\%M:\%S",
                              tz = "GMT")),
-                    Description = list("unevaluated", ""),
-                    Heading = list("node", "/item/title"),
-                    ID = list("node", "/item/link"),
-                    Origin = list("unevaluated", "Gmane Mailing List Archive")),
+                    description = list("unevaluated", ""),
+                    heading = list("node", "/item/title"),
+                    id = list("node", "/item/link"),
+                    origin = list("unevaluated", "Gmane Mailing List Archive")),
                     doc = PlainTextDocument())
 }
-\author{Ingo Feinerer}

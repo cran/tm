@@ -16,17 +16,41 @@
         as.character(sapply(XML::getNodeSet(doc, spec[[2]]), fun))
 }
 
+IETF_Snowball_map <-
+list("danish" = c("da", "dan"),
+     "dutch" = c("nl", "nld", "dut"),
+     "english" = c("en", "eng"),
+     "finnish" = c("fi", "fin"),
+     "french" = c("fr", "fra", "fre"),
+     "german" = c("de", "deu", "ger"),
+     "hungarian" = c("hu", "hun"),
+     "italian" = c("it", "ita"),
+     "norwegian" = c("no", "nor"),
+     "portuguese"= c("pt", "por"),
+     "romanian" = c("ro", "ron", "rum"),
+     "russian" = c("ru", "rus"),
+     "spanish" = c("es", "esl", "spa"),
+     "swedish" = c("sv", "swe"),
+     ## Have stopwords but no SnowballC stemmer ...
+     "catalan" = c("ca", "cat"),
+     ## Have SnowballC stemmer but no stopwords ...
+     "turkish" = c("tr", "tur")
+     )
+
 # Map IETF language tags to languages used by the Snowball stemmer project
 # http://en.wikipedia.org/wiki/IETF_language_tag
-map_IETF_Snowball <- function(code) {
-    stopifnot(is.character(code))
+map_IETF_Snowball <-
+local({
+    codes <- unlist(IETF_Snowball_map, use.names = FALSE)
+    names <- rep.int(names(IETF_Snowball_map),
+                     sapply(IETF_Snowball_map, length))
 
-    if (identical(code, "") || identical(code, character(0)))
-        return("porter")
+    function(code) {
+        code <- as.character(code)
 
-    codes <- c("da", "nl", "en", "fi", "fr", "de", "hu", "it", "no", "pt", "ru", "es", "sv")
-    names <- c("danish", "dutch", "english", "finnish", "french", "german", "hungarian",
-               "italian", "norwegian", "portuguese", "russian", "spanish", "swedish")
+        if (identical(code, "") || identical(code, character(0)) || is.na(code))
+            return("porter")
 
-    names[charmatch(gsub("-.*", "", code), codes)]
-}
+        names[charmatch(gsub("-.*", "", code), codes)]
+    }
+})

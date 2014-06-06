@@ -3,7 +3,7 @@
 \title{Read In a PDF Document}
 \description{
   Return a function which reads in a portable document format (\acronym{PDF})
-  document extracting both its text and its meta data.
+  document extracting both its text and its metadata.
 }
 \usage{
 readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
@@ -51,7 +51,7 @@ readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
 
   Control parameters for engine \code{"custom"} are as follows.
   \describe{
-    \item{\code{info}}{a function extracting meta data from a \acronym{PDF}.
+    \item{\code{info}}{a function extracting metadata from a \acronym{PDF}.
       The function must accept a file path as first argument and must return a
       named list with the components \code{Author} (as character string),
       \code{CreationDate} (of class \code{POSIXlt}), \code{Subject} (as
@@ -63,30 +63,29 @@ readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
   }
 }
 \value{
-  A \code{function} with the signature \code{elem, language, id}:
+  A \code{function} with the following formals:
   \describe{
-    \item{\code{elem}}{a list with the named component \code{uri} which must
+    \item{\code{elem}}{a named list with the component \code{uri} which must
       hold a valid file name.}
-    \item{\code{language}}{a string giving the text's language.}
-    \item{\code{id}}{a unique identification string for the returned text
-      document.}
+    \item{\code{language}}{a string giving the language.}
+    \item{\code{id}}{Not used.}
   }
   The function returns a \code{\link{PlainTextDocument}} representing the text
-  and meta data extracted from \code{elem$uri}.
+  and metadata extracted from \code{elem$uri}.
 }
 \seealso{
-  \code{\link{getReaders}} to list available reader functions.
+  \code{\link{Reader}} for basic information on the reader infrastructure
+  employed by package \pkg{tm}.
 }
 \examples{
-uri <- system.file(file.path("doc", "tm.pdf"), package = "tm")
+uri <- sprintf("file://\%s", system.file(file.path("doc", "tm.pdf"), package = "tm"))
 if(all(file.exists(Sys.which(c("pdfinfo", "pdftotext"))))) {
     pdf <- readPDF(control = list(text = "-layout"))(elem = list(uri = uri),
                                                      language = "en",
                                                      id = "id1")
-    pdf[1:13]
+    content(pdf)[1:13]
 }
-Corpus(URISource(uri),
-       readerControl = list(reader = readPDF(engine = "ghostscript")))
+VCorpus(URISource(uri, mode = ""),
+        readerControl = list(reader = readPDF(engine = "ghostscript")))
 }
-\author{Ingo Feinerer}
 \keyword{file}

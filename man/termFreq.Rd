@@ -14,18 +14,19 @@ termFreq(doc, control = list())
 
     First, following two options are processed.
     \describe{
-      \item{\code{tolower}}{Either a logical value indicating whether
-	characters should be translated to lower case or a custom function
-	converting characters to lower case. Defaults to
-	\code{\link{tolower}}.}
       \item{\code{tokenize}}{A function tokenizing documents into single
 	tokens or a string matching one of the predefined tokenization
 	functions:
 	\describe{
-	  \item{\code{scan}}{for \code{\link{scan_tokenizer}}, or}
-	  \item{\code{MC}}{for \code{\link{MC_tokenizer}}.}
+	  \item{\code{"MC"}}{for \code{\link{MC_tokenizer}}, or}
+	  \item{\code{"scan"}}{for \code{\link{scan_tokenizer}}, or}
+	  \item{\code{"words"}}{for \code{\link{words}}.}
 	}
-	Defaults to \code{\link{scan_tokenizer}}.}
+	Defaults to \code{\link{words}}.}
+      \item{\code{tolower}}{Either a logical value indicating whether
+	characters should be translated to lower case or a custom function
+	converting characters to lower case. Defaults to
+	\code{\link{tolower}}.}
     }  
     Next, a set of options which are sensitive to the order of
     occurrence in the \code{control} list. Options are processed in the
@@ -61,7 +62,7 @@ termFreq(doc, control = list())
 	must be an integer vector of length 2. Terms that appear less
 	often in \code{doc} than the lower bound \code{bounds$local[1]}
 	or more often than the upper bound \code{bounds$local[2]} are
-	discarded. Defaults to \code{list(local = c(1,Inf))} (i.e., every
+	discarded. Defaults to \code{list(local = c(1, Inf))} (i.e., every
 	token will be used).}
       \item{\code{wordLengths}}{An integer vector of length 2. Words
 	shorter than the minimum word length \code{wordLengths[1]} or
@@ -81,7 +82,8 @@ termFreq(doc, control = list())
 \examples{
 data("crude")
 termFreq(crude[[14]])
-strsplit_space_tokenizer <- function(x) unlist(strsplit(x, "[[:space:]]+"))
+strsplit_space_tokenizer <- function(x)
+    unlist(strsplit(as.character(x), "[[:space:]]+"))
 ctrl <- list(tokenize = strsplit_space_tokenizer,
              removePunctuation = list(preserve_intra_word_dashes = TRUE),
              stopwords = c("reuter", "that"),

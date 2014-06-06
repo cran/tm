@@ -84,4 +84,3 @@ TermDocumentMatrix(crude,
                                   weighting = function(x)
                                   weightSMART(x, spec = "ntc")))
 }
-\author{Ingo Feinerer}

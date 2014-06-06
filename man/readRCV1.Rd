@@ -10,17 +10,19 @@ readRCV1(elem, language, id)
 readRCV1asPlain(elem, language, id)
 }
 \arguments{
-  \item{elem}{a list with the named component \code{content} which must hold
+  \item{elem}{a named list with the component \code{content} which must hold
     the document to be read in.}
-  \item{language}{a string giving the text's language.}
-  \item{id}{a unique identification string for the returned text document.}
+  \item{language}{a string giving the language.}
+  \item{id}{Not used.}
 }
 \value{
-  An \code{\link{RCV1Document}} for \code{readRCV1}, or a
-  \code{\link{PlainTextDocument}} for \code{readRCV1asPlain}.
+  An \code{\link{XMLTextDocument}} for \code{readRCV1}, or a
+  \code{\link{PlainTextDocument}} for \code{readRCV1asPlain}, representing the
+  text and metadata extracted from \code{elem$content}.
 }
 \seealso{
-  \code{\link{getReaders}} to list available reader functions.
+  \code{\link{Reader}} for basic information on the reader infrastructure
+  employed by package \pkg{tm}.
 }
 \references{
   Lewis, D. D.; Yang, Y.; Rose, T.; and Li, F (2004).
@@ -34,4 +36,3 @@ rcv1 <- readRCV1(elem = list(content = readLines(f)),
                  language = "en", id = "id1")
 meta(rcv1)
 }
-\author{Ingo Feinerer}

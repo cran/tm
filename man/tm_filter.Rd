@@ -1,38 +1,33 @@
 \name{tm_filter}
 \alias{tm_filter}
-\alias{tm_filter.Corpus}
+\alias{tm_filter.PCorpus}
+\alias{tm_filter.VCorpus}
 \alias{tm_index}
-\alias{tm_index.Corpus}
+\alias{tm_index.PCorpus}
+\alias{tm_index.VCorpus}
 \title{Filter and Index Functions on Corpora}
 \description{
   Interface to apply filter and index functions to corpora.
 }
 \usage{
-\method{tm_filter}{Corpus}(x, \dots, FUN, doclevel = TRUE, useMeta = FALSE)
-\method{tm_index}{Corpus}(x, \dots, FUN, doclevel = TRUE, useMeta = FALSE)
+\method{tm_filter}{PCorpus}(x, FUN, \dots)
+\method{tm_filter}{VCorpus}(x, FUN, \dots)
+\method{tm_index}{PCorpus}(x, FUN, \dots)
+\method{tm_index}{VCorpus}(x, FUN, \dots)
 }
 \arguments{
   \item{x}{A corpus.}
-  \item{\dots}{Arguments to \code{FUN}.}
-  \item{FUN}{A filter function returning a logical value.} 
-  \item{doclevel}{Logical. If the document level flag is set \code{FUN}
-    is applied to each element of \code{x}, otherwise \code{FUN} is
-    applied to \code{x} itself. If \code{FUN} has an attribute
-    \code{doclevel} its value will be automatically used.}
-  \item{useMeta}{Logical. Should \code{\link{DMetaData}} be passed over
-    to \code{FUN} as argument?}
+  \item{FUN}{a filter function taking a text document as input and returning a
+    logical value.} 
+  \item{\dots}{arguments to \code{FUN}.}
 }
 \value{
   \code{tm_filter} returns a corpus containing documents where
   \code{FUN} matches, whereas \code{tm_index} only returns the
   corresponding indices.
 }
-\seealso{
-  \code{\link{sFilter}} for a filter using a simple statement query
-  language.
-}
 \examples{
 data("crude")
 # Full-text search
-tm_filter(crude, FUN = function(x) any(grep("co[m]?pany", x)))
+tm_filter(crude, FUN = function(x) any(grep("co[m]?pany", content(x))))
 }

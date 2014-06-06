@@ -9,18 +9,20 @@
 stopwords(kind = "en")
 }
 \arguments{
-  \item{kind}{A \code{character} identifying the desired stopword list.}
+  \item{kind}{A character string identifying the desired stopword list.}
 }
 \details{
   Available stopword lists are:
   \describe{
+    \item{\code{catalan}}{Catalan stopwords (obtained from
+      \url{http://latel.upf.edu/morgana/altres/pub/ca_stop.htm}),}
+    \item{\code{romanian}}{Romanian stopwords (extracted from
+      \url{http://snowball.tartarus.org/otherapps/romanian/romanian1.tgz}),}
     \item{\code{SMART}}{English stopwords from the SMART information
       retrieval system (obtained from
       \url{http://jmlr.csail.mit.edu/papers/volume5/lewis04a/a11-smart-stop-list/english.stop})
       (which coincides with the stopword list used by the MC toolkit
       (\url{http://www.cs.utexas.edu/users/dml/software/mc/})),}
-    \item{\code{catalan}}{Catalan stopwords (obtained from
-      \url{http://latel.upf.edu/morgana/altres/pub/ca_stop.htm}), and}
   }
   and a set of stopword lists from the Snowball stemmer project in different
   languages (obtained from
@@ -30,6 +32,10 @@ stopwords(kind = "en")
   \code{norwegian}, \code{portuguese}, \code{russian}, \code{spanish}, and
   \code{swedish}. Language names are case sensitive. Alternatively, their
   \acronym{IETF} language tags may be used.
+%
+%  Earlier \pkg{tm} versions (before 2013-06-14) used merged stopword lists from
+%  \url{http://www.ranks.nl/resources/stopwords.html} and the Snowball stemmer
+%  project.
 }
 \value{A character vector containing the requested stopwords. An error
   is raised if no stopwords are available for the requested

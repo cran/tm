@@ -1,24 +1,23 @@
-\name{PlainTextDocument}
-\alias{PlainTextDocument}
-\title{Plain Text Documents}
+\name{XMLTextDocument}
+\alias{XMLTextDocument}
+\title{XML Text Documents}
 \description{
-  Create plain text documents.
+  Create \acronym{XML} text documents.
 }
 \usage{
-PlainTextDocument(x = character(0),
-                  author = character(0),
-                  datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
-                  description = character(0),
-                  heading = character(0),
-                  id = character(0),
-                  language = character(0),
-                  origin = character(0),
-                  \dots,
-                  meta = NULL,
-                  class = NULL)
+XMLTextDocument(x = list(),
+                author = character(0),
+                datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
+                description = character(0),
+                heading = character(0),
+                id = character(0),
+                language = character(0),
+                origin = character(0),
+                \dots,
+                meta = NULL)
 }
 \arguments{
-  \item{x}{A character giving the plain text content.}
+  \item{x}{An \code{\link[XML:xmlTreeParse]{XMLDocument}}.}
   \item{author}{a character or an object of class \code{\link{person}} giving
     the author names.}
   \item{datetimestamp}{an object of class \code{\link{POSIXt}} or a character
@@ -37,11 +36,9 @@ PlainTextDocument(x = character(0),
   \item{\dots}{user-defined document metadata tag-value pairs.}
   \item{meta}{a named list or \code{NULL} (default) giving all metadata. If set
     all other metadata arguments are ignored.}
-  \item{class}{a character vector or \code{NULL} (default) giving
-    additional classes to be used for the created plain text document.}
 }
 \value{
-  An object inheriting from \code{class}, \code{PlainTextDocument} and
+  An object inheriting from \code{XMLTextDocument} and
   \code{\link{TextDocument}}.
 }
 \seealso{
@@ -49,9 +46,11 @@ PlainTextDocument(x = character(0),
   infrastructure employed by package \pkg{tm}.
 }
 \examples{
-(ptd <- PlainTextDocument("A simple plain text document",
-                          heading = "Plain text document",
-                          id = basename(tempfile()),
-                          language = "en"))
-meta(ptd)
+xml <- system.file("exampleData", "test.xml", package = "XML")
+(xtd <- XMLTextDocument(XML::xmlTreeParse(xml),
+                        heading = "XML text document",
+                        id = xml,
+                        language = "en"))
+meta(xtd)
+as.character(xtd)
 }

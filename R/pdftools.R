@@ -36,7 +36,7 @@ function(file)
 {
     file <- normalizePath(file)
     
-    gs_cmd <- find_gs_cmd(Sys.getenv("R_GSCMD", ""))
+    gs_cmd <- tools::find_gs_cmd()
 
     out <- system2(gs_cmd,
                    c("-dNODISPLAY -q",
@@ -79,7 +79,7 @@ function(file)
 {
     files <- normalizePath(file)
     
-    gs_cmd <- find_gs_cmd(Sys.getenv("R_GSCMD", ""))
+    gs_cmd <- tools::find_gs_cmd()
 
     tf <- tempfile("pdf")
     on.exit(unlink(tf))
@@ -123,28 +123,3 @@ function(file)
 
     strsplit(paste(txt, collapse = "\n"), "\f")[[1L]]
 }
-
-## <FIXME>
-## This is only exported from tools in versions >= r63623.
-## Change the code to use tools::find_gs_cmd() once R 3.1 is released
-## and tm depends on it ...
-find_gs_cmd <-
-function(gs_cmd = "") 
-{
-    if(!nzchar(gs_cmd)) {
-        if(.Platform$OS.type == "windows") {
-            gsexe <- Sys.getenv("R_GSCMD")
-            if(!nzchar(gsexe)) 
-                gsexe <- Sys.getenv("GSC")
-            gs_cmd <- Sys.which(gsexe)
-            if(!nzchar(gs_cmd)) 
-                gs_cmd <- Sys.which("gswin64c")
-            if(!nzchar(gs_cmd)) 
-                gs_cmd <- Sys.which("gswin32c")
-            gs_cmd
-        }
-        else Sys.which(Sys.getenv("R_GSCMD", "gs"))
-    }
-    else Sys.which(gs_cmd)
-}
-## </FIXME>

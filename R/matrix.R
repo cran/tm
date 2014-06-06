@@ -35,7 +35,7 @@ function(x, weighting)
     ## and hope for the best ...
     ## </NOTE>
     else if(is.character(weighting) && (length(weighting) == 2L))
-        attr(x, "Weighting") <- weighting
+        attr(x, "weighting") <- weighting
     else
         stop("invalid weighting")
     x
@@ -51,21 +51,16 @@ function(x, control = list())
 {
     stopifnot(is.list(control))
 
-    lazyTmMap <- meta(x, tag = "lazyTmMap", type = "corpus")
-    if (!is.null(lazyTmMap))
-        .Call("copyCorpus", x, materialize(x))
-
-    names(x) <- NULL
-
-    tflist <- parallel::mclapply(x, termFreq, control)
+    tflist <- mclapply(unname(content(x)), termFreq, control)
     tflist <- lapply(tflist, function(y) y[y > 0])
 
     v <- unlist(tflist)
     i <- names(v)
-    allTerms <- sort(unique(if (is.null(control$dictionary)) i else control$dictionary))
+    allTerms <- sort(unique(as.character(if (is.null(control$dictionary)) i
+                                         else control$dictionary)))
     i <- match(i, allTerms)
     j <- rep(seq_along(x), sapply(tflist, length))
-    docs <- as.character(unlist(lapply(x, ID)))
+    docs <- as.character(meta(x, "id", "local"))
     if (length(docs) != length(x)) {
         warning("invalid document identifiers")
         docs <- NULL
@@ -148,7 +143,7 @@ t.DocumentTermMatrix <-
 function(x)
 {
     m <- NextMethod("t")
-    attr(m, "Weighting") <- attr(x, "Weighting")
+    attr(m, "weighting") <- attr(x, "weighting")
     class(m) <- if(inherits(x, "DocumentTermMatrix"))
         TermDocumentMatrix_classes
     else
@@ -161,7 +156,18 @@ function(doc, control = list())
 {
     stopifnot(inherits(doc, "TextDocument"), is.list(control))
 
-    txt <- Content(doc)
+    ## Tokenize the corpus
+    .tokenize <- control$tokenize
+    if (is.null(.tokenize) || identical(.tokenize, "words"))
+        .tokenize <- words
+    else if (identical(.tokenize, "MC"))
+        .tokenize <- MC_tokenizer
+    else if (identical(.tokenize, "scan"))
+        .tokenize <- scan_tokenizer
+    if (is.function(.tokenize))
+        txt <- .tokenize(doc)
+    else
+        stop("invalid tokenizer")
 
     ## Conversion to lower characters
     .tolower <- control$tolower
@@ -169,15 +175,6 @@ function(doc, control = list())
         .tolower <- tolower
     if (is.function(.tolower))
         txt <- .tolower(txt)
-
-    ## Tokenize the corpus
-    .tokenize <- control$tokenize
-    if (is.null(.tokenize) || identical(.tokenize, "scan"))
-        .tokenize <- scan_tokenizer
-    else if (identical(.tokenize, "MC"))
-        .tokenize <- MC_tokenizer
-    if (is.function(.tokenize))
-        txt <- .tokenize(txt)
 
     ## Punctuation removal
     .removePunctuation <- control$removePunctuation
@@ -196,14 +193,14 @@ function(doc, control = list())
     ## Stopword filtering
     .stopwords <- control$stopwords
     if (isTRUE(.stopwords))
-        .stopwords <- function(x) x[is.na(match(x, stopwords(Language(doc))))] 
+        .stopwords <- function(x) x[is.na(match(x, stopwords(meta(doc, "language"))))] 
     else if (is.character(.stopwords))
         .stopwords <- function(x) x[is.na(match(x, control$stopwords))]
 
     ## Stemming
     .stemming <- control$stemming
     if (isTRUE(.stemming))
-        .stemming <- function(x) stemDocument(x, Language(doc))
+        .stemming <- function(x) stemDocument(x, meta(doc, "language"))
 
     ## Default order for options which support reordering
     or <- c("removePunctuation", "removeNumbers", "stopwords", "stemming")
@@ -219,7 +216,7 @@ function(doc, control = list())
 
     ## Check if the document content is NULL
     if (is.null(txt))
-        return(structure(integer(0), names = character(0)))
+        return(setNames(integer(0), character(0)))
 
     ## If dictionary is set tabulate against it
     dictionary <- control$dictionary
@@ -241,7 +238,9 @@ function(doc, control = list())
     tab <- tab[(nc >= lb) & (nc <= ub)]
 
     ## Return named integer
-    structure(as.integer(tab), names = names(tab), class = c("term_frequency", "integer"))
+    structure(as.integer(tab),
+              names = names(tab),
+              class = c("term_frequency", "integer"))
 }
 
 print.TermDocumentMatrix <-
@@ -251,16 +250,17 @@ function(x, ...)
     format <- c("term", "document")
     if (inherits(x, "DocumentTermMatrix"))
         format <- rev(format)
-    cat(sprintf("A %s-%s matrix (%d %ss, %d %ss)\n",
-                format[1L], format[2L], nrow(x),
-                format[1L], ncol(x), format[2L]))
-    cat(sprintf("\nNon-/sparse entries: %d/%.0f\n",
+    writeLines(sprintf("<<%s (%ss: %d, %ss: %d)>>",
+                       class(x)[1], format[1L], nrow(x), format[2L], ncol(x)))
+    writeLines(sprintf("Non-/sparse entries: %d/%.0f",
                 length(x$v), prod(dim(x)) - length(x$v)))
-    sparsity <- if (identical(prod(dim(x)), 0L)) 100 else round((1 - length(x$v)/prod(dim(x))) * 100)
-    cat(sprintf("Sparsity           : %s%%\n", sparsity))
-    cat("Maximal term length:", max(nchar(Terms(x), type = "chars"), 0), "\n")
-    cat(sprintf("Weighting          : %s (%s)\n",
-                attr(x, "Weighting")[1L], attr(x, "Weighting")[2L]))
+    sparsity <- if (!prod(dim(x))) 100
+        else round((1 - length(x$v)/prod(dim(x))) * 100)
+    writeLines(sprintf("Sparsity           : %s%%", sparsity))
+    writeLines(sprintf("Maximal term length: %s",
+                       max(nchar(Terms(x), type = "chars"), 0)))
+    writeLines(sprintf("Weighting          : %s (%s)",
+                       attr(x, "weighting")[1L], attr(x, "weighting")[2L]))
     invisible(x)
 }
 
@@ -278,7 +278,7 @@ function(x)
 function(x, i, j, ..., drop)
 {
     m <- NextMethod("[")
-    attr(m, "Weighting") <- attr(x, "Weighting")
+    attr(m, "weighting") <- attr(x, "weighting")
     class(m) <- if (inherits(x, "DocumentTermMatrix"))
         DocumentTermMatrix_classes
     else
@@ -368,7 +368,7 @@ function(..., recursive = FALSE)
     if(length(m) == 1L)
         return(m[[1L]])
 
-    weighting <- attr(m[[1L]], "Weighting")
+    weighting <- attr(m[[1L]], "weighting")
 
     allTermsNonUnique <- unlist(lapply(m, function(x) Terms(x)[x$i]))
     allTerms <- unique(allTermsNonUnique)

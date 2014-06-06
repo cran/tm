@@ -8,15 +8,15 @@
   distributions in corpora.
 }
 \usage{
-Zipf_plot(x, type = "l", ...)
-Heaps_plot(x, type = "l", ...)
+Zipf_plot(x, type = "l", \dots)
+Heaps_plot(x, type = "l", \dots)
 }
 \arguments{
   \item{x}{a document-term matrix or term-document matrix with
     unweighted term frequencies.}
   \item{type}{a character string indicating the type of plot to be
     drawn, see \code{\link{plot}}.}
-  \item{...}{further graphical parameters to be used for plotting.}
+  \item{\dots}{further graphical parameters to be used for plotting.}
 }
 \details{
   Zipf's law (e.g., \url{http://en.wikipedia.org/wiki/Zipf\%27s_law})

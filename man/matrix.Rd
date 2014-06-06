@@ -29,7 +29,7 @@ as.DocumentTermMatrix(x, \dots)
 	must be an integer vector of length 2. Terms that appear in less
 	documents than the lower bound \code{bounds$global[1]} or in
 	more documents than the upper bound \code{bounds$global[2]} are
-	discarded. Defaults to \code{list(global = c(1,Inf))} (i.e., every
+	discarded. Defaults to \code{list(global = c(1, Inf))} (i.e., every
 	term will be used).}
       \item{\code{weighting}}{A weighting function capable of handling a
 	\code{TermDocumentMatrix}. It defaults to \code{weightTf} for term
@@ -64,8 +64,7 @@ dtm <- DocumentTermMatrix(crude,
                                          weightTfIdf(x, normalize =
                                                      FALSE),
                                          stopwords = TRUE))
-inspect(tdm[155:160,1:5])
-inspect(tdm[c("price", "texas"),c("127","144","191","194")])
-inspect(dtm[1:5,155:160])
+inspect(tdm[202:205, 1:5])
+inspect(tdm[c("price", "texas"), c("127", "144", "191", "194")])
+inspect(dtm[1:5, 273:276])
 }
-\author{Ingo Feinerer}

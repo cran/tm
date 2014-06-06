@@ -1,48 +1,26 @@
 \name{TextDocument}
 \alias{TextDocument}
-\alias{Author}
-\alias{Content}
-\alias{Content<-}
-\alias{Content<-.PlainTextDocument}
-\alias{Content<-.XMLDocument}
-\alias{DateTimeStamp}
-\alias{Description}
-\alias{Heading}
-\alias{ID}
-\alias{Origin}
-\alias{Language}
-\alias{LocalMetaData}
-\title{Access and Modify Text Documents}
+\title{Text Documents}
 \description{
-  Access the meta data of text documents, and access and modify the
-  content of text documents.
+  Representing and computing on text documents.
 }
 \details{
-  The class \code{TextDocument} provides an abstraction over the concept
-  of text documents and attached meta data which is stored in following
-  attributes:
-  \describe{
-    \item{\code{Author}}{Object of class \code{character} containing
-      the author names.}
-    \item{\code{DateTimeStamp}}{Object of class \code{POSIXlt} containing the
-      date and time when the document was written.}
-    \item{\code{Description}}{Object of class \code{character} containing
-      additional text information.}
-    \item{\code{ID}}{Object of class \code{character} containing
-      an identifier.}
-    \item{\code{Origin}}{Object of class \code{character} containing
-      information on the source and origin of the text.}
-    \item{\code{Heading}}{Object of class \code{character} containing
-      the title or a short heading.}
-    \item{\code{Language}}{Object of class \code{character} containing
-      the language of the text.}
-    \item{\code{LocalMetaData}}{Object of class \code{list} containing
-      additional meta data in form of tag-value pairs which is local to
-      each individual text document.}
-  }
+  \emph{Text documents} are documents containing (natural language) text. The
+  \pkg{tm} package employs the infrastructure provided by package \pkg{NLP} and
+  represents text documents via the virtual S3 class \code{TextDocument}.
+  Actual S3 text document classes then extend the virtual base class (such as
+  \code{\link{PlainTextDocument}}).
+
+  All extension classes must provide an \code{\link{as.character}}
+  method which extracts the natural language text in documents of the
+  respective classes in a \dQuote{suitable} (not necessarily structured)
+  form, as well as \code{\link{content}} and \code{\link{meta}} methods
+  for accessing the (possibly raw) document content and metadata.
 }
 \seealso{
-  \code{\link{meta}} and \code{\link{DublinCore}} which provide a
-  unified interface for meta data management.
+  \code{\link{PlainTextDocument}}, and
+  \code{\link{XMLTextDocument}}
+  for the text document classes provided by package \pkg{tm}.
+
+  \code{\link[NLP]{TextDocument}} for text documents in package \pkg{NLP}.
 }
-\author{Ingo Feinerer}
