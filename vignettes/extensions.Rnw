@@ -32,9 +32,11 @@ as follows.
 A source abstracts input locations and provides uniform methods for access.
 Each source must provide implementations for following interface functions:
 \begin{description}
+\item[close()] closes the source and returns it,
 \item[eoi()] returns \code{TRUE} if the end of input of the source is reached,
 \item[getElem()] fetches the element at the current position,
 \item[length()] gives the number of elements,
+\item[open()] opens the source and returns it,
 \item[reader()] returns a default reader for processing elements,
 \item[pGetElem()] (optional) retrieves all elements in parallel at once, and
 \item[stepNext()] increases the position in the source to the next element.
@@ -57,11 +59,12 @@ VecSource <- function(x)
 @
 which overrides a few defaults (see \code{?SimpleSource} for defaults) and
 stores the vector in the \code{content} component. The functions
-\code{stepNext()} and \code{eoi()} have reasonable default methods already for
-the \code{SimpleSource} class (basically just incrementing a position counter
-and comparing the current position with the number of available elements as
-claimed by \code{length()}, respectively), so we only need custom methods for
-element access:
+\code{close()}, \code{eoi()}, \code{open()}, and \code{stepNext()} have
+reasonable default methods already for the \code{SimpleSource} class: the
+identity function for \code{open()} and \code{close()}, incrementing a position
+counter for \code{stepNext()}, and comparing the current position with the
+number of available elements as claimed by \code{length()} for \code{eoi()},
+respectively. So we only need custom methods for element access:
 <<keep.source=TRUE>>=
 getElem.VecSource <-
 function(x) list(content = x$content[x$position], uri = NULL)

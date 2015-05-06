@@ -10,11 +10,17 @@ function(..., recursive = FALSE)
     if (!all(unlist(lapply(args, inherits, class(x)))))
         stop("not all arguments are text documents")
 
-    structure(list(content = args,
-                   meta = CorpusMeta(),
-                   dmeta = data.frame(row.names = seq_along(args))),
-              class = c("VCorpus", "Corpus"))
+    v <- list(content = args,
+              meta = CorpusMeta(),
+              dmeta = data.frame(row.names = seq_along(args)))
+    class(v) <- c("VCorpus", "Corpus")
+    v
 }
+
+.format_TextDocument <-
+function(x, ...)
+    c(sprintf("<<%s>>", class(x)[1L]),
+      sprintf("Metadata:  %d", length(meta(x))))
 
 PlainTextDocument <-
 function(x = character(0),
@@ -29,11 +35,12 @@ function(x = character(0),
          meta = NULL,
          class = NULL)
 {
-    structure(list(content = as.character(x),
-                   meta = TextDocumentMeta(author, datetimestamp, description,
-                                           heading, id, language, origin, ...,
-                                           meta = meta)),
-              class = unique(c(class, "PlainTextDocument", "TextDocument")))
+    p <- list(content = as.character(x),
+              meta = TextDocumentMeta(author, datetimestamp, description,
+                                      heading, id, language, origin, ...,
+                                      meta = meta))
+    class(p) <- unique(c(class, "PlainTextDocument", "TextDocument"))
+    p
 }
 
 as.character.PlainTextDocument <-
@@ -51,12 +58,22 @@ function(x, value)
     x
 }
 
-print.PlainTextDocument <-
+format.PlainTextDocument <-
 function(x, ...)
+    c(.format_TextDocument(x), sprintf("Content:  chars: %d", nchar(x$content)))
+
+meta.PlainTextDocument <-
+function(x, tag = NULL, ...)
+    if (is.null(tag)) x$meta else x$meta[[tag]]
+
+`meta<-.PlainTextDocument` <-
+function(x, tag = NULL, ..., value)
 {
-    writeLines(sprintf("<<%s (metadata: %d)>>", class(x)[1], length(x$meta)))
-    writeLines(content(x))
-    invisible(x)
+    if(is.null(tag))
+        x$meta <- value
+    else
+        x$meta[[tag]] <- value
+    x
 }
 
 words.PlainTextDocument <-
@@ -75,11 +92,12 @@ function(x = list(),
          ...,
          meta = NULL)
 {
-    structure(list(content = x,
-                   meta = TextDocumentMeta(author, datetimestamp, description,
-                                           heading, id, language, origin, ...,
-                                           meta = meta)),
-              class = c("XMLTextDocument", "TextDocument"))
+    d <- list(content = x,
+              meta = TextDocumentMeta(author, datetimestamp, description,
+                                      heading, id, language, origin, ...,
+                                      meta = meta))
+    class(d) <- c("XMLTextDocument", "TextDocument")
+    d
 }
 
 as.character.XMLTextDocument <-
@@ -97,9 +115,8 @@ function(x, value)
     x
 }
 
-print.XMLTextDocument <-
-function(x, ...)
-{
-    writeLines(sprintf("<<%s (metadata: %d)>>", class(x)[1], length(x$meta)))
-    invisible(x)
-}
+format.XMLTextDocument <- format.PlainTextDocument
+
+meta.XMLTextDocument <- meta.PlainTextDocument
+
+`meta<-.XMLTextDocument` <- `meta<-.PlainTextDocument`

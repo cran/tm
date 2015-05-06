@@ -4,11 +4,11 @@ function(x,
          corThreshold = 0.7,
          weighting = FALSE,
          attrs = list(graph = list(rankdir = "BT"),
-         node = list(shape = "rectangle", fixedsize = FALSE)),
+                      node = list(shape = "rectangle", fixedsize = FALSE)),
          ...)
 {
-    if (!require("Rgraphviz"))
-        stop("could not find (bioconductor.org) Rgraphviz package")
+    if (system.file(package = "Rgraphviz") == "")
+        stop("Plotting requires package 'Rgraphviz'.")
 
     m <- if (inherits(x, "TermDocumentMatrix")) t(x) else x
     m <- as.matrix(m[, terms])
@@ -16,13 +16,12 @@ function(x,
     c[c < corThreshold] <- 0
     c[is.na(c)] <- 0
     diag(c) <- 0
-    g <- as(c, "graphNEL")
-    p <- plot(g, attrs = attrs, ...)
+    p <- Rgraphviz::plot(methods::as(c, "graphNEL"), attrs = attrs, ...)
     if (weighting) {
         i <- 1
         lw <- round(c[lower.tri(c) & c >= corThreshold] * 10)
         for (ae in Rgraphviz::AgEdge(p)) {
-            lines(ae, lwd = lw[i], len = 1)
+            Rgraphviz::lines(ae, lwd = lw[i], len = 1)
             i <- i + 1
         }
     }

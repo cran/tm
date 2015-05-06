@@ -96,8 +96,9 @@ function(x, words)
 # Improvements by Kurt Hornik
 removeWords.character <-
 function(x, words)
-    gsub(sprintf("(*UCP)\\b(%s)\\b", paste(words, collapse = "|")), "", x,
-         perl = TRUE)
+    gsub(sprintf("(*UCP)\\b(%s)\\b",
+                 paste(sort(words, decreasing = TRUE), collapse = "|")),
+         "", x, perl = TRUE)
 removeWords.PlainTextDocument <-
     content_transformer(removeWords.character)
 

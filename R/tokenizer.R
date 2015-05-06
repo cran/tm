@@ -4,7 +4,7 @@ function()
 
 # http://www.cs.utexas.edu/users/dml/software/mc/
 MC_tokenizer <-
-function(x)
+NLP::Token_Tokenizer(function(x)
 {
     x <- as.character(x)
     ASCII_letters <- "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -16,8 +16,8 @@ function(x)
     c(unlist(regmatches(x, gregexpr(http_or_email, x))),
       unlist(strsplit(gsub(http_or_email, "", x),
                       sprintf("[^%s]", ASCII_letters))))
-}
+})
 
 scan_tokenizer <-
-function(x)
-    scan(text = as.character(x), what = "character", quote = "", quiet = TRUE)
+NLP::Token_Tokenizer(function(x)
+    scan(text = as.character(x), what = "character", quote = "", quiet = TRUE))

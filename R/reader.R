@@ -11,7 +11,8 @@ function(x)
 getReaders <-
 function()
     c("readDOC", "readPDF", "readPlain", "readRCV1", "readRCV1asPlain",
-      "readReut21578XML", "readReut21578XMLasPlain", "readTabular", "readXML")
+      "readReut21578XML", "readReut21578XMLasPlain", "readTabular",
+      "readTagged", "readXML")
 
 prepareReader <-
 function(readerControl, reader = NULL, ...)
@@ -35,12 +36,11 @@ function(uri)
 }
 
 # readDOC needs antiword installed to be able to extract the text
-readDOC <- structure(
+readDOC <-
 function(AntiwordOptions = "")
 {
     stopifnot(is.character(AntiwordOptions))
 
-    AntiwordOptions <- AntiwordOptions
     function(elem, language, id) {
         uri <- processURI(elem$uri)
         content <- system2("antiword",
@@ -48,16 +48,16 @@ function(AntiwordOptions = "")
                            stdout = TRUE)
         PlainTextDocument(content, id = basename(elem$uri), language = language)
     }
-}, class = c("FunctionGenerator", "function"))
+}
+class(readDOC) <- c("FunctionGenerator", "function")
 
-readPDF <- structure(
+readPDF <-
 function(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
          control = list(info = NULL, text = NULL))
 {
     stopifnot(is.character(engine), is.list(control))
 
     engine <- match.arg(engine)
-    control <- control
 
     pdf_info <-
         switch(engine,
@@ -87,7 +87,8 @@ function(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
         PlainTextDocument(content, meta$Author, meta$CreationDate, meta$Subject,
                           meta$Title, basename(elem$uri), language, meta$Creator)
      }
-}, class = c("FunctionGenerator", "function"))
+}
+class(readPDF) <- c("FunctionGenerator", "function")
 
 readPlain <-
 function(elem, language, id) {
@@ -96,13 +97,11 @@ function(elem, language, id) {
     PlainTextDocument(elem$content, id = id, language = language)
 }
 
-readXML <- structure(
+readXML <-
 function(spec, doc)
 {
     stopifnot(is.list(spec), inherits(doc, "TextDocument"))
 
-    spec <- spec
-    doc <- doc
     function(elem, language, id) {
         tree <- XML::xmlParse(elem$content, asText = TRUE)
         content(doc) <- if ("content" %in% names(spec))
@@ -120,7 +119,8 @@ function(spec, doc)
             meta(doc, "language") <- as.character(language)
         doc
     }
-}, class = c("FunctionGenerator", "function"))
+}
+class(readXML) <- c("FunctionGenerator", "function")
 
 RCV1Spec <-
     list(author = list("unevaluated", ""),
@@ -159,7 +159,7 @@ Reut21578XMLSpec <-
          cgisplit = list("attribute", "/REUTERS/@CGISPLIT"),
          oldid = list("attribute", "/REUTERS/@OLDID"),
          origin = list("unevaluated", "Reuters-21578 XML"),
-         topics = list("node", "/REUTERS/TOPICS/D"),
+         topics_cat = list("node", "/REUTERS/TOPICS/D"),
          places = list("node", "/REUTERS/PLACES/D"),
          people = list("node", "/REUTERS/PEOPLE/D"),
          orgs = list("node", "/REUTERS/ORGS/D"),
@@ -170,10 +170,10 @@ readXML(spec = c(Reut21578XMLSpec,
                  list(content = list("node", "/REUTERS/TEXT/BODY"))),
         doc = PlainTextDocument())
 
-readTabular <- structure(
+readTabular <-
 function(mapping)
 {
-    mapping <- mapping
+    stopifnot(is.list(mapping))
     function(elem, language, id) {
         meta <- lapply(mapping[setdiff(names(mapping), "content")],
                        function(m) elem$content[, m])
@@ -183,4 +183,26 @@ function(mapping)
             meta$language <- as.character(language)
         PlainTextDocument(elem$content[, mapping$content], meta = meta)
     }
-}, class = c("FunctionGenerator", "function"))
+}
+class(readTabular) <- c("FunctionGenerator", "function")
+
+readTagged <-
+function(...)
+{
+    args <- list(...)
+    function(elem, language, id) {
+        if (!is.null(elem$content)) {
+            con <- textConnection(elem$content)
+            on.exit(close(con))
+        } else
+            con <- elem$uri
+
+        if (!is.null(elem$uri))
+            id <- basename(elem$uri)
+
+        a <- c(list(con = con, meta = list(id = id, language = language)), args)
+
+        do.call(NLP::TaggedTextDocument, a)
+    }
+}
+class(readTagged) <- c("FunctionGenerator", "function")

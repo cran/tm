@@ -1,5 +1,12 @@
 ## Helper functions
 
+.print_via_format <-
+function(x, ...)
+{
+    writeLines(format(x, ...))
+    invisible(x)
+}
+
 .xml_value_if_not_null <- function(n, default) if (!is.null(n)) XML::xmlValue(n) else default
 
 .xml_content <- function(doc, spec) {

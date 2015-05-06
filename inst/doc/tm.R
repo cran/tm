@@ -51,31 +51,37 @@ identical(ovid[[2]], ovid[["ovid_2.txt"]])
 
 
 ###################################################
-### code chunk number 8: tm.Rnw:149-150
+### code chunk number 8: tm.Rnw:139-140
+###################################################
+writeLines(as.character(ovid[[2]]))
+
+
+###################################################
+### code chunk number 9: tm.Rnw:154-155
 ###################################################
 reuters <- tm_map(reuters, stripWhitespace)
 
 
 ###################################################
-### code chunk number 9: tm.Rnw:155-156
+### code chunk number 10: tm.Rnw:160-161
 ###################################################
 reuters <- tm_map(reuters, content_transformer(tolower))
 
 
 ###################################################
-### code chunk number 10: Stopwords
+### code chunk number 11: Stopwords
 ###################################################
 reuters <- tm_map(reuters, removeWords, stopwords("english"))
 
 
 ###################################################
-### code chunk number 11: Stemming
+### code chunk number 12: Stemming
 ###################################################
 tm_map(reuters, stemDocument)
 
 
 ###################################################
-### code chunk number 12: tm.Rnw:187-190
+### code chunk number 13: tm.Rnw:192-195
 ###################################################
 idx <- meta(reuters, "id") == '237' &
   meta(reuters, "heading") == 'INDONESIA SEEN AT CROSSROADS OVER ECONOMIC CHANGE'
@@ -83,14 +89,14 @@ reuters[idx]
 
 
 ###################################################
-### code chunk number 13: DublinCore
+### code chunk number 14: DublinCore
 ###################################################
 DublinCore(crude[[1]], "Creator") <- "Ano Nymous"
 meta(crude[[1]])
 
 
 ###################################################
-### code chunk number 14: tm.Rnw:221-225
+### code chunk number 15: tm.Rnw:226-230
 ###################################################
 meta(crude, tag = "test", type = "corpus") <- "test meta"
 meta(crude, type = "corpus")
@@ -99,32 +105,32 @@ meta(crude)
 
 
 ###################################################
-### code chunk number 15: tm.Rnw:242-244
+### code chunk number 16: tm.Rnw:247-249
 ###################################################
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[5:10, 740:743])
 
 
 ###################################################
-### code chunk number 16: tm.Rnw:253-254
+### code chunk number 17: tm.Rnw:258-259
 ###################################################
 findFreqTerms(dtm, 5)
 
 
 ###################################################
-### code chunk number 17: tm.Rnw:259-260
+### code chunk number 18: tm.Rnw:264-265
 ###################################################
 findAssocs(dtm, "opec", 0.8)
 
 
 ###################################################
-### code chunk number 18: tm.Rnw:268-269
+### code chunk number 19: tm.Rnw:273-274
 ###################################################
 inspect(removeSparseTerms(dtm, 0.4))
 
 
 ###################################################
-### code chunk number 19: tm.Rnw:283-285
+### code chunk number 20: tm.Rnw:288-290
 ###################################################
 inspect(DocumentTermMatrix(reuters,
                            list(dictionary = c("prices", "crude", "oil"))))

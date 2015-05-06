@@ -23,7 +23,7 @@ weightTfIdf(m, normalize = TRUE)
   \eqn{\mathit{tf}_{i,j}} is divided by \eqn{\sum_k n_{k,j}}.
 
   \emph{Inverse document frequency} for a term \eqn{t_i} is defined as
-  \deqn{\mathit{idf}_i = \log \frac{|D|}{|\{d \mid t_i \in d\}|}} where
+  \deqn{\mathit{idf}_i = \log_2 \frac{|D|}{|\{d \mid t_i \in d\}|}} where
   \eqn{|D|} denotes the total number of documents and where \eqn{|\{d
   \mid t_i \in d\}|} is the number of documents where the term \eqn{t_i}
   appears.

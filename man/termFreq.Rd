@@ -8,15 +8,16 @@
 termFreq(doc, control = list())
 }
 \arguments{
-  \item{doc}{An object inheriting from \code{TextDocument}.}
+  \item{doc}{An object inheriting from \code{\link{TextDocument}}.}
   \item{control}{A list of control options which override default
     settings.
 
     First, following two options are processed.
     \describe{
-      \item{\code{tokenize}}{A function tokenizing documents into single
-	tokens or a string matching one of the predefined tokenization
-	functions:
+      \item{\code{tokenize}}{A function tokenizing a \code{\link{TextDocument}}
+	into single tokens, a \code{\link[NLP]{Span_Tokenizer}},
+	\code{\link[NLP]{Token_Tokenizer}}, or a string matching one of the
+	predefined tokenization functions:
 	\describe{
 	  \item{\code{"MC"}}{for \code{\link{MC_tokenizer}}, or}
 	  \item{\code{"scan"}}{for \code{\link{scan_tokenizer}}, or}
@@ -27,7 +28,7 @@ termFreq(doc, control = list())
 	characters should be translated to lower case or a custom function
 	converting characters to lower case. Defaults to
 	\code{\link{tolower}}.}
-    }  
+    }
     Next, a set of options which are sensitive to the order of
     occurrence in the \code{control} list. Options are processed in the
     same order as specified. User-specified options have precedence over

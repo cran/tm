@@ -2,12 +2,14 @@
 \alias{DublinCore}
 \alias{DublinCore<-}
 \alias{meta}
-\alias{meta.TextDocument}
-\alias{meta<-.TextDocument}
 \alias{meta.PCorpus}
 \alias{meta.VCorpus}
 \alias{meta<-.PCorpus}
 \alias{meta<-.VCorpus}
+\alias{meta.PlainTextDocument}
+\alias{meta<-.PlainTextDocument}
+\alias{meta.XMLTextDocument}
+\alias{meta<-.XMLTextDocument}
 \title{Metadata Management}
 \description{
   Accessing and modifying metadata of text documents and corpora.
@@ -17,8 +19,10 @@
 \method{meta}{PCorpus}(x, tag, type = c("indexed", "corpus", "local"), \dots) <- value
 \method{meta}{VCorpus}(x, tag = NULL, type = c("indexed", "corpus", "local"), \dots)
 \method{meta}{VCorpus}(x, tag, type = c("indexed", "corpus", "local"), \dots) <- value
-\method{meta}{TextDocument}(x, tag = NULL, \dots)
-\method{meta}{TextDocument}(x, tag, \dots) <- value
+\method{meta}{PlainTextDocument}(x, tag = NULL, \dots)
+\method{meta}{PlainTextDocument}(x, tag = NULL, \dots) <- value
+\method{meta}{XMLTextDocument}(x, tag = NULL, \dots)
+\method{meta}{XMLTextDocument}(x, tag = NULL, \dots) <- value
 DublinCore(x, tag = NULL)
 DublinCore(x, tag) <- value
 }

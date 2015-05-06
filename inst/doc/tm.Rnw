@@ -123,8 +123,8 @@ multiple files on disk.
 \section*{Inspecting Corpora}
 Custom \code{print()} methods are available which hide the raw amount of
 information (consider a corpus could consist of several thousand documents,
-like a database). \code{print()} gives a concise overview whereas the full
-content of text documents is displayed with \code{inspect()}.
+like a database). \code{print()} gives a concise overview whereas more details
+are displayed with \code{inspect()}.
 <<>>=
 inspect(ovid[1:2])
 @
@@ -133,6 +133,11 @@ position in the corpus, or via their identifier.
 <<keep.source=TRUE>>=
 meta(ovid[[2]], "id")
 identical(ovid[[2]], ovid[["ovid_2.txt"]])
+@
+A character representation of a document is available via
+\code{as.character()}:
+<<keep.source=TRUE>>=
+writeLines(as.character(ovid[[2]]))
 @
 
 \section*{Transformations}

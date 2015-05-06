@@ -35,7 +35,7 @@ pdf_info_via_gs <-
 function(file)
 {
     file <- normalizePath(file)
-    
+
     gs_cmd <- tools::find_gs_cmd()
 
     out <- system2(gs_cmd,
@@ -78,7 +78,7 @@ pdf_text_via_gs <-
 function(file)
 {
     files <- normalizePath(file)
-    
+
     gs_cmd <- tools::find_gs_cmd()
 
     tf <- tempfile("pdf")

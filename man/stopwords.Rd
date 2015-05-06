@@ -26,7 +26,7 @@ stopwords(kind = "en")
   }
   and a set of stopword lists from the Snowball stemmer project in different
   languages (obtained from
-  \url{http://svn.tartarus.org/snowball/trunk/website/algorithms/*/stop.txt}).
+  \samp{http://svn.tartarus.org/snowball/trunk/website/algorithms/*/stop.txt}).
   Supported languages are \code{danish}, \code{dutch}, \code{english},
   \code{finnish}, \code{french}, \code{german}, \code{hungarian}, \code{italian},
   \code{norwegian}, \code{portuguese}, \code{russian}, \code{spanish}, and

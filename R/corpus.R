@@ -13,6 +13,7 @@ function(x,
         stop("error in creating database")
     db <- filehash::dbInit(dbControl$dbName, dbControl$dbType)
 
+    x <- open(x)
     tdl <- vector("list", length(x))
     counter <- 1
     while (!eoi(x)) {
@@ -25,12 +26,14 @@ function(x,
         tdl[[counter]] <- meta(doc, "id")
         counter <- counter + 1
     }
+    x <- close(x)
 
-    structure(list(content = tdl,
-                   meta = CorpusMeta(),
-                   dmeta = data.frame(row.names = seq_along(tdl)),
-                   dbcontrol = dbControl),
-              class = c("PCorpus", "Corpus"))
+    p <- list(content = tdl,
+              meta = CorpusMeta(),
+              dmeta = data.frame(row.names = seq_along(tdl)),
+              dbcontrol = dbControl)
+    class(p) <- c("PCorpus", "Corpus")
+    p
 }
 
 Corpus <-
@@ -41,6 +44,7 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
 
     readerControl <- prepareReader(readerControl, reader(x))
 
+    x <- open(x)
     tdl <- vector("list", length(x))
     # Check for parallel element access
     if (is.function(getS3method("pGetElem", class(x), TRUE)))
@@ -61,11 +65,9 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
             counter <- counter + 1
         }
     }
+    x <- close(x)
 
-    structure(list(content = tdl,
-                   meta = CorpusMeta(),
-                   dmeta = data.frame(row.names = seq_along(tdl))),
-              class = c("VCorpus", "Corpus"))
+    as.VCorpus(tdl)
 }
 
 `[.PCorpus` <-
@@ -136,12 +138,21 @@ function(x, i, value)
 
 as.list.PCorpus <- as.list.VCorpus <-
 function(x, ...)
-    content(x)
+    setNames(content(x), as.character(lapply(content(x), meta, "id")))
 
 as.VCorpus <-
 function(x)
     UseMethod("as.VCorpus")
 as.VCorpus.VCorpus <- identity
+as.VCorpus.list <-
+function(x)
+{
+    v <- list(content = x,
+              meta = CorpusMeta(),
+              dmeta = data.frame(row.names = seq_along(x)))
+    class(v) <- c("VCorpus", "Corpus")
+    v
+}
 
 outer_union <-
 function(x, y, ...)
@@ -168,11 +179,12 @@ function(..., recursive = FALSE)
     if (!all(unlist(lapply(args, inherits, class(x)))))
         stop("not all arguments are of the same corpus type")
 
-    structure(list(content = do.call("c", lapply(args, content)),
-                   meta = CorpusMeta(meta = do.call("c",
-                     lapply(args, function(a) meta(a, type = "corpus")))),
-                   dmeta = Reduce(outer_union, lapply(args, meta))),
-              class = c("VCorpus", "Corpus"))
+    v <- list(content = do.call("c", lapply(args, content)),
+              meta = CorpusMeta(meta = do.call("c",
+                lapply(args, function(a) meta(a, type = "corpus")))),
+              dmeta = Reduce(outer_union, lapply(args, meta)))
+    class(v) <- c("VCorpus", "Corpus")
+    v
 }
 
 content.VCorpus <-
@@ -217,15 +229,14 @@ function(x, value)
     x
 }
 
-print.PCorpus <- print.VCorpus <-
+format.PCorpus <- format.VCorpus <-
 function(x, ...)
 {
-    writeLines(sprintf("<<%s (documents: %d, metadata (corpus/indexed): %d/%d)>>",
-                       class(x)[1],
-                       length(x),
-                       length(meta(x, type = "corpus")),
-                       ncol(meta(x, type = "indexed"))))
-    invisible(x)
+    c(sprintf("<<%s>>", class(x)[1L]),
+      sprintf("Metadata:  corpus specific: %d, document level (indexed): %d",
+              length(meta(x, type = "corpus")),
+              ncol(meta(x, type = "indexed"))),
+      sprintf("Content:  documents: %d", length(x)))
 }
 
 writeCorpus <-

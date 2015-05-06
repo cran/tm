@@ -8,7 +8,7 @@ library("XML")
 
 
 ###################################################
-### code chunk number 2: extensions.Rnw:53-56
+### code chunk number 2: extensions.Rnw:55-58
 ###################################################
 VecSource <- function(x)
     SimpleSource(length = length(x), content = as.character(x),
@@ -16,7 +16,7 @@ VecSource <- function(x)
 
 
 ###################################################
-### code chunk number 3: extensions.Rnw:65-69
+### code chunk number 3: extensions.Rnw:68-72
 ###################################################
 getElem.VecSource <-
 function(x) list(content = x$content[x$position], uri = NULL)
@@ -25,14 +25,14 @@ function(x) lapply(x$content, function(y) list(content = y, uri = NULL))
 
 
 ###################################################
-### code chunk number 4: extensions.Rnw:97-99
+### code chunk number 4: extensions.Rnw:100-102
 ###################################################
 readPlain <- function(elem, language, id)
     PlainTextDocument(elem$content, id = id, language = language)
 
 
 ###################################################
-### code chunk number 5: extensions.Rnw:127-132
+### code chunk number 5: extensions.Rnw:130-135
 ###################################################
 df <- data.frame(contents = c("content 1", "content 2", "content 3"),
                  title    = c("title 1"  , "title 2"  , "title 3"  ),
@@ -55,13 +55,13 @@ myReader <- readTabular(mapping = m)
 
 
 ###################################################
-### code chunk number 8: extensions.Rnw:154-155
+### code chunk number 8: extensions.Rnw:157-158
 ###################################################
 (corpus <- VCorpus(DataframeSource(df), readerControl = list(reader = myReader)))
 
 
 ###################################################
-### code chunk number 9: extensions.Rnw:160-162
+### code chunk number 9: extensions.Rnw:163-165
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])
@@ -99,13 +99,13 @@ myXMLReader <- readXML(
 
 
 ###################################################
-### code chunk number 13: extensions.Rnw:270-271
+### code chunk number 13: extensions.Rnw:273-274
 ###################################################
 corpus <- VCorpus(mySource(custom.xml))
 
 
 ###################################################
-### code chunk number 14: extensions.Rnw:275-277
+### code chunk number 14: extensions.Rnw:278-280
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])

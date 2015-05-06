@@ -44,6 +44,7 @@ export("as.DocumentTermMatrix",
        "readRCV1asPlain",
        "readPDF",
        "readTabular",
+       "readTagged",
        "readXML",
        "removeNumbers",
        "removePunctuation",
@@ -75,7 +76,8 @@ export("as.DocumentTermMatrix",
        "writeCorpus",
        "XMLSource",
        "XMLTextDocument",
-       "Zipf_plot")
+       "Zipf_plot",
+       "ZipSource")
 
 S3method("removeNumbers", "character")
 S3method("removePunctuation", "character")
@@ -99,6 +101,8 @@ S3method("print", "DocumentTermMatrix")
 S3method("t", "DocumentTermMatrix")
 S3method("tm_term_score", "DocumentTermMatrix")
 
+S3method("as.VCorpus", "list")
+
 S3method("tm_term_score", "term_frequency")
 
 S3method("[", "PCorpus")
@@ -106,13 +110,14 @@ S3method("[[", "PCorpus")
 S3method("[[<-", "PCorpus")
 S3method("as.list", "PCorpus")
 S3method("content", "PCorpus")
+S3method("format", "PCorpus")
 S3method("inspect", "PCorpus")
 S3method("length", "PCorpus")
 S3method("meta", "PCorpus")
 S3method("meta<-", "PCorpus")
 S3method("names", "PCorpus")
 S3method("names<-", "PCorpus")
-S3method("print", "PCorpus")
+S3method("print", "PCorpus", .print_via_format)
 S3method("TermDocumentMatrix", "PCorpus")
 S3method("tm_filter", "PCorpus")
 S3method("tm_index", "PCorpus")
@@ -121,7 +126,10 @@ S3method("tm_map", "PCorpus")
 S3method("as.character", "PlainTextDocument")
 S3method("content", "PlainTextDocument")
 S3method("content<-", "PlainTextDocument")
-S3method("print", "PlainTextDocument")
+S3method("format", "PlainTextDocument")
+S3method("meta", "PlainTextDocument")
+S3method("meta<-", "PlainTextDocument")
+S3method("print", "PlainTextDocument", .print_via_format)
 S3method("removeNumbers", "PlainTextDocument")
 S3method("removePunctuation", "PlainTextDocument")
 S3method("removeWords", "PlainTextDocument")
@@ -130,8 +138,10 @@ S3method("stripWhitespace", "PlainTextDocument")
 S3method("tm_term_score", "PlainTextDocument")
 S3method("words", "PlainTextDocument")
 
+S3method("close", "SimpleSource")
 S3method("eoi", "SimpleSource")
 S3method("length", "SimpleSource")
+S3method("open", "SimpleSource")
 S3method("reader", "SimpleSource")
 S3method("stepNext", "SimpleSource")
 
@@ -148,8 +158,6 @@ S3method("tm_term_score", "TermDocumentMatrix")
 S3method("c", "term_frequency")
 
 S3method("c", "TextDocument")
-S3method("meta", "TextDocument")
-S3method("meta<-", "TextDocument")
 
 S3method("print", "TextDocumentMeta")
 
@@ -163,13 +171,14 @@ S3method("as.list", "VCorpus")
 S3method("as.VCorpus", "VCorpus")
 S3method("c", "VCorpus")
 S3method("content", "VCorpus")
+S3method("format", "VCorpus")
 S3method("inspect", "VCorpus")
 S3method("length", "VCorpus")
 S3method("meta", "VCorpus")
 S3method("meta<-", "VCorpus")
 S3method("names", "VCorpus")
 S3method("names<-", "VCorpus")
-S3method("print", "VCorpus")
+S3method("print", "VCorpus", .print_via_format)
 S3method("TermDocumentMatrix", "VCorpus")
 S3method("tm_filter", "VCorpus")
 S3method("tm_index", "VCorpus")
@@ -183,7 +192,15 @@ S3method("getElem", "XMLSource")
 S3method("as.character", "XMLTextDocument")
 S3method("content", "XMLTextDocument")
 S3method("content<-", "XMLTextDocument")
-S3method("print", "XMLTextDocument")
+S3method("format", "XMLTextDocument")
+S3method("meta", "XMLTextDocument")
+S3method("meta<-", "XMLTextDocument")
+S3method("print", "XMLTextDocument", .print_via_format)
+
+S3method("close", "ZipSource")
+S3method("getElem", "ZipSource")
+S3method("open", "ZipSource")
+S3method("pGetElem", "ZipSource")
 
 S3method("as.DocumentTermMatrix", "DocumentTermMatrix")
 S3method("as.DocumentTermMatrix", "TermDocumentMatrix")

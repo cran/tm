@@ -1,6 +1,7 @@
 \name{Source}
 \alias{Source}
 \alias{SimpleSource}
+\alias{close.SimpleSource}
 \alias{eoi}
 \alias{eoi.SimpleSource}
 \alias{getElem}
@@ -11,6 +12,7 @@
 \alias{getElem.XMLSource}
 \alias{getSources}
 \alias{length.SimpleSource}
+\alias{open.SimpleSource}
 \alias{pGetElem}
 \alias{pGetElem.DataframeSource}
 \alias{pGetElem.DirSource}
@@ -33,6 +35,7 @@ SimpleSource(encoding = "",
              \dots,
              class)
 getSources()
+\method{close}{SimpleSource}(con, \dots)
 \method{eoi}{SimpleSource}(x)
 \method{getElem}{DataframeSource}(x)
 \method{getElem}{DirSource}(x)
@@ -40,6 +43,7 @@ getSources()
 \method{getElem}{VectorSource}(x)
 \method{getElem}{XMLSource}(x)
 \method{length}{SimpleSource}(x)
+\method{open}{SimpleSource}(con, \dots)
 \method{pGetElem}{DataframeSource}(x)
 \method{pGetElem}{DirSource}(x)
 \method{pGetElem}{URISource}(x)
@@ -49,13 +53,15 @@ getSources()
 }
 \arguments{
   \item{x}{A \code{Source}.}
+  \item{con}{A \code{Source}.}
   \item{encoding}{a character giving the encoding of the elements delivered by
     the source.}
   \item{length}{a non-negative integer denoting the number of elements delivered
     by the source. If the length is unknown in advance set it to \code{0}.}
   \item{position}{a numeric indicating the current position in the source.}
   \item{reader}{a reader function (generator).}
-  \item{\dots}{tag-value pairs for storing additional information.}
+  \item{\dots}{For \code{SimpleSource} tag-value pairs for storing additional
+    information; not used otherwise.}
   \item{class}{a character vector giving additional classes to be used for the
     created source.}
 }
@@ -68,11 +74,12 @@ getSources()
   \code{\link{DirSource}} provided by package \pkg{tm} itself).
 
   All extension classes must provide implementations for the functions
-  \code{eoi}, \code{getElem}, \code{length}, \code{reader}, and \code{stepNext}.
-  For parallel element access the function \code{pGetElem} must be provided as
-  well.
+  \code{close}, \code{eoi}, \code{getElem}, \code{length}, \code{open},
+  \code{reader}, and \code{stepNext}. For parallel element access the function
+  \code{pGetElem} must be provided as well.
 
-  The function \code{eoi} indicates end of input. \code{getElem} fetches the
+  The functions \code{open} and \code{close} open and close the source,
+  respectively. \code{eoi} indicates end of input. \code{getElem} fetches the
   element at the current position, whereas \code{pGetElem} retrieves all
   elements in parallel at once. The function \code{length} gives the number of
   elements. \code{reader} returns a default reader for processing elements.
@@ -88,6 +95,9 @@ getSources()
 
   For \code{getSources}, a character vector with sources provided by package
   \pkg{tm}.
+
+  \code{open} and \code{close} return the opened and closed source,
+  respectively.
 
   For \code{eoi}, a logical indicating if the end of input of the source is
   reached.

@@ -17,7 +17,7 @@
   \url{http://kdd.ics.uci.edu/databases/reuters21578/reuters21578.html}
 
   Luz, Saturnino \emph{\acronym{XML}-encoded version of Reuters-21578}.
-  \url{http://modnlp.berlios.de/reuters21578.html}
+  \url{http://ronaldo.cs.tcd.ie/esslli07/data/reuters21578-xml/}
 }
 \examples{
 data("crude")

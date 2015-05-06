@@ -25,13 +25,13 @@ function(author, datetimestamp, description, heading, id, language, origin, ...,
     if (!is.null(meta$origin))
        meta$origin <- as.character(meta$origin)
 
-    structure(meta, class = "TextDocumentMeta")
+    class(meta) <- "TextDocumentMeta"
+    meta
 }
 
 print.TextDocumentMeta <-
 function(x, ...)
 {
-    writeLines("Metadata:")
     cat(sprintf("  %s: %s",
                 format(names(x), justify = "left"),
                 sapply(x, as.character)),
@@ -47,7 +47,8 @@ function(..., meta = NULL)
 
     stopifnot(is.list(meta))
 
-    structure(meta, class = "CorpusMeta")
+    class(meta) <- "CorpusMeta"
+    meta
 }
 
 meta.VCorpus <- meta.PCorpus <-
@@ -68,9 +69,6 @@ function(x, tag = NULL, type = c("indexed", "corpus", "local"), ...)
     else
         stop("invalid type")
 }
-meta.TextDocument <-
-function(x, tag = NULL, ...)
-    if (is.null(tag)) x$meta else x$meta[[tag]]
 
 `meta<-.VCorpus` <- `meta<-.PCorpus` <-
 function(x, tag, type = c("indexed", "corpus", "local"), ..., value)
@@ -85,12 +83,6 @@ function(x, tag, type = c("indexed", "corpus", "local"), ..., value)
             meta(x[[i]], tag) <- value[i]
     } else
         stop("invalid type")
-    x
-}
-`meta<-.TextDocument` <-
-function(x, tag, ..., value)
-{
-    x$meta[[tag]] <- value
     x
 }
 
@@ -120,10 +112,12 @@ function(x, tag = NULL)
     tmm <- unlist(Dublin_Core_tm_map, use.names = FALSE)
     dcm <- names(Dublin_Core_tm_map)
 
-    if (is.null(tag))
-        structure(lapply(tmm, function(t) meta(x, t)), names = dcm,
-                  class = "TextDocumentMeta")
-    else
+    if (is.null(tag)) {
+        m <- lapply(tmm, function(t) meta(x, t))
+        names(m) <- dcm
+        class(m) <- "TextDocumentMeta"
+        m
+    } else
         meta(x, tmm[charmatch(tolower(tag), dcm)])
 }
 

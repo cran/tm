@@ -29,12 +29,12 @@ weightSMART(m, spec = "nnn", control = list())
       \eqn{n_{i,j}} of a term \eqn{t_i} in a document \eqn{d_j}. The
       input term-document matrix \code{m} is assumed to be in this
       standard term frequency format already.}
-    \item{"l"}{(logarithm) is defined as \eqn{1 + \log(\mathit{tf}_{i,j})}.}
+    \item{"l"}{(logarithm) is defined as \eqn{1 + \log_2(\mathit{tf}_{i,j})}.}
     \item{"a"}{(augmented) is defined as \eqn{0.5 +
 	\frac{0.5 * \mathit{tf}_{i,j}}{\max_i(\mathit{tf}_{i,j})}}.}
     \item{"b"}{(boolean) is defined as 1 if \eqn{\mathit{tf}_{i,j} > 0} and 0 otherwise.}
     \item{"L"}{(log average) is defined as \eqn{\frac{1 +
-    \log(\mathit{tf}_{i,j})}{1+\log(\mathrm{ave}_{i\in j}(\mathit{tf}_{i,j}))}}.}
+    \log_2(\mathit{tf}_{i,j})}{1+\log_2(\mathrm{ave}_{i\in j}(\mathit{tf}_{i,j}))}}.}
   }
 
   The second letter of \code{spec} specifies a weighting schema of
@@ -42,10 +42,10 @@ weightSMART(m, spec = "nnn", control = list())
 
   \describe{
     \item{"n"}{(no) is defined as 1.}
-    \item{"t"}{(idf) is defined as \eqn{\log \frac{N}{\mathit{df}_t}} where
+    \item{"t"}{(idf) is defined as \eqn{\log_2 \frac{N}{\mathit{df}_t}} where
     \eqn{\mathit{df}_t} denotes how often term \eqn{t} occurs in all
       documents.}
-    \item{"p"}{(prob idf) is defined as \eqn{\max(0, \log(\frac{N - \mathit{df}_t}{\mathit{df}_t}))}.}
+    \item{"p"}{(prob idf) is defined as \eqn{\max(0, \log_2(\frac{N - \mathit{df}_t}{\mathit{df}_t}))}.}
   }
 
   The third letter of \code{spec} specifies a schema for normalization
