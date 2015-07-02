@@ -438,13 +438,13 @@ function(x, terms, corlimit)
 
     i <- match(terms, rownames(x), nomatch = 0L)
     names(i) <- terms
-    mapply(function(i, cl) {
-           xi <- x[i, ]
-           t <- sort(round(xi[which(xi >= cl)], 2), TRUE)
-           if (!length(t))
-               names(t) <- NULL
-           t
-           }, i, corlimit)
+    Map(function(i, cl) {
+        xi <- x[i, ]
+        t <- sort(round(xi[which(xi >= cl)], 2), TRUE)
+        if (!length(t))
+            names(t) <- NULL
+        t
+        }, i, corlimit)
 }
 
 removeSparseTerms <-

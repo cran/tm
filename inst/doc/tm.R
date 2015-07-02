@@ -51,19 +51,20 @@ identical(ovid[[2]], ovid[["ovid_2.txt"]])
 
 
 ###################################################
-### code chunk number 8: tm.Rnw:139-140
+### code chunk number 8: tm.Rnw:139-141
 ###################################################
 writeLines(as.character(ovid[[2]]))
+lapply(ovid[1:2], as.character)
 
 
 ###################################################
-### code chunk number 9: tm.Rnw:154-155
+### code chunk number 9: tm.Rnw:155-156
 ###################################################
 reuters <- tm_map(reuters, stripWhitespace)
 
 
 ###################################################
-### code chunk number 10: tm.Rnw:160-161
+### code chunk number 10: tm.Rnw:161-162
 ###################################################
 reuters <- tm_map(reuters, content_transformer(tolower))
 
@@ -81,7 +82,7 @@ tm_map(reuters, stemDocument)
 
 
 ###################################################
-### code chunk number 13: tm.Rnw:192-195
+### code chunk number 13: tm.Rnw:193-196
 ###################################################
 idx <- meta(reuters, "id") == '237' &
   meta(reuters, "heading") == 'INDONESIA SEEN AT CROSSROADS OVER ECONOMIC CHANGE'
@@ -96,7 +97,7 @@ meta(crude[[1]])
 
 
 ###################################################
-### code chunk number 15: tm.Rnw:226-230
+### code chunk number 15: tm.Rnw:227-231
 ###################################################
 meta(crude, tag = "test", type = "corpus") <- "test meta"
 meta(crude, type = "corpus")
@@ -105,32 +106,32 @@ meta(crude)
 
 
 ###################################################
-### code chunk number 16: tm.Rnw:247-249
+### code chunk number 16: tm.Rnw:248-250
 ###################################################
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[5:10, 740:743])
 
 
 ###################################################
-### code chunk number 17: tm.Rnw:258-259
+### code chunk number 17: tm.Rnw:259-260
 ###################################################
 findFreqTerms(dtm, 5)
 
 
 ###################################################
-### code chunk number 18: tm.Rnw:264-265
+### code chunk number 18: tm.Rnw:265-266
 ###################################################
 findAssocs(dtm, "opec", 0.8)
 
 
 ###################################################
-### code chunk number 19: tm.Rnw:273-274
+### code chunk number 19: tm.Rnw:274-275
 ###################################################
 inspect(removeSparseTerms(dtm, 0.4))
 
 
 ###################################################
-### code chunk number 20: tm.Rnw:288-290
+### code chunk number 20: tm.Rnw:289-291
 ###################################################
 inspect(DocumentTermMatrix(reuters,
                            list(dictionary = c("prices", "crude", "oil"))))

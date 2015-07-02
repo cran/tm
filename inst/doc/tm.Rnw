@@ -138,6 +138,7 @@ A character representation of a document is available via
 \code{as.character()}:
 <<keep.source=TRUE>>=
 writeLines(as.character(ovid[[2]]))
+lapply(ovid[1:2], as.character)
 @
 
 \section*{Transformations}

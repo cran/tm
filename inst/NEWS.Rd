@@ -1,7 +1,23 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.6-2}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item \code{format.PlainTextDocument()} now reports only one character
+        count for a whole document.
+    }
+  }
+}
 \section{Changes in tm version 0.6-1}{
+  \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+    \itemize{
+      \item \code{format.PlainTextDocument()} now displays a compact
+        representation instead of the content. Use \code{as.character()} to
+        obtain the character content (which in turn can be applied to a corpus
+        via \code{lapply()}).
+    }
+  }
   \subsection{NEW FEATURES}{
     \itemize{
       \item \code{ZipSource()} for processing ZIP files.
@@ -79,7 +95,7 @@
       \item License changed to GPL-3 (from GPL-2 | GPL-3).
       \item Following functions have been renamed:
       \itemize{
-	\item \code{tm_tag_score()} to \code{tm_term_score()}.
+        \item \code{tm_tag_score()} to \code{tm_term_score()}.
        }
     }
   }
@@ -96,12 +112,12 @@
           \pkg{tm.corpus.Reuters21578}),
         \item \code{readGmane()} (but still available via an example in
           \code{readXML()}),
-	\item \code{searchFullText()} and \code{tm_intersect()}
+        \item \code{searchFullText()} and \code{tm_intersect()}
         (use \code{grep()} instead).
       }
       \item Following S3 classes are no longer registered as S4 classes:
       \itemize{
-	\item \code{VCorpus} and \code{PlainTextDocument}.
+        \item \code{VCorpus} and \code{PlainTextDocument}.
       }
     }
   }
@@ -122,7 +138,7 @@
     \itemize{
       \item Following functions have been removed:
       \itemize{
-	\item \code{tm_startCluster()} and \code{tm_stopCluster()}.
+        \item \code{tm_startCluster()} and \code{tm_stopCluster()}.
       }
     }
   }
@@ -233,7 +249,7 @@
     \itemize{
       \item Following functions have been removed:
       \itemize{
-	\item \code{CSVSource()} (use \code{DataframeSource(read.csv(..., stringsAsFactors = FALSE))} instead), and
+        \item \code{CSVSource()} (use \code{DataframeSource(read.csv(..., stringsAsFactors = FALSE))} instead), and
         \item \code{TermDocMatrix()} (use \code{DocumentTermMatrix()} instead).
       }
     }
@@ -259,7 +275,7 @@
             the S3 class system.
       \item Following functions have been renamed:
       \itemize{
-	\item \code{activateCluster()} to \code{tm_startCluster()},
+        \item \code{activateCluster()} to \code{tm_startCluster()},
         \item \code{asPlain()} to \code{as.PlainTextDocument()},
         \item \code{deactivateCluster()} to \code{tm_stopCluster()},
         \item \code{tmFilter()} to \code{tm_filter()},
