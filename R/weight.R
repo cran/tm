@@ -21,20 +21,23 @@ weightTfIdf <-
         if (normalize) {
             cs <- col_sums(m)
             if (any(cs == 0))
-                warning("empty document(s): ", paste(Docs(m)[cs == 0], collapse = " "))
+                warning("empty document(s): ",
+                        paste(Docs(m)[cs == 0], collapse = " "))
             names(cs) <- seq_len(nDocs(m))
             m$v <- m$v / cs[m$j]
         }
         rs <- row_sums(m > 0)
         if (any(rs == 0))
-            warning("unreferenced term(s): ", paste(Terms(m)[rs == 0], collapse = " "))
+            warning("unreferenced term(s): ",
+                    paste(Terms(m)[rs == 0], collapse = " "))
         lnrs <- log2(nDocs(m) / rs)
         lnrs[!is.finite(lnrs)] <- 0
         m <- m * lnrs
-        attr(m, "weighting") <- c(sprintf("%s%s",
-                                          "term frequency - inverse document frequency",
-                                          if (normalize) " (normalized)" else ""),
-                                  "tf-idf")
+        attr(m, "weighting") <-
+            c(sprintf("%s%s",
+                      "term frequency - inverse document frequency",
+                      if (normalize) " (normalized)" else ""),
+              "tf-idf")
         if (isDTM) t(m) else m
     }, "term frequency - inverse document frequency", "tf-idf")
 
@@ -56,8 +59,8 @@ weightSMART <-
         isDTM <- inherits(m, "DocumentTermMatrix")
         if (isDTM) m <- t(m)
 
-        if(normalization == "b") {
-            ## Need to compute the character lenghts of the documents
+        if (normalization == "b") {
+            ## Need to compute the character lengths of the documents
             ## before starting the weighting.
             charlengths <-
                 tapply(nchar(Terms(m))[m$i] * m$v, m$j, sum)
@@ -79,14 +82,14 @@ weightSMART <-
                       ## log ave
                       L = {
                           s <- tapply(m$v, m$j, mean)
-                          ((1 + log2(m$v)) /
-                           (1 + log2(s[as.character(m$j)])))
+                          ((1 + log2(m$v)) / (1 + log2(s[as.character(m$j)])))
                       })
 
         ## Document frequency
         rs <- row_sums(m > 0)
         if (any(rs == 0))
-            warning("unreferenced term(s): ", paste(Terms(m)[rs == 0], collapse = " "))
+            warning("unreferenced term(s): ",
+                    paste(Terms(m)[rs == 0], collapse = " "))
         df <- switch(document_frequency,
                      ## natural
                      n = 1,
@@ -99,24 +102,25 @@ weightSMART <-
         ## Normalization
         cs <- col_sums(m)
         if (any(cs == 0))
-            warning("empty document(s): ", paste(Docs(m)[cs == 0], collapse = " "))
+            warning("empty document(s): ",
+                    paste(Docs(m)[cs == 0], collapse = " "))
         norm <- switch(normalization,
                        ## none
-                       n = rep(1, nDocs(m)),
+                       n = rep.int(1, nDocs(m)),
                        ## cosine
                        c = sqrt(col_sums(m ^ 2)),
                        ## pivoted unique
                        u = {
-                           if(is.null(pivot <- control$pivot))
+                           if (is.null(pivot <- control$pivot))
                                stop("invalid control argument pivot")
-                           if(is.null(slope <- control$slope))
+                           if (is.null(slope <- control$slope))
                                stop("invalid control argument slope")
                            (slope * sqrt(col_sums(m ^ 2)) +
                             (1 - slope) * pivot)
                        },
                        ## byte size
                        b = {
-                           if(is.null(alpha <- control$alpha))
+                           if (is.null(alpha <- control$alpha))
                                stop("invalid control argument alpha")
                            norm <- double(nDocs(m))
                            norm[match(names(charlengths),
@@ -134,7 +138,7 @@ weightSMART <-
 
 weightBin <-
     WeightFunction(function(m) {
-        m$v <- rep(1, length(m$v))
+        m$v <- rep_len(1L, length(m$v))
         attr(m, "weighting") <- c("binary", "bin")
         m
     }, "binary", "bin")

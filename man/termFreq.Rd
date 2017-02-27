@@ -8,7 +8,8 @@
 termFreq(doc, control = list())
 }
 \arguments{
-  \item{doc}{An object inheriting from \code{\link{TextDocument}}.}
+  \item{doc}{An object inheriting from \code{\link{TextDocument}} or a
+    character vector.}
   \item{control}{A list of control options which override default
     settings.
 
@@ -36,6 +37,10 @@ termFreq(doc, control = list())
     then all remaining options (with the default settings and in the
     order as listed below) are processed.
     \describe{
+      \item{\code{language}}{A character giving the language (preferably as
+        \acronym{IETF} language tags, see \link[NLP]{language} in package
+        \pkg{NLP}) to be used for \code{stopwords} and \code{stemming} if
+        not provided by \code{doc}.}
       \item{\code{removePunctuation}}{A logical value indicating whether
 	punctuation characters should be removed from
 	\code{doc}, a custom function which performs punctuation
@@ -74,8 +79,8 @@ termFreq(doc, control = list())
   }
 }
 \value{
-  A named integer vector of class \code{term_frequency} with term
-  frequencies as values and tokens as names.
+  A table of class \code{c("term_frequency", "table")} with term frequencies as
+  values and tokens as names.
 }
 \seealso{
   \code{\link{getTokenizers}}

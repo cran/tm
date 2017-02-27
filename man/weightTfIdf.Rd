@@ -15,7 +15,7 @@ weightTfIdf(m, normalize = TRUE)
 }
 \details{
   Formally this function is of class \code{WeightingFunction} with the
-  additional attributes \code{Name} and \code{Acronym}.
+  additional attributes \code{name} and \code{acronym}.
 
   \emph{Term frequency} \eqn{\mathit{tf}_{i,j}} counts the number of
   occurrences \eqn{n_{i,j}} of a term \eqn{t_i} in a document

@@ -1,14 +1,16 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.6-2
-Date: 2015-07-02
+Version: 0.7
+Date: 2017-02-26
 Authors@R: c(person("Ingo", "Feinerer", role = c("aut", "cre"),
                     email = "feinerer@logic.at"),
              person("Kurt", "Hornik", role = "aut"),
              person("Artifex Software, Inc.", role = c("ctb", "cph"),
                     comment = "pdf_info.ps taken from GPL Ghostscript"))
-Depends: R (>= 3.1.0), NLP (>= 0.1-6.2)
-Imports: parallel, slam (>= 0.1-31), stats, tools, utils, graphics
+Depends: R (>= 3.2.0), NLP (>= 0.1-6.2)
+Imports: Rcpp, parallel, slam (>= 0.1-37), stats, tools, utils,
+        graphics
+LinkingTo: BH, Rcpp
 Suggests: filehash, methods, Rcampdf, Rgraphviz, Rpoppler, SnowballC,
         tm.lexicon.GeneralInquirer, XML
 SystemRequirements: Antiword (<http://www.winfield.demon.nl/>) for
@@ -19,11 +21,11 @@ License: GPL-3
 URL: http://tm.r-forge.r-project.org/
 Additional_repositories: http://datacube.wu.ac.at
 NeedsCompilation: yes
-Packaged: 2015-07-03 06:57:05 UTC; hornik
+Packaged: 2017-02-26 18:53:41 UTC; hornik
 Author: Ingo Feinerer [aut, cre],
   Kurt Hornik [aut],
   Artifex Software, Inc. [ctb, cph] (pdf_info.ps taken from GPL
     Ghostscript)
 Maintainer: Ingo Feinerer <feinerer@logic.at>
 Repository: CRAN
-Date/Publication: 2015-07-03 10:43:07
+Date/Publication: 2017-02-27 09:03:55

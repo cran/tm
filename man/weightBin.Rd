@@ -12,7 +12,7 @@ weightBin(m)
 }
 \details{
   Formally this function is of class \code{WeightingFunction} with the
-  additional attributes \code{Name} and \code{Acronym}.
+  additional attributes \code{name} and \code{acronym}.
 }
 \value{
   The weighted matrix.

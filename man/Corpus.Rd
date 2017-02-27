@@ -26,10 +26,13 @@
   entity due to some high-level information like the range of possible values)
   or for performance reasons (single access instead of extracting metadata of
   each document).
+
+  The function \code{Corpus} is a convenience alias to \code{SimpleCorpus} or
+  \code{VCorpus}, depending on the arguments provided.
 }
 \seealso{
-  \code{\link{VCorpus}}, and \code{\link{PCorpus}} for the corpora classes
-  provided by package \pkg{tm}.
+  \code{\link{SimpleCorpus}}, \code{\link{VCorpus}}, and \code{\link{PCorpus}}
+  for the corpora classes provided by package \pkg{tm}.
 
   \code{\link[tm.plugin.dc]{DCorpus}} for a distributed corpus class provided by
   package \pkg{tm.plugin.dc}.

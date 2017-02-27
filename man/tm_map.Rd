@@ -1,6 +1,7 @@
 \name{tm_map}
 \alias{tm_map}
 \alias{tm_map.VCorpus}
+\alias{tm_map.SimpleCorpus}
 \alias{tm_map.PCorpus}
 \title{Transformations on Corpora}
 \description{
@@ -9,14 +10,16 @@
 }
 \usage{
 \method{tm_map}{PCorpus}(x, FUN, \dots)
+\method{tm_map}{SimpleCorpus}(x, FUN, \dots)
 \method{tm_map}{VCorpus}(x, FUN, \dots, lazy = FALSE)
 }
 \arguments{
   \item{x}{A corpus.}
-  \item{FUN}{a transformation function taking a text document as input and
-    returning a text document. The function \code{\link{content_transformer}}
-    can be used to create a wrapper to get and set the content of text
-    documents.}
+  \item{FUN}{a transformation function taking a text document (a character
+    vector when \code{x} is a \code{SimpleCorpus}) as input and returning a text
+    document (a character vector of the same length as the input vector for
+    \code{SimpleCorpus}). The function \code{\link{content_transformer}} can be
+    used to create a wrapper to get and set the content of text documents.}
   \item{\dots}{arguments to \code{FUN}.}
   \item{lazy}{a logical. Lazy mappings are mappings which are delayed
     until the content is accessed. It is useful for large corpora if only few

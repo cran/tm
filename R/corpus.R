@@ -1,5 +1,19 @@
 # Author: Ingo Feinerer
 
+Corpus <-
+function(x, readerControl = list(reader = reader(x), language = "en"))
+{
+    stopifnot(inherits(x, "Source"))
+
+    readerControl <- prepareReader(readerControl, reader(x))
+
+    if ((inherits(x, "DirSource") || inherits(x, "VectorSource")) &&
+        identical(readerControl$reader, readPlain))
+        SimpleCorpus(x, readerControl)
+    else
+        VCorpus(x, readerControl)
+}
+
 PCorpus <-
 function(x,
          readerControl = list(reader = reader(x), language = "en"),
@@ -36,7 +50,32 @@ function(x,
     p
 }
 
-Corpus <-
+SimpleCorpus <-
+function(x, control = list(language = "en"))
+{
+    stopifnot(inherits(x, "Source"))
+
+    if (!is.null(control$reader) && !identical(control$reader, readPlain))
+        warning("custom reader is ignored")
+
+    content <- if (inherits(x, "VectorSource")) {
+        if (is.character(x$content)) x$content else as.character(x$content)
+    } else if (inherits(x, "DirSource")) {
+        setNames(as.character(
+                   lapply(x$filelist,
+                          function(f) paste(readContent(f, x$encoding, "text"),
+                                            collapse = "\n"))
+                   ),
+                 basename(x$filelist))
+    } else
+        stop("unsupported source type")
+    s <- list(content = content,
+              meta = CorpusMeta(language = control$language),
+              dmeta = data.frame(row.names = seq_along(x)))
+    class(s) <- c("SimpleCorpus", "Corpus")
+    s
+}
+
 VCorpus <-
 function(x, readerControl = list(reader = reader(x), language = "en"))
 {
@@ -49,7 +88,7 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
     # Check for parallel element access
     if (is.function(getS3method("pGetElem", class(x), TRUE)))
         tdl <- mapply(function(elem, id)
-                          readerControl$reader(elem, readerControl$language, id),
+                        readerControl$reader(elem, readerControl$language, id),
                       pGetElem(x),
                       id = as.character(seq_along(x)),
                       SIMPLIFY = FALSE)
@@ -71,6 +110,7 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
 }
 
 `[.PCorpus` <-
+`[.SimpleCorpus` <-
 function(x, i)
 {
     if (!missing(i)) {
@@ -79,7 +119,6 @@ function(x, i)
     }
     x
 }
-
 `[.VCorpus` <-
 function(x, i)
 {
@@ -108,12 +147,21 @@ function(x, i)
     db <- filehash::dbInit(x$dbcontrol[["dbName"]], x$dbcontrol[["dbType"]])
     filehash::dbFetch(db, x$content[[i]])
 }
+`[[.SimpleCorpus` <-
+function(x, i)
+{
+    i <- .map_name_index(x, i)
+    n <- names(x$content)
+    PlainTextDocument(x$content[[i]],
+                      id = if (is.null(n)) i else n[i],
+                      language = meta(x, "language"))
+}
 `[[.VCorpus` <-
 function(x, i)
 {
     i <- .map_name_index(x, i)
     if (!is.null(x$lazy))
-        .Call(copyCorpus, x, materialize(x, i))
+        .Call(tm_copyCorpus, x, materialize(x, i))
     x$content[[i]]
 }
 
@@ -139,6 +187,10 @@ function(x, i, value)
 as.list.PCorpus <- as.list.VCorpus <-
 function(x, ...)
     setNames(content(x), as.character(lapply(content(x), meta, "id")))
+
+as.list.SimpleCorpus <-
+function(x, ...)
+    as.list(content(x))
 
 as.VCorpus <-
 function(x)
@@ -191,9 +243,13 @@ content.VCorpus <-
 function(x)
 {
     if (!is.null(x$lazy))
-        .Call(copyCorpus, x, materialize(x))
+        .Call(tm_copyCorpus, x, materialize(x))
     x$content
 }
+
+content.SimpleCorpus <-
+function(x)
+    x$content
 
 content.PCorpus <-
 function(x)
@@ -205,7 +261,9 @@ function(x)
 inspect <-
 function(x)
     UseMethod("inspect", x)
-inspect.PCorpus <- inspect.VCorpus <-
+inspect.PCorpus <-
+inspect.SimpleCorpus <-
+inspect.VCorpus <-
 function(x)
 {
     print(x)
@@ -214,11 +272,15 @@ function(x)
     invisible(x)
 }
 
-length.PCorpus <- length.VCorpus <-
+length.PCorpus <-
+length.SimpleCorpus <-
+length.VCorpus <-
 function(x)
     length(x$content)
 
-names.PCorpus <- names.VCorpus <-
+names.PCorpus <-
+names.SimpleCorpus <-
+names.VCorpus <-
 function(x)
     as.character(meta(x, "id", "local"))
 
@@ -229,7 +291,9 @@ function(x, value)
     x
 }
 
-format.PCorpus <- format.VCorpus <-
+format.PCorpus <-
+format.SimpleCorpus <-
+format.VCorpus <-
 function(x, ...)
 {
     c(sprintf("<<%s>>", class(x)[1L]),

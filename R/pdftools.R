@@ -12,7 +12,7 @@ function(file, options = NULL)
     tags <- c("Title", "Subject", "Keywords", "Author", "Creator",
               "Producer", "CreationDate", "ModDate", "Tagged", "Form",
               "Pages", "Encrypted", "Page size", "File size",
-              "Optimized", "PDF version" )
+              "Optimized", "PDF version")
     re <- sprintf("^(%s)",
                   paste(sprintf("%-16s", sprintf("%s:", tags)),
                         collapse = "|"))
@@ -22,11 +22,11 @@ function(file, options = NULL)
     info <- split(sub(re, "", lines), cumsum(ind))
     names(info) <- tags
     fmt <- "%a %b %d %X %Y"
-    if(!is.null(d <- info$CreationDate))
+    if (!is.null(d <- info$CreationDate))
         info$CreationDate <- strptime(d, fmt)
-    if(!is.null(d <- info$ModDate))
+    if (!is.null(d <- info$ModDate))
         info$ModDate <- strptime(d, fmt)
-    if(!is.null(p <- info$Pages))
+    if (!is.null(p <- info$Pages))
         info$Pages <- as.integer(p)
     info
 }
@@ -48,9 +48,9 @@ function(file)
     val <- sub("^[^:]+:[[:space:]]*", "", out)
     names(val) <- sub(":.*", "", out)
     val <- as.list(val)
-    if(!is.null(d <- val$CreationDate))
+    if (!is.null(d <- val$CreationDate))
         val$CreationDate <- PDF_Date_to_POSIXt(d)
-    if(!is.null(d <- val$ModDate))
+    if (!is.null(d <- val$ModDate))
         val$ModDate <- PDF_Date_to_POSIXt(d)
 
     val
@@ -63,11 +63,11 @@ function(s)
     s <- sub("^D:", "", s)
     ## Strip apostrophes in offset spec.
     s <- gsub("'", "", s)
-    if(nchar(s) <= 14L) {
+    if (nchar(s) <= 14L) {
         s <- sprintf("%s%s", s,
                      substring("    0101000000", nchar(s) + 1L, 14L))
         strptime(s, "%Y%m%d%H%M%S")
-    } else if(substring(s, 15L, 15L) == "Z") {
+    } else if (substring(s, 15L, 15L) == "Z") {
         strptime(substring(s, 1L, 14L), "%Y%m%d%H%M%S")
     } else {
         strptime(s, "%Y%m%d%H%M%S%z")
@@ -77,7 +77,7 @@ function(s)
 pdf_text_via_gs <-
 function(file)
 {
-    files <- normalizePath(file)
+    file <- normalizePath(file)
 
     gs_cmd <- tools::find_gs_cmd()
 
@@ -116,7 +116,7 @@ function(file)
                    stdout = TRUE)
     ## Argh.  How can we catch errors?
     ## The return values are always 0 ...
-    if(any(grepl("Error handled by opdfread.ps", txt))) {
+    if (any(grepl("Error handled by opdfread.ps", txt))) {
         stop(paste(c("Ghostscript failed, with output:", txt),
                    collapse = "\n"))
     }

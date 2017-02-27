@@ -1,10 +1,17 @@
-importFrom("NLP", "content", "content<-", "meta", "meta<-", "words")
-importFrom("parallel", "mclapply")
+useDynLib("tm", .registration = TRUE)
+
+importFrom("NLP", "content", "content<-", "meta", "meta<-", "words",
+           "as.Token_Tokenizer", "is.Span_Tokenizer", "Token_Tokenizer",
+           "TaggedTextDocument")
+importFrom("Rcpp", "evalCpp")
+importFrom("graphics", "abline", "plot")
+importFrom("parallel", "parLapply")
 importFrom("stats", "coef", "cor", "lm", "setNames")
 importFrom("utils", "download.file", "getS3method", "unzip")
-importFrom("graphics", "abline", "plot")
 
-import(slam)
+importFrom("slam", "as.simple_triplet_matrix", "col_sums",
+           "crossapply_simple_triplet_matrix", "read_stm_MC", "rollup",
+           "row_sums", "simple_triplet_matrix")
 
 export("as.DocumentTermMatrix",
        "as.TermDocumentMatrix",
@@ -23,6 +30,7 @@ export("as.DocumentTermMatrix",
        "Heaps_plot",
        "findAssocs",
        "findFreqTerms",
+       "findMostFreqTerms",
        "getReaders",
        "getSources",
        "getTokenizers",
@@ -52,6 +60,7 @@ export("as.DocumentTermMatrix",
        "removeSparseTerms",
        "removeWords",
        "scan_tokenizer",
+       "SimpleCorpus",
        "SimpleSource",
        "stemCompletion",
        "stemDocument",
@@ -64,6 +73,8 @@ export("as.DocumentTermMatrix",
        "tm_filter",
        "tm_index",
        "tm_map",
+       "tm_parLapply",
+       "tm_parLapply_engine",
        "tm_reduce",
        "tm_term_score",
        "URISource",
@@ -85,10 +96,15 @@ S3method("removePunctuation", "character")
 S3method("removeWords", "character")
 S3method("stemDocument", "character")
 S3method("stripWhitespace", "character")
+S3method("words", "character")
 
+S3method("[", "DataframeSource")
+S3method("[[", "DataframeSource")
 S3method("getElem", "DataframeSource")
 S3method("pGetElem", "DataframeSource")
 
+S3method("[", "DirSource")
+S3method("[[", "DirSource")
 S3method("getElem", "DirSource")
 S3method("pGetElem", "DirSource")
 
@@ -96,6 +112,7 @@ S3method("[", "DocumentTermMatrix")
 S3method("c", "DocumentTermMatrix")
 S3method("dimnames<-", "DocumentTermMatrix")
 S3method("findAssocs", "DocumentTermMatrix")
+S3method("findMostFreqTerms", "DocumentTermMatrix")
 S3method("inspect", "DocumentTermMatrix")
 S3method("plot", "DocumentTermMatrix")
 S3method("print", "DocumentTermMatrix")
@@ -139,6 +156,22 @@ S3method("stripWhitespace", "PlainTextDocument")
 S3method("tm_term_score", "PlainTextDocument")
 S3method("words", "PlainTextDocument")
 
+S3method("[", "SimpleCorpus")
+S3method("[[", "SimpleCorpus")
+S3method("as.list", "SimpleCorpus")
+S3method("content", "SimpleCorpus")
+S3method("format", "SimpleCorpus")
+S3method("inspect", "SimpleCorpus")
+S3method("length", "SimpleCorpus")
+S3method("meta", "SimpleCorpus")
+S3method("meta<-", "SimpleCorpus")
+S3method("names", "SimpleCorpus")
+S3method("print", "SimpleCorpus", .print_via_format)
+S3method("TermDocumentMatrix", "SimpleCorpus")
+S3method("tm_filter", "SimpleCorpus")
+S3method("tm_index", "SimpleCorpus")
+S3method("tm_map", "SimpleCorpus")
+
 S3method("close", "SimpleSource")
 S3method("eoi", "SimpleSource")
 S3method("length", "SimpleSource")
@@ -150,6 +183,7 @@ S3method("c", "TermDocumentMatrix")
 S3method("[", "TermDocumentMatrix")
 S3method("dimnames<-", "TermDocumentMatrix")
 S3method("findAssocs", "TermDocumentMatrix")
+S3method("findMostFreqTerms", "TermDocumentMatrix")
 S3method("inspect", "TermDocumentMatrix")
 S3method("plot", "TermDocumentMatrix")
 S3method("print", "TermDocumentMatrix")
@@ -157,11 +191,15 @@ S3method("t", "TermDocumentMatrix")
 S3method("tm_term_score", "TermDocumentMatrix")
 
 S3method("c", "term_frequency")
+S3method("findMostFreqTerms", "term_frequency")
 
 S3method("c", "TextDocument")
+S3method("inspect", "TextDocument")
 
 S3method("print", "TextDocumentMeta")
 
+S3method("[", "URISource")
+S3method("[[", "URISource")
 S3method("getElem", "URISource")
 S3method("pGetElem", "URISource")
 
@@ -185,6 +223,8 @@ S3method("tm_filter", "VCorpus")
 S3method("tm_index", "VCorpus")
 S3method("tm_map", "VCorpus")
 
+S3method("[", "VectorSource")
+S3method("[[", "VectorSource")
 S3method("getElem", "VectorSource")
 S3method("pGetElem", "VectorSource")
 
@@ -222,5 +262,3 @@ S3method("nDocs", "DocumentTermMatrix")
 S3method("nDocs", "TermDocumentMatrix")
 S3method("nTerms", "DocumentTermMatrix")
 S3method("nTerms", "TermDocumentMatrix")
-
-useDynLib(tm, copyCorpus)

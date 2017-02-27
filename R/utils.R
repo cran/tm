@@ -7,7 +7,16 @@ function(x, ...)
     invisible(x)
 }
 
-.xml_value_if_not_null <- function(n, default) if (!is.null(n)) XML::xmlValue(n) else default
+## Efficient alternative to table() proposed by Kurt Hornik
+.table <- function(x) {
+    u <- sort(unique(x))
+    v <- tabulate(match(x, u))
+    names(v) <- u
+    v
+}
+
+.xml_value_if_not_null <-
+function(n, default) if (!is.null(n)) XML::xmlValue(n) else default
 
 .xml_content <- function(doc, spec) {
     type <- spec[[1]]
@@ -33,7 +42,7 @@ list("danish" = c("da", "dan"),
      "hungarian" = c("hu", "hun"),
      "italian" = c("it", "ita"),
      "norwegian" = c("no", "nor"),
-     "portuguese"= c("pt", "por"),
+     "portuguese" = c("pt", "por"),
      "romanian" = c("ro", "ron", "rum"),
      "russian" = c("ru", "rus"),
      "spanish" = c("es", "esl", "spa"),
@@ -49,8 +58,7 @@ list("danish" = c("da", "dan"),
 map_IETF_Snowball <-
 local({
     codes <- unlist(IETF_Snowball_map, use.names = FALSE)
-    names <- rep.int(names(IETF_Snowball_map),
-                     sapply(IETF_Snowball_map, length))
+    names <- rep.int(names(IETF_Snowball_map), lengths(IETF_Snowball_map))
 
     function(code) {
         code <- as.character(code)

@@ -22,8 +22,14 @@ as.DocumentTermMatrix(x, \dots)
     options which are evaluated for each document and global options
     which are evaluated once for the constructed matrix. Available local
     options are documented in \code{\link{termFreq}} and are internally
-    delegated to a \code{\link{termFreq}} call. Available global options
-    are:
+    delegated to a \code{\link{termFreq}} call.
+
+    This is different for a \code{\link{SimpleCorpus}}. In this case all
+    options are processed in a fixed order in one pass to improve performance.
+    It always uses the Boost Tokenizer (via \pkg{Rcpp}) and takes no custom
+    functions as option arguments.
+
+    Available global options are:
     \describe{
       \item{\code{bounds}}{A list with a tag \code{global} whose value
 	must be an integer vector of length 2. Terms that appear in less
@@ -47,7 +53,7 @@ as.DocumentTermMatrix(x, \dots)
   \code{DocumentTermMatrix} (both inheriting from a
   \link[slam:matrix]{simple triplet matrix} in package \pkg{slam})
   containing a sparse term-document matrix or document-term matrix. The
-  attribute \code{Weighting} contains the weighting applied to the
+  attribute \code{weighting} contains the weighting applied to the
   matrix.
 }
 \seealso{
@@ -65,6 +71,13 @@ dtm <- DocumentTermMatrix(crude,
                                                      FALSE),
                                          stopwords = TRUE))
 inspect(tdm[202:205, 1:5])
-inspect(tdm[c("price", "texas"), c("127", "144", "191", "194")])
+inspect(tdm[c("price", "prices", "texas"), c("127", "144", "191", "194")])
 inspect(dtm[1:5, 273:276])
+
+s <- SimpleCorpus(VectorSource(unlist(lapply(crude, as.character))))
+m <- TermDocumentMatrix(s,
+                        control = list(removeNumbers = TRUE,
+                                       stopwords = TRUE,
+                                       stemming = TRUE))
+inspect(m[c("price", "texa"), c("127", "144", "191", "194")])
 }

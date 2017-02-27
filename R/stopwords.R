@@ -9,7 +9,7 @@ stopwords <- {
             "english"
         else
             resolved
-        s <- system.file("stopwords", paste(base, ".dat", sep = ""),
+        s <- system.file("stopwords", paste0(base, ".dat"),
                          package = "tm")
         if (identical(s, ""))
             stop(paste("no stopwords available for '", base, "'", sep = ""))

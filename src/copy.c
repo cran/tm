@@ -1,6 +1,6 @@
 #include <Rinternals.h>
 
-void copyCorpus(SEXP x, SEXP y)
+void tm_copyCorpus(SEXP x, SEXP y)
 {
     copyVector(x, y);
 }

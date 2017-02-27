@@ -14,9 +14,9 @@ function(x, terms, FUN = function(x) sum(x, na.rm = TRUE))
                   terms, FUN)
 
 tm_term_score.TermDocumentMatrix <-
-function(x, terms, FUN = slam::col_sums)
+function(x, terms, FUN = col_sums)
     FUN(x[match(terms, Terms(x), nomatch = 0L), ])
 
 tm_term_score.DocumentTermMatrix <-
-function(x, terms, FUN = slam::row_sums)
+function(x, terms, FUN = row_sums)
     FUN(x[, match(terms, Terms(x), nomatch = 0L)])

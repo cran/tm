@@ -51,6 +51,25 @@ function(..., meta = NULL)
     meta
 }
 
+meta.SimpleCorpus <-
+function(x, tag = NULL, type = c("indexed", "corpus"), ...)
+{
+    if (identical(tag, "id")) {
+        n <- names(content(x))
+        return(if (is.null(n)) as.character(seq_along(x)) else n)
+    }
+
+    if (!is.null(tag) && missing(type))
+        type <- if (tag %in% names(x$meta)) "corpus" else "indexed"
+    type <- match.arg(type)
+    if (identical(type, "indexed"))
+        if (is.null(tag)) x$dmeta else x$dmeta[tag]
+    else if (identical(type, "corpus"))
+        if (is.null(tag)) x$meta else x$meta[[tag]]
+    else
+        stop("invalid type")
+}
+
 meta.VCorpus <- meta.PCorpus <-
 function(x, tag = NULL, type = c("indexed", "corpus", "local"), ...)
 {
@@ -68,6 +87,19 @@ function(x, tag = NULL, type = c("indexed", "corpus", "local"), ...)
         lapply(x, meta, tag)
     else
         stop("invalid type")
+}
+
+`meta<-.SimpleCorpus` <-
+function(x, tag, type = c("indexed", "corpus"), ..., value)
+{
+    type <- match.arg(type)
+    if (identical(type, "indexed"))
+        x$dmeta[, tag] <- value
+    else if (type == "corpus")
+        x$meta[[tag]] <- value
+    else
+        stop("invalid type")
+    x
 }
 
 `meta<-.VCorpus` <- `meta<-.PCorpus` <-

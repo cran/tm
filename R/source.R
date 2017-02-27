@@ -112,11 +112,11 @@ function(zipfile, pattern = NULL, recursive = FALSE, ignore.case = FALSE,
 read_all_bytes <-
 function(con, chunksize = 2 ^ 16)
 {
-    if(is.character(con)) {
+    if (is.character(con)) {
         return(readBin(con, raw(), file.info(con)$size))
     }
 
-    if(!isOpen(con)) {
+    if (!isOpen(con)) {
         open(con, "rb")
         on.exit(close(con))
     }
@@ -125,7 +125,7 @@ function(con, chunksize = 2 ^ 16)
     repeat {
         chunk <- readBin(con, raw(), chunksize)
         bytes <- c(bytes, list(chunk))
-        if(length(chunk) < chunksize) break
+        if (length(chunk) < chunksize) break
     }
 
     unlist(bytes)
@@ -244,26 +244,39 @@ function(x)
 pGetElem <-
 function(x)
     UseMethod("pGetElem", x)
+
 pGetElem.DataframeSource <-
 function(x)
     lapply(seq_len(x$length),
-           function(y) list(content = x$content[y,],
+           function(y) list(content = x$content[y, ],
                             uri = NULL))
+`[.DataframeSource` <- function(x, i, j, ...) x$content[i, j, ...]
+`[[.DataframeSource` <- function(x, ...) x$content[[...]]
+
 pGetElem.DirSource <-
 function(x)
     lapply(x$filelist,
            function(f) list(content = readContent(f, x$encoding, x$mode),
                             uri = paste0("file://", f)))
+`[.DirSource` <- function(x, i, ...) x$filelist[i, ...]
+`[[.DirSource` <- function(x, i, ...) x$filelist[[i, ...]]
+
 pGetElem.URISource <-
 function(x)
     lapply(x$uri,
            function(uri) list(content = readContent(uri, x$encoding, x$mode),
                               uri = uri))
+`[.URISource` <- function(x, i, ...) x$uri[i, ...]
+`[[.URISource` <- function(x, i, ...) x$uri[[i, ...]]
+
 pGetElem.VectorSource <-
 function(x)
     lapply(x$content,
            function(y) list(content = y,
                             uri = NULL))
+`[.VectorSource` <- function(x, i, ...) x$content[i, ...]
+`[[.VectorSource` <- function(x, i, ...) x$content[[i, ...]]
+
 pGetElem.ZipSource <-
 function(x)
     lapply(file.path(x$exdir, x$files),

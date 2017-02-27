@@ -30,8 +30,6 @@ as.VCorpus(x)
 \details{
   A \emph{volatile corpus} is fully kept in memory and thus all changes only
   affect the corresponding \R object.
-
-  The function \code{Corpus} is a convenience alias to \code{VCorpus}.
 }
 \seealso{
   \code{\link{Corpus}} for basic information on the corpus infrastructure

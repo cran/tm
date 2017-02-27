@@ -53,7 +53,7 @@ identical(ovid[[2]], ovid[["ovid_2.txt"]])
 ###################################################
 ### code chunk number 8: tm.Rnw:139-141
 ###################################################
-writeLines(as.character(ovid[[2]]))
+inspect(ovid[[2]])
 lapply(ovid[1:2], as.character)
 
 
@@ -106,32 +106,32 @@ meta(crude)
 
 
 ###################################################
-### code chunk number 16: tm.Rnw:248-250
+### code chunk number 16: tm.Rnw:250-252
 ###################################################
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[5:10, 740:743])
 
 
 ###################################################
-### code chunk number 17: tm.Rnw:259-260
+### code chunk number 17: tm.Rnw:261-262
 ###################################################
 findFreqTerms(dtm, 5)
 
 
 ###################################################
-### code chunk number 18: tm.Rnw:265-266
+### code chunk number 18: tm.Rnw:267-268
 ###################################################
 findAssocs(dtm, "opec", 0.8)
 
 
 ###################################################
-### code chunk number 19: tm.Rnw:274-275
+### code chunk number 19: tm.Rnw:276-277
 ###################################################
 inspect(removeSparseTerms(dtm, 0.4))
 
 
 ###################################################
-### code chunk number 20: tm.Rnw:289-291
+### code chunk number 20: tm.Rnw:291-293
 ###################################################
 inspect(DocumentTermMatrix(reuters,
                            list(dictionary = c("prices", "crude", "oil"))))

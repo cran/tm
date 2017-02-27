@@ -135,9 +135,9 @@ meta(ovid[[2]], "id")
 identical(ovid[[2]], ovid[["ovid_2.txt"]])
 @
 A character representation of a document is available via
-\code{as.character()}:
+\code{as.character()} which is also used when inspecting a document:
 <<keep.source=TRUE>>=
-writeLines(as.character(ovid[[2]]))
+inspect(ovid[[2]])
 lapply(ovid[1:2], as.character)
 @
 
@@ -244,7 +244,9 @@ A common approach in text mining is to create a term-document matrix
 from a corpus. In the \pkg{tm} package the classes
 \class{TermDocumentMatrix} and \class{DocumentTermMatrix} (depending
 on whether you want terms as rows and documents as columns, or vice
-versa) employ sparse matrices for corpora.
+versa) employ sparse matrices for corpora. Inspecting a term-document matrix
+displays a sample, whereas \code{as.matrix()} yields the full matrix in
+dense format (which can be very memory consuming for large matrices).
 <<>>=
 dtm <- DocumentTermMatrix(reuters)
 inspect(dtm[5:10, 740:743])
@@ -290,6 +292,29 @@ distinct text mining contexts, e.g.,
 inspect(DocumentTermMatrix(reuters,
                            list(dictionary = c("prices", "crude", "oil"))))
 @
+
+\section*{Performance}
+Often you do not need all the generality, modularity and full range of features
+offered by \pkg{tm} as this sometimes comes at the price of performance.
+
+\class{SimpleCorpus} provides a corpus which is optimized for the most common
+usage scenario: importing plain texts from files in a directory or directly
+from a vector in \proglang{R}, preprocessing and transforming the texts, and
+finally exporting them to a term-document matrix. The aim is to boost
+performance and minimize memory pressure. It loads all documents into memory,
+and is designed for medium-sized to large data sets.
+
+However, it operates only under the following contraints:
+\begin{itemize}
+  \item only \code{DirSource} and \code{VectorSource} are supported,
+  \item no custom readers, i.e., each document is read in and stored as plain
+    text (as a string, i.e., a character vector of length one),
+  \item transformations applied via \code{tm\_map} must be able to
+    process strings and return strings,
+  \item no lazy transformations in \code{tm\_map},
+  \item no meta data for individual documents (i.e., no \code{"local"} in
+    \code{meta()}).
+\end{itemize}
 
 \bibliographystyle{abbrvnat}
 \bibliography{references}

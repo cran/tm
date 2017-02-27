@@ -202,7 +202,7 @@ function(...)
 
         a <- c(list(con = con, meta = list(id = id, language = language)), args)
 
-        do.call(NLP::TaggedTextDocument, a)
+        do.call(TaggedTextDocument, a)
     }
 }
 class(readTagged) <- c("FunctionGenerator", "function")

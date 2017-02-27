@@ -15,11 +15,11 @@ weightSMART(m, spec = "nnn", control = list())
     specifies a term frequency schema, the second a document frequency
     schema, and the third a normalization schema. See \bold{Details} for
     available built-in schemata.}
-  \item{control}{a list of control parameters.  See \bold{Details}.}
+  \item{control}{a list of control parameters. See \bold{Details}.}
 }
 \details{
   Formally this function is of class \code{WeightingFunction} with the
-  additional attributes \code{Name} and \code{Acronym}.
+  additional attributes \code{name} and \code{acronym}.
 
   The first letter of \code{spec} specifies a weighting schema for term
   frequencies of \code{m}:
@@ -31,10 +31,10 @@ weightSMART(m, spec = "nnn", control = list())
       standard term frequency format already.}
     \item{"l"}{(logarithm) is defined as \eqn{1 + \log_2(\mathit{tf}_{i,j})}.}
     \item{"a"}{(augmented) is defined as \eqn{0.5 +
-	\frac{0.5 * \mathit{tf}_{i,j}}{\max_i(\mathit{tf}_{i,j})}}.}
+      \frac{0.5 * \mathit{tf}_{i,j}}{\max_i(\mathit{tf}_{i,j})}}.}
     \item{"b"}{(boolean) is defined as 1 if \eqn{\mathit{tf}_{i,j} > 0} and 0 otherwise.}
     \item{"L"}{(log average) is defined as \eqn{\frac{1 +
-    \log_2(\mathit{tf}_{i,j})}{1+\log_2(\mathrm{ave}_{i\in j}(\mathit{tf}_{i,j}))}}.}
+      \log_2(\mathit{tf}_{i,j})}{1+\log_2(\mathrm{ave}_{i\in j}(\mathit{tf}_{i,j}))}}.}
   }
 
   The second letter of \code{spec} specifies a weighting schema of
@@ -63,7 +63,7 @@ weightSMART(m, spec = "nnn", control = list())
       \eqn{\alpha} must be set via the named tag \code{alpha}
       in the \code{control} list.}
   }
-  
+
   The final result is defined by multiplication of the chosen term
   frequency component with the chosen document frequency component with
   the chosen normalization component.

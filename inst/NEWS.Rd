@@ -1,6 +1,36 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7}{
+  \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+    \itemize{
+      \item \code{inspect.TermDocumentMatrix()} now displays a sample instead
+        of the full matrix. The full dense representation is available via
+        \code{as.matrix()}.
+    }
+  }
+  \subsection{NEW FEATURES}{
+    \itemize{
+      \item \code{SimpleCorpus} provides a corpus which is optimized for the
+        most common usage scenario: importing plain texts from files in a
+        directory or directly from a vector in \R, preprocessing and transforming
+        the texts, and finally exporting them to a term-document matrix. The aim
+        is to boost performance and minimize memory pressure. It loads all
+        documents into memory, and is designed for medium-sized to large data
+        sets.
+      \item \code{inspect()} on text documents as a shorthand for
+        \code{writeLines(as.character())}.
+      \item \code{findMostFreqTerms()} finds most frequent terms in a
+        document-term or term-document matrix, or a vector of term frequencies.
+      \item \code{tm_parLapply()} is now internally used for the parallelization
+        of transformations, filters, and term-document matrix construction. The
+        preferred parallelization engine can be registered via
+        \code{tm_parLapply_engine()}. The default is to use no parallelization
+        (instead of \code{\link[parallel]{mclapply}} (package \pkg{parallel}) in
+        previous versions).
+    }
+  }
+}
 \section{Changes in tm version 0.6-2}{
   \subsection{BUG FIXES}{
     \itemize{
@@ -304,7 +334,7 @@
             interface.
       \item VCorpus, the default implementation of the abstract corpus
             interface (by subclassing), provides a corpus with volatile (=
-            standard R object) semantics. It loads all documents into
+            standard \R object) semantics. It loads all documents into
             memory, and is designed for small to medium-sized data sets.
       \item PCorpus, an implementation of the abstract corpus interface (by
             subclassing), provides a corpus with permanent storage

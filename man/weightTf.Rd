@@ -12,7 +12,7 @@ weightTf(m)
 }
 \details{
   Formally this function is of class \code{WeightingFunction} with the
-  additional attributes \code{Name} and \code{Acronym}.
+  additional attributes \code{name} and \code{acronym}.
 
   This function acts as the identity function since the input matrix is
   already in term frequency format.

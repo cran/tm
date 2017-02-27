@@ -34,14 +34,14 @@ function(x,
 Zipf_plot <-
 function(x, type = "l", ...)
 {
-    if(inherits(x, "TermDocumentMatrix"))
+    if (inherits(x, "TermDocumentMatrix"))
         x <- t(x)
-    y <- log(sort(slam::col_sums(x), decreasing = TRUE))
+    y <- log(sort(col_sums(x), decreasing = TRUE))
     x <- log(seq_along(y))
     m <- lm(y ~ x)
     dots <- list(...)
-    if(is.null(dots$xlab)) dots$xlab <- "log(rank)"
-    if(is.null(dots$ylab)) dots$ylab <- "log(frequency)"
+    if (is.null(dots$xlab)) dots$xlab <- "log(rank)"
+    if (is.null(dots$ylab)) dots$ylab <- "log(frequency)"
     do.call(plot, c(list(x, y, type = type), dots))
     abline(m)
     ## <NOTE>
@@ -79,14 +79,14 @@ function(m)
 Heaps_plot <-
 function(x, type = "l", ...)
 {
-    if(inherits(x, "TermDocumentMatrix"))
+    if (inherits(x, "TermDocumentMatrix"))
         x <- t(x)
     y <- log(cum_vocabulary_size(x))
-    x <- log(cumsum(slam::row_sums(x)))
+    x <- log(cumsum(row_sums(x)))
     m <- lm(y ~ x)
     dots <- list(...)
-    if(is.null(dots$xlab)) dots$xlab <- "log(T)"
-    if(is.null(dots$ylab)) dots$ylab <- "log(V)"
+    if (is.null(dots$xlab)) dots$xlab <- "log(T)"
+    if (is.null(dots$ylab)) dots$ylab <- "log(V)"
     do.call(plot, c(list(x, y, type = type), dots))
     abline(m)
     ## <NOTE>

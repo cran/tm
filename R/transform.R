@@ -11,11 +11,20 @@ function(x, FUN, ..., lazy = FALSE)
     if (lazy) {
         fun <- function(x) FUN(x, ...)
         if (is.null(x$lazy))
-            x$lazy <- list(index = rep(TRUE, length(x)), maps = list(fun))
+            x$lazy <- list(index = rep_len(TRUE, length(x)), maps = list(fun))
         else
             x$lazy$maps <- c(x$lazy$maps, list(fun))
     } else
-        x$content <- mclapply(content(x), FUN, ...)
+        x$content <- tm_parLapply(content(x), FUN, ...)
+    x
+}
+tm_map.SimpleCorpus <-
+function(x, FUN, ...)
+{
+    if (inherits(FUN, "content_transformer"))
+        FUN <- get("FUN", envir = environment(FUN))
+
+    x$content <- FUN(content(x), ...)
     x
 }
 tm_map.PCorpus <-
@@ -36,7 +45,8 @@ function(x, range = seq_along(x))
        i <- (seq_along(x) %in% range) & x$lazy$index
        if (any(i)) {
            x$content[i] <-
-               mclapply(x$content[i], function(d) tm_reduce(d, x$lazy$maps))
+               tm_parLapply(x$content[i],
+                            function(d) tm_reduce(d, x$lazy$maps))
            x$lazy$index[i] <- FALSE
        }
 
@@ -58,10 +68,14 @@ function()
 
 content_transformer <-
 function(FUN)
-    function(x, ...) {
+{
+    f <- function(x, ...) {
         content(x) <- FUN(content(x), ...)
         x
     }
+    class(f) <- c("content_transformer", "function")
+    f
+}
 
 removeNumbers <-
 function(x)
@@ -107,7 +121,13 @@ function(x, language = "english")
     UseMethod("stemDocument", x)
 stemDocument.character <-
 function(x, language = "english")
-    SnowballC::wordStem(x, as.character(language))
+{
+    s <- unlist(lapply(x, function(line)
+                              paste(SnowballC::wordStem(words(line),
+                                                        as.character(language)),
+                                    collapse = " ")))
+    if (is.character(s)) s else ""
+}
 stemDocument.PlainTextDocument <-
 function(x, language = meta(x, "language"))
 {
@@ -117,12 +137,7 @@ function(x, language = meta(x, "language"))
         is.na(language))
         language <- "english"
 
-    s <- unlist(lapply(content(x),
-      function(x) paste(stemDocument.character(unlist(strsplit(x, "[[:blank:]]")),
-                                               language),
-                        collapse = " ")))
-    content(x) <- if (is.character(s)) s else ""
-    x
+    content_transformer(stemDocument.character)(x)
 }
 
 stripWhitespace <-

@@ -3,8 +3,10 @@
 \alias{DublinCore<-}
 \alias{meta}
 \alias{meta.PCorpus}
+\alias{meta.SimpleCorpus}
 \alias{meta.VCorpus}
 \alias{meta<-.PCorpus}
+\alias{meta<-.SimpleCorpus}
 \alias{meta<-.VCorpus}
 \alias{meta.PlainTextDocument}
 \alias{meta<-.PlainTextDocument}
@@ -17,6 +19,8 @@
 \usage{
 \method{meta}{PCorpus}(x, tag = NULL, type = c("indexed", "corpus", "local"), \dots)
 \method{meta}{PCorpus}(x, tag, type = c("indexed", "corpus", "local"), \dots) <- value
+\method{meta}{SimpleCorpus}(x, tag = NULL, type = c("indexed", "corpus"), \dots)
+\method{meta}{SimpleCorpus}(x, tag, type = c("indexed", "corpus"), \dots) <- value
 \method{meta}{VCorpus}(x, tag = NULL, type = c("indexed", "corpus", "local"), \dots)
 \method{meta}{VCorpus}(x, tag, type = c("indexed", "corpus", "local"), \dots) <- value
 \method{meta}{PlainTextDocument}(x, tag = NULL, \dots)

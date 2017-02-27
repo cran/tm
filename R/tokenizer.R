@@ -4,7 +4,7 @@ function()
 
 # http://www.cs.utexas.edu/users/dml/software/mc/
 MC_tokenizer <-
-NLP::Token_Tokenizer(function(x)
+Token_Tokenizer(function(x)
 {
     x <- as.character(x)
     ASCII_letters <- "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -19,5 +19,5 @@ NLP::Token_Tokenizer(function(x)
 })
 
 scan_tokenizer <-
-NLP::Token_Tokenizer(function(x)
+Token_Tokenizer(function(x)
     scan(text = as.character(x), what = "character", quote = "", quiet = TRUE))

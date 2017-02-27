@@ -12,7 +12,7 @@
 read_dtm_MC <-
 function(file, scalingtype = NULL)
 {
-    m <- slam::read_stm_MC(file, scalingtype)
+    m <- read_stm_MC(file, scalingtype)
     s <- attr(m, "scalingtype")
     as.DocumentTermMatrix(m, rep.int(s, 2L))
 }
@@ -42,7 +42,7 @@ function(file, vocab = NULL)
     j <- as.integer(unlist(lapply(x, `[`, 1L))) + 1L
     x <- as.numeric(unlist(lapply(x, `[`, 2L)))
     m <- simple_triplet_matrix(i, j, x)
-    if(!is.null(vocab))
+    if (!is.null(vocab))
         colnames(m) <- readLines(vocab)
     as.DocumentTermMatrix(m, weightTf)
 }
