@@ -1,4 +1,4 @@
-990c381f34280ef31fff99707b322e84 *DESCRIPTION
+31045e4533bd7a7c374335918622ca79 *DESCRIPTION
 027351b054d1aa7541c3a61f005db894 *NAMESPACE
 ad281d19eba09b6df5d976d9838dedea *R/RcppExports.R
 510a666ecf5fd65f67753e356193c9c0 *R/complete.R
@@ -23,13 +23,13 @@ c39b949b3de9289ee2464773fa4bacab *build/vignette.rds
 d75daaef84a86a786b68f2f9299700cf *data/acq.rda
 2313a5982f6f53c994f87b554f89a7e7 *data/crude.rda
 1393d9426c77569eca1c952136019d84 *inst/CITATION
-1906e7981eec989bf3a0089bb67ca113 *inst/NEWS.Rd
+ff047bfa5e5c8bf2650be5e5f19c1e4f *inst/NEWS.Rd
 dcc8dfaac7e28966996bb3b020ac91ef *inst/doc/extensions.R
 ab103206f0da814ba1742abc02065bc3 *inst/doc/extensions.Rnw
-79f76792c3b0da48d06cdc64fec0aed8 *inst/doc/extensions.pdf
+b61a3b156613c3633ca384d971021df0 *inst/doc/extensions.pdf
 ce5ad9a490676ba5a2ae02dd47ed0ebb *inst/doc/tm.R
 98b03db10b839065993ea7acee90faf1 *inst/doc/tm.Rnw
-a0e44b17748f4808f97014e741dc972e *inst/doc/tm.pdf
+4d2b4637f6ac2f874b0ff528b5131876 *inst/doc/tm.pdf
 98f3b5f3d1f670032af4131a627c18d7 *inst/ghostscript/pdf_info.ps
 7ec7b5de9c642afedf1159021c89f12a *inst/stopwords/SMART.dat
 4c8fb2c1404c10540c267425fcc005f0 *inst/stopwords/catalan.dat
@@ -189,7 +189,7 @@ abe06433d8438326d1e03c8367312a59 *man/weightSMART.Rd
 e73d4c01025c3ed1ff5227cb8448fb19 *src/RcppExports.cpp
 952f7dcd70039cb8493ba8ad1843f89f *src/copy.c
 2b093eefce50be79db0d0b3f5f38c6b9 *src/init.c
-35056d3a94283fabb75828464275cce6 *src/tdm.cpp
+0d26ecc191b86a58a13f9bc16a0355e1 *src/tdm.cpp
 ab103206f0da814ba1742abc02065bc3 *vignettes/extensions.Rnw
 3641da272a48168ad7b4ffef9fbf7d21 *vignettes/references.bib
 98b03db10b839065993ea7acee90faf1 *vignettes/tm.Rnw

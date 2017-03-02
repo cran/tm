@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-1}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Compilation fixes for Clang's libc++.
+    }
+  }
+}
 \section{Changes in tm version 0.7}{
   \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
     \itemize{
