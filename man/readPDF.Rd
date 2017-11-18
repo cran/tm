@@ -6,7 +6,8 @@
   document extracting both its text and its metadata.
 }
 \usage{
-readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
+readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
+                   "ghostscript", "Rcampdf", "custom"),
         control = list(info = NULL, text = NULL))
 }
 \arguments{
@@ -23,7 +24,10 @@ readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
 
   Available \acronym{PDF} extraction engines are as follows.
   \describe{
-    \item{\code{"xpdf"}}{(default) command line \command{pdfinfo} and
+    \item{\code{"pdftools"}}{(default) Poppler \acronym{PDF} rendering library
+      as provided by the functions \code{\link[pdftools]{pdf_info}} and
+      \code{\link[pdftools]{pdf_text}} in package \pkg{pdftools}.}
+    \item{\code{"xpdf"}}{command line \command{pdfinfo} and
       \command{pdftotext} executables which must be installed and accessible on
       your system. Suitable utilities are provided by the Xpdf
       (\url{http://www.foolabs.com/xpdf/}) \acronym{PDF} viewer or by the
@@ -37,9 +41,9 @@ readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
     \item{\code{"Rcampdf"}}{Perl CAM::PDF \acronym{PDF} manipulation library
       as provided by the functions \code{pdf_info} and \code{pdf_text}
       in package \pkg{Rcampdf}, available from the repository at
-      \url{http://datacube.wu.ac.at}.}   
+      \url{http://datacube.wu.ac.at}.}
     \item{\code{"custom"}}{custom user-provided extraction engine.}
-  } 
+  }
 
   Control parameters for engine \code{"xpdf"} are as follows.
   \describe{
@@ -79,12 +83,8 @@ readPDF(engine = c("xpdf", "Rpoppler", "ghostscript", "Rcampdf", "custom"),
 }
 \examples{
 uri <- sprintf("file://\%s", system.file(file.path("doc", "tm.pdf"), package = "tm"))
-if(all(file.exists(Sys.which(c("pdfinfo", "pdftotext"))))) {
-    pdf <- readPDF(control = list(text = "-layout"))(elem = list(uri = uri),
-                                                     language = "en",
-                                                     id = "id1")
-    content(pdf)[1:13]
-}
+pdf <- readPDF()(elem = list(uri = uri), language = "en", id = "id1")
+cat(content(pdf)[1])
 VCorpus(URISource(uri, mode = ""),
         readerControl = list(reader = readPDF(engine = "ghostscript")))
 }

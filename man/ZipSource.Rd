@@ -6,9 +6,9 @@
 }
 \usage{
 ZipSource(zipfile,
-	  pattern = NULL,
-	  recursive = FALSE,
-	  ignore.case = FALSE,
+          pattern = NULL,
+          recursive = FALSE,
+          ignore.case = FALSE,
           mode = "text")
 }
 \arguments{

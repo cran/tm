@@ -8,14 +8,20 @@ importFrom("graphics", "abline", "plot")
 importFrom("parallel", "parLapply")
 importFrom("stats", "coef", "cor", "lm", "setNames")
 importFrom("utils", "download.file", "getS3method", "unzip")
-
 importFrom("slam", "as.simple_triplet_matrix", "col_sums",
            "crossapply_simple_triplet_matrix", "read_stm_MC", "rollup",
            "row_sums", "simple_triplet_matrix")
+importFrom("xml2",
+           "read_xml",
+           "xml_contents",
+           "xml_find_all",
+           "xml_missing",
+           "xml_text")
 
 export("as.DocumentTermMatrix",
        "as.TermDocumentMatrix",
        "as.VCorpus",
+       "Boost_tokenizer",
        "content_transformer",
        "Corpus",
        "DataframeSource",
@@ -27,6 +33,7 @@ export("as.DocumentTermMatrix",
        "eoi",
        "FunctionGenerator",
        "getElem",
+       "getMeta",
        "Heaps_plot",
        "findAssocs",
        "findFreqTerms",
@@ -44,6 +51,7 @@ export("as.DocumentTermMatrix",
        "PlainTextDocument",
        "read_dtm_Blei_et_al",
        "read_dtm_MC",
+       "readDataframe",
        "readDOC",
        "reader",
        "readPlain",
@@ -52,7 +60,6 @@ export("as.DocumentTermMatrix",
        "readRCV1",
        "readRCV1asPlain",
        "readPDF",
-       "readTabular",
        "readTagged",
        "readXML",
        "removeNumbers",
@@ -101,6 +108,7 @@ S3method("words", "character")
 S3method("[", "DataframeSource")
 S3method("[[", "DataframeSource")
 S3method("getElem", "DataframeSource")
+S3method("getMeta", "DataframeSource")
 S3method("pGetElem", "DataframeSource")
 
 S3method("[", "DirSource")
@@ -158,6 +166,7 @@ S3method("words", "PlainTextDocument")
 
 S3method("[", "SimpleCorpus")
 S3method("[[", "SimpleCorpus")
+S3method("[[<-", "SimpleCorpus")
 S3method("as.list", "SimpleCorpus")
 S3method("content", "SimpleCorpus")
 S3method("format", "SimpleCorpus")

@@ -15,21 +15,11 @@ function(x, ...)
     v
 }
 
-.xml_value_if_not_null <-
-function(n, default) if (!is.null(n)) XML::xmlValue(n) else default
-
 .xml_content <- function(doc, spec) {
-    type <- spec[[1]]
-    fun <- switch(type,
-                  node = XML::xmlValue,
-                  attribute = identity)
-
-    if (identical(type, "unevaluated"))
-        spec[[2]]
-    else if (identical(type, "function") && is.function(spec[[2]]))
-        spec[[2]](doc)
-    else
-        as.character(sapply(XML::getNodeSet(doc, spec[[2]]), fun))
+    switch(spec[[1]],
+           node = xml_text(xml_find_all(doc, spec[[2]])),
+           "function" = spec[[2]](doc),
+           unevaluated = spec[[2]])
 }
 
 IETF_Snowball_map <-

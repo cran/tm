@@ -19,8 +19,8 @@ as.VCorpus(x)
         format delivered by \code{x}.}
       \item{\code{language}}{a character giving the language (preferably as
         \acronym{IETF} language tags, see \link[NLP]{language} in
-	package \pkg{NLP}).
-	The default language is assumed to be English (\code{"en"}).}
+        package \pkg{NLP}).
+        The default language is assumed to be English (\code{"en"}).}
     }
   }
 }
@@ -40,5 +40,6 @@ as.VCorpus(x)
 }
 \examples{
 reut21578 <- system.file("texts", "crude", package = "tm")
-VCorpus(DirSource(reut21578), list(reader = readReut21578XMLasPlain))
+VCorpus(DirSource(reut21578, mode = "binary"),
+        list(reader = readReut21578XMLasPlain))
 }

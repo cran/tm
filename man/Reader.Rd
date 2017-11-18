@@ -44,5 +44,5 @@ getReaders()
   \code{\link{readDOC}}, \code{\link{readPDF}}, \code{\link{readPlain}},
   \code{\link{readRCV1}}, \code{\link{readRCV1asPlain}},
   \code{\link{readReut21578XML}}, \code{\link{readReut21578XMLasPlain}},
-  \code{\link{readTabular}}, and \code{\link{readXML}}.
+  and \code{\link{readXML}}.
 }

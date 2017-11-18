@@ -5,7 +5,7 @@
   Create \acronym{XML} text documents.
 }
 \usage{
-XMLTextDocument(x = list(),
+XMLTextDocument(x = xml_missing(),
                 author = character(0),
                 datetimestamp = as.POSIXlt(Sys.time(), tz = "GMT"),
                 description = character(0),
@@ -17,7 +17,7 @@ XMLTextDocument(x = list(),
                 meta = NULL)
 }
 \arguments{
-  \item{x}{An \code{\link[XML:xmlTreeParse]{XMLDocument}}.}
+  \item{x}{An \code{\link[xml2:read_xml]{XMLDocument}}.}
   \item{author}{a character or an object of class \code{\link{person}} giving
     the author names.}
   \item{datetimestamp}{an object of class \code{\link{POSIXt}} or a character
@@ -46,11 +46,11 @@ XMLTextDocument(x = list(),
   infrastructure employed by package \pkg{tm}.
 }
 \examples{
-xml <- system.file("exampleData", "test.xml", package = "XML")
-(xtd <- XMLTextDocument(XML::xmlTreeParse(xml),
+xml <- system.file("extdata", "order-doc.xml", package = "xml2")
+(xtd <- XMLTextDocument(xml2::read_xml(xml),
                         heading = "XML text document",
                         id = xml,
                         language = "en"))
+content(xtd)
 meta(xtd)
-as.character(xtd)
 }

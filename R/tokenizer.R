@@ -1,6 +1,10 @@
 getTokenizers <-
 function()
-    c("MC_tokenizer", "scan_tokenizer")
+    c("Boost_tokenizer", "MC_tokenizer", "scan_tokenizer")
+
+# http://www.boost.org
+Boost_tokenizer <-
+Token_Tokenizer(function(x) enc2utf8(Boost_Tokenizer(as.character(x))))
 
 # http://www.cs.utexas.edu/users/dml/software/mc/
 MC_tokenizer <-
@@ -19,5 +23,4 @@ Token_Tokenizer(function(x)
 })
 
 scan_tokenizer <-
-Token_Tokenizer(function(x)
-    scan(text = as.character(x), what = "character", quote = "", quiet = TRUE))
+Token_Tokenizer(function(x) .Call(`_tm_scan`, x, 0L))

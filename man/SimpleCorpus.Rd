@@ -8,7 +8,8 @@
 SimpleCorpus(x, control = list(language = "en"))
 }
 \arguments{
-  \item{x}{a \code{\link{DirSource}} or \code{\link{VectorSource}}.}
+  \item{x}{a \code{\link{DataframeSource}}, \code{\link{DirSource}} or
+    \code{\link{VectorSource}}.}
   \item{control}{a named list of control parameters.
     \describe{
       \item{\code{language}}{a character giving the language (preferably as
@@ -30,7 +31,8 @@ SimpleCorpus(x, control = list(language = "en"))
   internally various shortcuts to boost performance and minimize memory
   pressure; consequently it operates only under the following contraints:
   \itemize{
-    \item{only \code{DirSource} and \code{VectorSource} are supported,}
+    \item{only \code{DataframeSource}, \code{DirSource} and \code{VectorSource}
+      are supported,}
     \item{no custom readers, i.e., each document is read in and stored as plain
       text (as a string, i.e., a character vector of length one),}
     \item{transformations applied via \code{\link{tm_map}} must be able to

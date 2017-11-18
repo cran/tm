@@ -4,7 +4,7 @@
 ### code chunk number 1: Init
 ###################################################
 library("tm")
-library("XML")
+library("xml2")
 
 
 ###################################################
@@ -32,9 +32,10 @@ readPlain <- function(elem, language, id)
 
 
 ###################################################
-### code chunk number 5: extensions.Rnw:130-135
+### code chunk number 5: extensions.Rnw:124-130
 ###################################################
-df <- data.frame(contents = c("content 1", "content 2", "content 3"),
+df <- data.frame(doc_id   = c("doc 1"    , "doc 2"    , "doc 3"    ),
+		 text     = c("content 1", "content 2", "content 3"),
                  title    = c("title 1"  , "title 2"  , "title 3"  ),
                  authors  = c("author 1" , "author 2" , "author 3" ),
                  topics   = c("topic 1"  , "topic 2"  , "topic 3"  ),
@@ -42,70 +43,51 @@ df <- data.frame(contents = c("content 1", "content 2", "content 3"),
 
 
 ###################################################
-### code chunk number 6: Mapping
+### code chunk number 6: extensions.Rnw:138-141
 ###################################################
-m <- list(content = "contents", heading = "title",
-          author = "authors", topic = "topics")
-
-
-###################################################
-### code chunk number 7: myReader
-###################################################
-myReader <- readTabular(mapping = m)
-
-
-###################################################
-### code chunk number 8: extensions.Rnw:157-158
-###################################################
-(corpus <- VCorpus(DataframeSource(df), readerControl = list(reader = myReader)))
-
-
-###################################################
-### code chunk number 9: extensions.Rnw:163-165
-###################################################
+(corpus <- Corpus(DataframeSource(df)))
 corpus[[1]]
 meta(corpus[[1]])
 
 
 ###################################################
-### code chunk number 10: CustomXMLFile
+### code chunk number 7: CustomXMLFile
 ###################################################
 custom.xml <- system.file("texts", "custom.xml", package = "tm")
 print(readLines(custom.xml), quote = FALSE)
 
 
 ###################################################
-### code chunk number 11: mySource
+### code chunk number 8: mySource
 ###################################################
 mySource <- function(x)
-    XMLSource(x, function(tree) XML::xmlChildren(XML::xmlRoot(tree)),
-              myXMLReader)
+    XMLSource(x, parser = xml2::xml_children, reader = myXMLReader)
 
 
 ###################################################
-### code chunk number 12: myXMLReader
+### code chunk number 9: myXMLReader
 ###################################################
 myXMLReader <- readXML(
-    spec = list(author = list("node", "/document/writer"),
-                content = list("node", "/document/description"),
+    spec = list(author = list("node", "writer"),
+                content = list("node", "description"),
                 datetimestamp = list("function",
                     function(x) as.POSIXlt(Sys.time(), tz = "GMT")),
-                description = list("attribute", "/document/@short"),
-                heading = list("node", "/document/caption"),
+                description = list("node", "@short"),
+                heading = list("node", "caption"),
                 id = list("function", function(x) tempfile()),
                 origin = list("unevaluated", "My private bibliography"),
-                type = list("node", "/document/type")),
+                type = list("node", "type")),
     doc = PlainTextDocument())
 
 
 ###################################################
-### code chunk number 13: extensions.Rnw:273-274
+### code chunk number 10: extensions.Rnw:244-245
 ###################################################
 corpus <- VCorpus(mySource(custom.xml))
 
 
 ###################################################
-### code chunk number 14: extensions.Rnw:278-280
+### code chunk number 11: extensions.Rnw:249-251
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])

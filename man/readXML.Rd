@@ -19,17 +19,14 @@ readXML(spec, doc)
     describing the type of the second argument, and the second is the
     specification entry. Valid combinations are:
     \describe{
-      \item{\code{type = "node", spec = "XPathExpression"}}{The XPath
-	expression \code{spec} extracts information from an \acronym{XML} node.}
-      \item{\code{type = "attribute", spec = "XPathExpression"}}{The XPath
-	expression \code{spec} extracts information from an attribute of
-	an \acronym{XML} node.}
-      \item{\code{type = "function", spec = function(tree) \dots}}{The function
-	\code{spec} is called, passing over a tree representation (as
-	delivered by \code{xmlInternalTreeParse} from package \pkg{XML})
-	of the read in \acronym{XML} document as first argument.}
+      \item{\code{type = "node", spec = "XPathExpression"}}{The XPath (1.0)
+        expression \code{spec} extracts information from an \acronym{XML} node.}
+      \item{\code{type = "function", spec = function(doc) \dots}}{The function
+        \code{spec} is called, passing over the \acronym{XML} document (as
+        delivered by \code{\link[xml2]{read_xml}} from package \pkg{xml2}) as
+        first argument.}
       \item{\code{type = "unevaluated", spec = "String"}}{The character vector
-	\code{spec} is returned without modification.}
+        \code{spec} is returned without modification.}
     }
   }
   \item{doc}{An (empty) document of some subclass of \code{TextDocument}.}
@@ -62,18 +59,4 @@ readXML(spec, doc)
 
   Vignette 'Extensions: How to Handle Custom File Formats', and
   \code{\link{XMLSource}}.
-}
-\examples{
-readGmane <-
-readXML(spec = list(author = list("node", "/item/creator"),
-                    content = list("node", "/item/description"),
-                    datetimestamp = list("function", function(node)
-                    strptime(sapply(XML::getNodeSet(node, "/item/date"), XML::xmlValue),
-                             format = "\%Y-\%m-\%dT\%H:\%M:\%S",
-                             tz = "GMT")),
-                    description = list("unevaluated", ""),
-                    heading = list("node", "/item/title"),
-                    id = list("node", "/item/link"),
-                    origin = list("unevaluated", "Gmane Mailing List Archive")),
-                    doc = PlainTextDocument())
 }

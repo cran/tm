@@ -27,7 +27,7 @@ VCorpus(VectorSource(docs))
 ### code chunk number 4: Reuters
 ###################################################
 reut21578 <- system.file("texts", "crude", package = "tm")
-reuters <- VCorpus(DirSource(reut21578),
+reuters <- VCorpus(DirSource(reut21578, mode = "binary"),
                    readerControl = list(reader = readReut21578XMLasPlain))
 
 
@@ -109,7 +109,7 @@ meta(crude)
 ### code chunk number 16: tm.Rnw:250-252
 ###################################################
 dtm <- DocumentTermMatrix(reuters)
-inspect(dtm[5:10, 740:743])
+inspect(dtm)
 
 
 ###################################################

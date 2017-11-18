@@ -32,7 +32,12 @@ function(encoding = "",
 # A data frame where each row is interpreted as document
 DataframeSource <-
 function(x)
-    SimpleSource(length = nrow(x), content = x, class = "DataframeSource")
+{
+    stopifnot(all(!is.na(match(c("doc_id", "text"), names(x)))))
+
+    SimpleSource(length = nrow(x), reader = readDataframe,
+                 content = x, class = "DataframeSource")
+}
 
 # A directory with files interpreted as documents
 DirSource <-
@@ -78,11 +83,10 @@ function(x)
     SimpleSource(length = length(x), content = x, class = "VectorSource")
 
 XMLSource <-
-function(x, parser, reader)
+function(x, parser = xml_contents, reader)
 {
-    tree <- XML::xmlParse(x)
-    content <- parser(tree)
-    XML::free(tree)
+    xmldoc <- read_xml(x)
+    content <- parser(xmldoc)
 
     SimpleSource(length = length(content), reader = reader, content = content,
                  uri = x, class = "XMLSource")
@@ -226,7 +230,7 @@ function(x)
          uri = NULL)
 getElem.XMLSource <-
 function(x)
-    list(content = XML::saveXML(x$content[[x$position]]),
+    list(content = x$content[[x$position]],
          uri = x$uri)
 getElem.ZipSource <-
 function(x)
@@ -235,6 +239,16 @@ function(x)
        list(content = readContent(path, x$encoding, x$mode),
             uri = paste0("file://", path))
 }
+
+getMeta <-
+function(x)
+    UseMethod("getMeta", x)
+getMeta.DataframeSource <-
+function(x)
+    list(cmeta = NULL,
+         dmeta = x$content[, is.na(match(names(x$content),
+                                         c("doc_id", "text"))),
+                           drop = FALSE])
 
 
 length.SimpleSource <-

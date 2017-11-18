@@ -18,8 +18,8 @@ PCorpus(x,
         format delivered by \code{x}.}
       \item{\code{language}}{a character giving the language (preferably as
         \acronym{IETF} language tags, see \link[NLP]{language} in
-	package \pkg{NLP}).
-	The default language is assumed to be English (\code{"en"}).}
+        package \pkg{NLP}).
+        The default language is assumed to be English (\code{"en"}).}
     }
   }
   \item{dbControl}{a named list of control parameters for the underlying

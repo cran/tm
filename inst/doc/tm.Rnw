@@ -105,7 +105,7 @@ Finally we create a corpus for some Reuters documents as example for
 later use:
 <<Reuters,keep.source=TRUE>>=
 reut21578 <- system.file("texts", "crude", package = "tm")
-reuters <- VCorpus(DirSource(reut21578),
+reuters <- VCorpus(DirSource(reut21578, mode = "binary"),
                    readerControl = list(reader = readReut21578XMLasPlain))
 @
 
@@ -249,7 +249,7 @@ displays a sample, whereas \code{as.matrix()} yields the full matrix in
 dense format (which can be very memory consuming for large matrices).
 <<>>=
 dtm <- DocumentTermMatrix(reuters)
-inspect(dtm[5:10, 740:743])
+inspect(dtm)
 @
 
 \section*{Operations on Term-Document Matrices}

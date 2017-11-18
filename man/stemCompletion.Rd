@@ -20,11 +20,11 @@ stemCompletion(x,
       completion.}
       \item{\code{first}}{Takes the first found completion.}
       \item{\code{longest}}{Takes the longest completion in terms of
-	characters.}
+        characters.}
       \item{\code{none}}{Is the identity.}
       \item{\code{random}}{Takes some completion.}
       \item{\code{shortest}}{Takes the shortest completion in terms of
-	characters.}
+        characters.}
     }
   }
 }

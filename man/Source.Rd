@@ -4,6 +4,8 @@
 \alias{close.SimpleSource}
 \alias{eoi}
 \alias{eoi.SimpleSource}
+\alias{getMeta}
+\alias{getMeta.DataframeSource}
 \alias{getElem}
 \alias{getElem.DataframeSource}
 \alias{getElem.DirSource}
@@ -37,6 +39,7 @@ SimpleSource(encoding = "",
 getSources()
 \method{close}{SimpleSource}(con, \dots)
 \method{eoi}{SimpleSource}(x)
+\method{getMeta}{DataframeSource}(x)
 \method{getElem}{DataframeSource}(x)
 \method{getElem}{DirSource}(x)
 \method{getElem}{URISource}(x)
@@ -75,8 +78,10 @@ getSources()
 
   All extension classes must provide implementations for the functions
   \code{close}, \code{eoi}, \code{getElem}, \code{length}, \code{open},
-  \code{reader}, and \code{stepNext}. For parallel element access the function
-  \code{pGetElem} must be provided as well.
+  \code{reader}, and \code{stepNext}. For parallel element access the
+  (optional) function \code{pGetElem} must be provided as well. If
+  document level metadata is available, the (optional) function \code{getMeta}
+  must be implemented.
 
   The functions \code{open} and \code{close} open and close the source,
   respectively. \code{eoi} indicates end of input. \code{getElem} fetches the

@@ -112,8 +112,7 @@ function(x, control = list())
              as.integer(min_term_freq), as.integer(max_term_freq),
              as.integer(min_word_length), as.integer(max_word_length))
 
-    terms <- if (is.null(control$dictionary)) m$terms else control$dictionary
-    m <- .SimpleTripletMatrix(m$i, m$j, m$v, terms, x)
+    m <- .SimpleTripletMatrix(m$i, m$j, m$v, enc2utf8(m$terms), x)
 
     ## Stemming
     ## <NOTE>
@@ -127,7 +126,8 @@ function(x, control = list())
     ## local bounds and word lengths.
     ## </NOTE>
     if (isTRUE(control$stemming)) {
-        stems <- as.factor(SnowballC::wordStem(terms, meta(x, "language")))
+        stems <- as.factor(SnowballC::wordStem(m$dimnames$Terms,
+                                               meta(x, "language")))
         m <- rollup(m, "Terms", stems)
 
         ## Recheck local bounds
@@ -240,6 +240,8 @@ function(doc, control = list())
     .tokenize <- control$tokenize
     if (is.null(.tokenize) || identical(.tokenize, "words"))
         .tokenize <- words
+    else if (identical(.tokenize, "Boost"))
+        .tokenize <- Boost_tokenizer
     else if (identical(.tokenize, "MC"))
         .tokenize <- MC_tokenizer
     else if (identical(.tokenize, "scan"))
@@ -288,14 +290,14 @@ function(doc, control = list())
     ## Stemming
     .stemming <- control$stemming
     if (isTRUE(.stemming))
-        .stemming <- function(x) stemDocument(x, .language)
+        .stemming <- function(x) SnowballC::wordStem(x, .language)
 
     ## Default order for options which support reordering
     or <- c("removePunctuation", "removeNumbers", "stopwords", "stemming")
 
     ## Process control options in specified order
     nc <- names(control)
-    n <- nc[nc %in% or]
+    n <- nc[!is.na(match(nc, or))]
     for (name in sprintf(".%s", c(n, setdiff(or, n)))) {
         g <- get(name)
         if (is.function(g))
@@ -304,7 +306,10 @@ function(doc, control = list())
 
     ## If dictionary is set tabulate against it
     dictionary <- control$dictionary
-    tab <- table(if (is.null(dictionary)) txt else intersect(txt, dictionary))
+    tab <- .table(if (is.null(dictionary))
+                      txt
+                  else
+                      txt[!is.na(match(txt, dictionary))])
 
     ## Ensure local bounds
     bl <- control$bounds$local

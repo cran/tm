@@ -1,4 +1,5 @@
 // [[Rcpp::depends(BH)]]
+// [[Rcpp::plugins(cpp11)]]
 
 #include <Rcpp.h>
 #include <boost/tokenizer.hpp>
@@ -58,6 +59,10 @@ List tdm(const StringVector strings,
             }
         }
     }
+
+    for (const std::string &term : dictionary)
+        if (std::find(terms.begin(), terms.end(), term) == terms.end())
+            terms.push_back(term);
 
     return List::create(Named("i") = i,
                         Named("j") = j,

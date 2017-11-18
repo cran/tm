@@ -7,8 +7,9 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
 
     readerControl <- prepareReader(readerControl, reader(x))
 
-    if ((inherits(x, "DirSource") || inherits(x, "VectorSource")) &&
-        identical(readerControl$reader, readPlain))
+    if ( (inherits(x, "DataframeSource") || inherits(x, "DirSource") ||
+          inherits(x, "VectorSource") ) &&
+        identical(readerControl$reader, reader(x)))
         SimpleCorpus(x, readerControl)
     else
         VCorpus(x, readerControl)
@@ -42,10 +43,16 @@ function(x,
     }
     x <- close(x)
 
-    p <- list(content = tdl,
-              meta = CorpusMeta(),
-              dmeta = data.frame(row.names = seq_along(tdl)),
-              dbcontrol = dbControl)
+    cmeta <- CorpusMeta()
+    dmeta <- data.frame(row.names = seq_along(tdl))
+    # Check if metadata retrieval is supported
+    if (is.function(getS3method("getMeta", class(x), TRUE))) {
+        m <- getMeta(x)
+        if (!is.null(m$cmeta)) cmeta <- m$cmeta
+        if (!is.null(m$dmeta)) dmeta <- m$dmeta
+    }
+
+    p <- list(content = tdl, meta = cmeta, dmeta = dmeta, dbcontrol = dbControl)
     class(p) <- c("PCorpus", "Corpus")
     p
 }
@@ -55,7 +62,7 @@ function(x, control = list(language = "en"))
 {
     stopifnot(inherits(x, "Source"))
 
-    if (!is.null(control$reader) && !identical(control$reader, readPlain))
+    if (!is.null(control$reader) && !identical(control$reader, reader(x)))
         warning("custom reader is ignored")
 
     content <- if (inherits(x, "VectorSource")) {
@@ -67,11 +74,21 @@ function(x, control = list(language = "en"))
                                             collapse = "\n"))
                    ),
                  basename(x$filelist))
+    } else if (inherits(x, "DataframeSource")) {
+        setNames(as.character(x$content[, "text"]), x$content[, "doc_id"])
     } else
         stop("unsupported source type")
+
+    dmeta <- if (inherits(x, "DataframeSource"))
+        x$content[, is.na(match(names(x$content),
+                                c("doc_id", "text"))),
+                  drop = FALSE]
+    else
+        data.frame(row.names = seq_along(x))
+
     s <- list(content = content,
               meta = CorpusMeta(language = control$language),
-              dmeta = data.frame(row.names = seq_along(x)))
+              dmeta = dmeta)
     class(s) <- c("SimpleCorpus", "Corpus")
     s
 }
@@ -106,7 +123,20 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
     }
     x <- close(x)
 
-    as.VCorpus(tdl)
+    cmeta <- CorpusMeta()
+    dmeta <- data.frame(row.names = seq_along(tdl))
+    # Check if metadata retrieval is supported
+    if (is.function(getS3method("getMeta", class(x), TRUE))) {
+        m <- getMeta(x)
+        if (!is.null(m$cmeta)) cmeta <- m$cmeta
+        if (!is.null(m$dmeta)) dmeta <- m$dmeta
+    }
+
+    v <- as.VCorpus(tdl)
+    v$meta <- cmeta
+    v$dmeta <- dmeta
+
+    v
 }
 
 `[.PCorpus` <-
@@ -161,10 +191,16 @@ function(x, i)
 {
     i <- .map_name_index(x, i)
     if (!is.null(x$lazy))
-        .Call(tm_copyCorpus, x, materialize(x, i))
+        .Call(`_tm_copyCorpus`, x, materialize(x, i))
     x$content[[i]]
 }
 
+`[[<-.SimpleCorpus` <-
+function(x, i, value)
+{
+    x$content[i] <- paste0(as.character(value), collapse = "\n")
+    x
+}
 `[[<-.PCorpus` <-
 function(x, i, value)
 {
@@ -243,7 +279,7 @@ content.VCorpus <-
 function(x)
 {
     if (!is.null(x$lazy))
-        .Call(tm_copyCorpus, x, materialize(x))
+        .Call(`_tm_copyCorpus`, x, materialize(x))
     x$content
 }
 

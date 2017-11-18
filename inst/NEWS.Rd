@@ -1,6 +1,39 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-2}{
+  \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+    \itemize{
+      \item \code{DataframeSource} now only processes data frames with the two
+        mandatory columns \code{"doc_id"} and \code{"text"}. Additional columns
+        are used as document level metadata. This implements compatibility with
+        \emph{Text Interchange Formats} corpora
+        (\url{https://github.com/ropensci/tif}).
+      \item \code{readTabular()} has been removed. Use \code{DataframeSource}
+        instead.
+      \item \code{removeNumbers()} and \code{removePunctuation()} now have an
+        argument \code{ucp} to check for Unicode general categories \code{Nd}
+        (decimal digits) and \code{P} (punctuation), respectively. Contributed
+        by Kurt Hornik.
+      \item The package \pkg{xml2} is now imported for \acronym{XML}
+        functionality instead of the (\acronym{CRAN} maintainer orphaned)
+        package \pkg{XML}.
+    }
+  }
+  \subsection{NEW FEATURES}{
+    \itemize{
+      \item \code{Boost_tokenizer} provides a tokenizer based on the Boost
+        (\url{http://www.boost.org}) Tokenizer.
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Correctly handle the \code{dictionary} argument when constructing a
+        term-document matrix from a \code{SimpleCorpus} (reported by Joe
+        Corrigan) or from a \code{VCorpus} (reported by Mark Rosenstein).
+    }
+  }
+}
 \section{Changes in tm version 0.7-1}{
   \subsection{BUG FIXES}{
     \itemize{

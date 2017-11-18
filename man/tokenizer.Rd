@@ -1,9 +1,11 @@
 \name{tokenizer}
+\alias{Boost_tokenizer}
 \alias{MC_tokenizer}
 \alias{scan_tokenizer}
 \title{Tokenizers}
 \description{Tokenize a document or character vector.}
 \usage{
+Boost_tokenizer(x)
 MC_tokenizer(x)
 scan_tokenizer(x)
 }
@@ -23,9 +25,11 @@ scan_tokenizer(x)
   tokenization function.
 
   \describe{
-    \item{scan_tokenizer}{Relies on \code{scan(\dots, what = "character")}.}
+    \item{Boost_tokenizer}{Uses the Boost (\url{http://www.boost.org})
+      Tokenizer (via \pkg{Rcpp}).}
     \item{MC_tokenizer}{Implements the functionality of the tokenizer in the
-    MC toolkit (\url{http://www.cs.utexas.edu/users/dml/software/mc/}).}
+      MC toolkit (\url{http://www.cs.utexas.edu/users/dml/software/mc/}).}
+    \item{scan_tokenizer}{Simulates \code{scan(\dots, what = "character")}.}
   }
 }
 \seealso{
@@ -36,9 +40,13 @@ scan_tokenizer(x)
 
   \code{\link[tau]{tokenize}} for a simple regular expression based tokenizer
     provided by package \pkg{tau}.
+
+  \code{\link[tokenizers]{tokenizers}} for a collection of tokenizers provided
+    by package \pkg{tokenizers}.
 }
 \examples{
 data("crude")
+Boost_tokenizer(crude[[1]])
 MC_tokenizer(crude[[1]])
 scan_tokenizer(crude[[1]])
 strsplit_space_tokenizer <- function(x)

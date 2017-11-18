@@ -26,23 +26,23 @@ as.DocumentTermMatrix(x, \dots)
 
     This is different for a \code{\link{SimpleCorpus}}. In this case all
     options are processed in a fixed order in one pass to improve performance.
-    It always uses the Boost Tokenizer (via \pkg{Rcpp}) and takes no custom
-    functions as option arguments.
+    It always uses the Boost (\url{http://www.boost.org}) Tokenizer (via
+    \pkg{Rcpp}) and takes no custom functions as option arguments.
 
     Available global options are:
     \describe{
       \item{\code{bounds}}{A list with a tag \code{global} whose value
-	must be an integer vector of length 2. Terms that appear in less
-	documents than the lower bound \code{bounds$global[1]} or in
-	more documents than the upper bound \code{bounds$global[2]} are
-	discarded. Defaults to \code{list(global = c(1, Inf))} (i.e., every
-	term will be used).}
+        must be an integer vector of length 2. Terms that appear in less
+        documents than the lower bound \code{bounds$global[1]} or in
+        more documents than the upper bound \code{bounds$global[2]} are
+        discarded. Defaults to \code{list(global = c(1, Inf))} (i.e., every
+        term will be used).}
       \item{\code{weighting}}{A weighting function capable of handling a
-	\code{TermDocumentMatrix}. It defaults to \code{weightTf} for term
-	frequency weighting. Available weighting functions shipped with
-	the \pkg{tm} package are \code{\link{weightTf}},
-	\code{\link{weightTfIdf}}, \code{\link{weightBin}}, and
-	\code{\link{weightSMART}}.}
+        \code{TermDocumentMatrix}. It defaults to \code{weightTf} for term
+        frequency weighting. Available weighting functions shipped with
+        the \pkg{tm} package are \code{\link{weightTf}},
+        \code{\link{weightTfIdf}}, \code{\link{weightBin}}, and
+        \code{\link{weightSMART}}.}
     }}
     \item{\dots}{the additional argument \code{weighting} (typically a
     \code{\link{WeightFunction}}) is allowed when coercing a

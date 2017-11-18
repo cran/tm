@@ -74,7 +74,7 @@ meta.VCorpus <- meta.PCorpus <-
 function(x, tag = NULL, type = c("indexed", "corpus", "local"), ...)
 {
     if (!is.null(tag) && missing(type)) {
-        type <- if (tag %in% colnames(x$dmeta)) "indexed"
+        type <- if (tag %in% names(x$dmeta)) "indexed"
         else if (tag %in% names(x$meta)) "corpus"
         else "local"
     }
