@@ -80,8 +80,8 @@ termFreq(doc, control = list())
   }
 }
 \value{
-  A table of class \code{c("term_frequency", "table")} with term frequencies as
-  values and tokens as names.
+  A table of class \code{c("term_frequency", "integer")} with term frequencies
+  as values and tokens as names.
 }
 \seealso{
   \code{\link{getTokenizers}}

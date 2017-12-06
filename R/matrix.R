@@ -548,6 +548,9 @@ function(x, size = 10)
     stopifnot(inherits(x, c("DocumentTermMatrix", "TermDocumentMatrix")),
               is.numeric(size), size >= 0)
 
+    if (length(x$v) == 0L)
+        return(x)
+
     m <- if (inherits(x, "DocumentTermMatrix")) t(x) else x
     terms <- sort(names(sort(row_sums(m), decreasing = TRUE)
                         [0:min(size, nTerms(m))]))

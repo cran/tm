@@ -10,6 +10,7 @@ function(x, ...)
 ## Efficient alternative to table() proposed by Kurt Hornik
 .table <- function(x) {
     u <- sort(unique(x))
+    if(!length(u)) return(integer())
     v <- tabulate(match(x, u))
     names(v) <- u
     v

@@ -82,8 +82,15 @@ readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
   employed by package \pkg{tm}.
 }
 \examples{
-uri <- sprintf("file://\%s", system.file(file.path("doc", "tm.pdf"), package = "tm"))
-pdf <- readPDF()(elem = list(uri = uri), language = "en", id = "id1")
+uri <- sprintf("file://\%s",
+               system.file(file.path("doc", "tm.pdf"), package = "tm"))
+engine <- if(nzchar(system.file(package = "pdftools"))) {
+    "pdftools" 
+} else {
+    "ghostscript"
+}
+reader <- readPDF(engine)
+pdf <- reader(elem = list(uri = uri), language = "en", id = "id1")
 cat(content(pdf)[1])
 VCorpus(URISource(uri, mode = ""),
         readerControl = list(reader = readPDF(engine = "ghostscript")))

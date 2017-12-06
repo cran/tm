@@ -1,6 +1,16 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-3}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item \code{scan_tokenizer()} now works with character vectors and
+        character strings.
+      \item \code{removePunctuation()} now works again in \code{latin1} locales.
+      \item Handle empty term-document matrices gracefully.
+    }
+  }
+}
 \section{Changes in tm version 0.7-2}{
   \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
     \itemize{

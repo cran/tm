@@ -2,12 +2,12 @@
 #include <Rdefines.h>
 #include <ctype.h>
 
-int is_space_or_punct(int c) {
-    return(isspace(c) || ispunct(c));
+static int is_space_or_ascii_punct(int c) {
+    return(isspace(c) || (ispunct(c) && isascii(c)));
 }
 
-SEXP _tm_scan(SEXP x, SEXP which) {
-    SEXP y, this;
+static SEXP tm_scan_one(SEXP this, int (*test) ()) {
+    SEXP y;
     Rboolean skip;
     int size = 256, i, j, nb = 0, ne = 0, u, v, w;
     int *beg, *end;
@@ -15,25 +15,8 @@ SEXP _tm_scan(SEXP x, SEXP which) {
     char c, *t, *p;
     cetype_t e;
 
-    int (*test) () = isspace;
-
-    if(LENGTH(which) > 0) {
-	PROTECT(this = AS_INTEGER(which));
-	w = INTEGER(this)[0];
-	if(w == 1)
-	    test = is_space_or_punct;
-	UNPROTECT(1);
-    }
-
-    if(LENGTH(x) < 1)
-	error("invalid '%s' argument", "x");
-
-    PROTECT(x = AS_CHARACTER(x));
-
-    this = STRING_ELT(x, 0);
     if(this == NA_STRING) {
-	UNPROTECT(1);
-	return NA_STRING;
+	return ScalarString(NA_STRING);
     }
 
     beg = Calloc(size, int);
@@ -84,6 +67,52 @@ SEXP _tm_scan(SEXP x, SEXP which) {
 
     Free(beg);
     Free(end);
+
+    UNPROTECT(1);
+
+    return y;
+}
+
+
+SEXP _tm_scan(SEXP x, SEXP which) {
+
+    SEXP y, z, this;
+    R_xlen_t i, j, k, nx, ny;
+    int w;
+
+    int (*test) () = isspace;
+
+    if(LENGTH(which) > 0) {
+	PROTECT(this = AS_INTEGER(which));
+	w = INTEGER(this)[0];
+	if(w == 1)
+	    test = is_space_or_ascii_punct;
+	UNPROTECT(1);
+    }
+
+    nx = LENGTH(x);
+
+    if(nx < 1)
+	return NEW_CHARACTER(0);
+
+    if(nx == 1)
+	return tm_scan_one(STRING_ELT(x, 0), test);
+
+    PROTECT(z = NEW_LIST(nx));
+    ny = 0;
+    for(i = 0; i < nx; i++) {
+	this = tm_scan_one(STRING_ELT(x, i), test);
+	SET_VECTOR_ELT(z, i, this);
+	ny += LENGTH(this);
+    }
+    // Now unlist.
+    k = 0;
+    PROTECT(y = NEW_STRING(ny));
+    for(i = 0; i < nx; i++) {
+	this = VECTOR_ELT(z, i);
+	for(j = 0; j < LENGTH(this); j++, k++)
+	    SET_STRING_ELT(y, k, STRING_ELT(this, j));
+    }
 
     UNPROTECT(2);
 
