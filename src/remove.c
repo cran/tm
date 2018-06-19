@@ -1,5 +1,7 @@
 #include <R.h>
 #include <Rdefines.h>
+
+/*
 #include <ctype.h>
 
 static int is_ascii_digit(int c) {
@@ -8,6 +10,17 @@ static int is_ascii_digit(int c) {
 
 static int is_ascii_punct(int c) {
     return(ispunct(c) && isascii(c));
+}
+*/
+
+static int is_ascii_digit(int c) {
+    static const char *s = "0123456789";
+    return strchr(s, c) == NULL ? 0 : 1;
+}
+
+static int is_ascii_punct(int c) {
+    static const char *s = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    return strchr(s, c) == NULL ? 0 : 1;
 }
 
 SEXP _tm_remove_chars(SEXP x, SEXP which) {
@@ -47,6 +60,7 @@ SEXP _tm_remove_chars(SEXP x, SEXP which) {
 	*t = '\0';
 	SET_STRING_ELT(y, i, mkCharCE(p, e));
     }
+    setAttrib(y, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
 
     UNPROTECT(2);
     return y;

@@ -1,6 +1,15 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-4}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Keep document names in \code{tm_map.SimpleCorpus()}.
+      \item Fix encoding problems in \code{scan_tokenizer()} and
+        \code{Boost_tokenizer()}.
+    }
+  }
+}
 \section{Changes in tm version 0.7-3}{
   \subsection{BUG FIXES}{
     \itemize{

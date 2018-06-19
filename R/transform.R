@@ -24,7 +24,12 @@ function(x, FUN, ...)
     if (inherits(FUN, "content_transformer"))
         FUN <- get("FUN", envir = environment(FUN))
 
+    n <- names(content(x))
     x$content <- FUN(content(x), ...)
+    if (length(content(x)) != length(n))
+        warning("transformation drops documents")
+    else
+        names(x$content) <- n
     x
 }
 tm_map.PCorpus <-

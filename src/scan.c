@@ -1,9 +1,26 @@
 #include <R.h>
 #include <Rdefines.h>
+
+/*
 #include <ctype.h>
+
+static int is_ascii_space(int c) {
+    return (isspace(c) && isascii(c));
+}
 
 static int is_space_or_ascii_punct(int c) {
     return(isspace(c) || (ispunct(c) && isascii(c)));
+}
+*/
+
+static int is_ascii_space(int c) {
+    static const char *s = " \f\n\r\t\v";
+    return strchr(s, c) == NULL ? 0 : 1;
+}
+
+static int is_ascii_space_or_punct(int c) {
+    static const char *s = " \f\n\r\t\v!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    return strchr(s, c) == NULL ? 0 : 1;
 }
 
 static SEXP tm_scan_one(SEXP this, int (*test) ()) {
@@ -80,13 +97,13 @@ SEXP _tm_scan(SEXP x, SEXP which) {
     R_xlen_t i, j, k, nx, ny;
     int w;
 
-    int (*test) () = isspace;
+    int (*test) () = is_ascii_space;
 
     if(LENGTH(which) > 0) {
 	PROTECT(this = AS_INTEGER(which));
 	w = INTEGER(this)[0];
 	if(w == 1)
-	    test = is_space_or_ascii_punct;
+	    test = is_ascii_space_or_punct;
 	UNPROTECT(1);
     }
 
