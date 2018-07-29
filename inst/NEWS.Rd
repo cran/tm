@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-5}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Handle \code{NA}s consistently in tokenizers.
+    }
+  }
+}
 \section{Changes in tm version 0.7-4}{
   \subsection{BUG FIXES}{
     \itemize{
@@ -193,7 +200,7 @@
       \item Following functions have been removed:
       \itemize{
         \item \code{Dictionary()} (use a character vector instead; use
-          \code{Terms()} to extract terms from a document-term or term-document 
+          \code{Terms()} to extract terms from a document-term or term-document
           matrix),
         \item \code{GmaneSource()} (but still available via an example in
           \code{XMLSource()}),
@@ -236,7 +243,7 @@
   \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
     \itemize{
       \item The function \code{termFreq()} now processes the
-      \code{tolower} and \code{tokenize} options first. 
+      \code{tolower} and \code{tokenize} options first.
     }
   }
   \subsection{NEW FEATURES}{
