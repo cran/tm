@@ -32,7 +32,7 @@ readRCV1asPlain(elem, language, id)
 }
 \examples{
 f <- system.file("texts", "rcv1_2330.xml", package = "tm")
-f_bin <- readBin(f, raw(), file.info(f)$size)
+f_bin <- readBin(f, raw(), file.size(f))
 rcv1 <- readRCV1(elem = list(content = f_bin), language = "en", id = "id1")
 content(rcv1)
 meta(rcv1)

@@ -82,8 +82,8 @@ readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
   employed by package \pkg{tm}.
 }
 \examples{
-uri <- sprintf("file://\%s",
-               system.file(file.path("doc", "tm.pdf"), package = "tm"))
+uri <- paste0("file://",
+              system.file(file.path("doc", "tm.pdf"), package = "tm"))
 engine <- if(nzchar(system.file(package = "pdftools"))) {
     "pdftools" 
 } else {

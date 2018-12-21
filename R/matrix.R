@@ -107,12 +107,14 @@ function(x, control = list())
         min(wl[2], .Machine$integer.max) else .Machine$integer.max
 
     m <- tdm(txt,
+             isTRUE(control$removePunctuation),
              isTRUE(control$removeNumbers),
              .stopwords, .dictionary,
              as.integer(min_term_freq), as.integer(max_term_freq),
              as.integer(min_word_length), as.integer(max_word_length))
 
-    m <- .SimpleTripletMatrix(m$i, m$j, m$v, enc2utf8(m$terms), x)
+    Encoding(m$terms) <- "UTF-8"
+    m <- .SimpleTripletMatrix(m$i, m$j, m$v, m$terms, x)
 
     ## Stemming
     ## <NOTE>

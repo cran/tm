@@ -26,9 +26,11 @@ tm_parLapply_engine(new)
   parallel computations performed in package \pkg{tm}, specifically
   \code{\link{tm_index}()}, \code{\link{tm_map}()} on a non-lazy-mapped
   \code{\link{VCorpus}}, and \code{\link{TermDocumentMatrix}()} on a
-  \code{\link{VCorpus}} or \code{\link{PCorpus}}.  Functions
-  \code{tm_parLapply()} and \code{tm_parLapply_engine()} can be used to
-  customize parallelization according to the available resources.
+  \code{\link{VCorpus}} or \code{\link{PCorpus}}.
+
+  Functions \code{tm_parLapply()} and \code{tm_parLapply_engine()} can
+  be used to customize parallelization according to the available
+  resources.
 
   \code{tm_parLapply_engine()} is used for getting (with no arguments)
   or setting (with argument \code{new}) the parallelization engine
@@ -41,15 +43,16 @@ tm_parLapply_engine(new)
   calls the function with the given arguments.  Otherwise, it simply
   calls \code{\link{lapply}()}.
 
-  Hence, to achieve parallelization via
+  Hence, parallelization via
   \code{\link[parallel:parLapply]{parLapply}()}
   and a default cluster registered via
-  \code{\link[parallel:setDefaultCluster]{setDefaultCluster}()}, one
-  can use \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
+  \code{\link[parallel:setDefaultCluster]{setDefaultCluster}()} can be
+  achieved via \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::parLapply(NULL, X, FUN, ...))}
-  or re-register the cluster, say \code{cl}, using \preformatted{  tm_parLapply_engine(cl)}
-  (note that there is no mechanism for programmatically getting the
-  registered default cluster).  Using \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
+  or re-registering the cluster, say \code{cl}, using \preformatted{  tm_parLapply_engine(cl)}
+  (note that since \R version 3.5.0, one can use
+  \code{\link[parallel:getDefaultCluster]{getDefaultCluster}()} to get
+  the registered default cluster).  Using \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::parLapplyLB(NULL, X, FUN, ...))}
   or \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::parLapplyLB(cl, X, FUN, ...))}

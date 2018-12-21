@@ -49,6 +49,7 @@ PCorpus(x,
 }
 \examples{
 txt <- system.file("texts", "txt", package = "tm")
-\dontrun{PCorpus(DirSource(txt),
+\dontrun{
+PCorpus(DirSource(txt),
         dbControl = list(dbName = "pcorpus.db", dbType = "DB1"))}
 }

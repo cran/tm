@@ -1,6 +1,20 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-6}{
+  \subsection{NEW FEATURES}{
+    \itemize{
+      \item \code{TermDocumentMatrix.SimpleCorpus()} now also honors a
+      logical \code{removePunctuation} control option (default: false).
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Sync encoding fixes in \code{TermDocumentMatrix.SimpleCorpus()} with
+        \code{Boost_tokenizer()}.
+    }
+  }
+}
 \section{Changes in tm version 0.7-5}{
   \subsection{BUG FIXES}{
     \itemize{

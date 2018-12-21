@@ -14,7 +14,7 @@ DataframeSource(x)
   A \emph{data frame source} interprets each row of the data frame \code{x} as a
   document. The first column must be named \code{"doc_id"} and contain a unique
   string identifier for each document. The second column must be named
-  \code{"text"} and contain a \code{"UTF-8"} encoded string representing the
+  \code{"text"} and contain a UTF-8 encoded string representing the
   document's content. Optional additional columns are used as document level
   metadata.
 }

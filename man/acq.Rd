@@ -16,14 +16,14 @@
   Machine Learning for Natural Language Processing.
   \emph{European Summer School of Logic, Language and Information,
     course reader}.
-  \url{https://www.scss.tcd.ie/~luzs/publications/mlfornlp.pdf}
+  \url{http://ronaldo.cs.tcd.ie/esslli07/mlfornlp.pdf}
 
   Lewis, David (1997) \emph{Reuters-21578 Text Categorization
     Collection Distribution 1.0}.
   \url{http://kdd.ics.uci.edu/databases/reuters21578/reuters21578.html}
 
   Luz, Saturnino \emph{\acronym{XML}-encoded version of Reuters-21578}.
-  \url{https://www.scss.tcd.ie/~luzs/t/cs4ll4/sw/reuters21578-xml/}
+  \url{http://ronaldo.cs.tcd.ie/esslli07/data/reuters21578-xml/}
 }
 \examples{
 data("acq")
