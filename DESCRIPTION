@@ -29,3 +29,4 @@ Author: Ingo Feinerer [aut, cre] (<https://orcid.org/0000-0001-7656-8338>),
 Maintainer: Ingo Feinerer <feinerer@logic.at>
 Repository: CRAN
 Date/Publication: 2018-12-21 13:55:26 UTC
+RoxygenNote: 6.1.1
