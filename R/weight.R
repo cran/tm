@@ -45,13 +45,12 @@ weightModel <- function(m, spec = "nnn", control = list())
 {
     docfreq <- row_sums(m > 0)
     mode(docfreq) <- "integer"
-    return(list("docfreq" = docfreq))
+    
+    return(list("docfreq" = docfreq,
+                "ndoc" = nDocs(m)))
 }
 
-weightSMART2 <- function(m,
-                         spec = "nnn",
-                         control = list())
-{
+weightSMART2 <- WeightFunction(function(m, spec = "nnn", control = list()) {
     stopifnot(inherits(m, c("DocumentTermMatrix", "TermDocumentMatrix")),
               is.character(spec), nchar(spec) == 3L, is.list(control))
 
@@ -99,6 +98,10 @@ weightSMART2 <- function(m,
         rs <- control$docfreq
     else
         rs <- row_sums(m > 0)
+    if(!is.null(control$ndoc))
+        ndoc <- control$ndoc
+    else
+        ndoc <- nDocs(m)
    
     if (any(rs == 0))
         warning("unreferenced term(s): ",
@@ -107,9 +110,9 @@ weightSMART2 <- function(m,
                  ## natural
                  n = 1,
                  ## idf
-                 t = log2(nDocs(m) / rs),
+                 t = log2(ndoc / rs),
                  ## prob idf
-                 p = max(0, log2((nDocs(m) - rs) / rs)))
+                 p = max(0, log2((ndoc - rs) / rs)))
     df[!is.finite(df)] <- 0
 
     ## Normalization
@@ -147,7 +150,7 @@ weightSMART2 <- function(m,
     attr(m, "weighting") <- c(paste("SMART", spec), "SMART")
 
      m <- if (isDTM) t(m) else m
-}
+}, "SMART2", "SMART2")
 
 weightSMART <-
     WeightFunction(function(m, spec = "nnn", control = list()) {
