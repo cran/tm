@@ -2,7 +2,7 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 
-void _tm_copyCorpus(SEXP x, SEXP y);
+SEXP _tm_copyCorpus(SEXP x, SEXP y);
 SEXP _tm_remove_chars(SEXP x, SEXP which);
 SEXP _tm_scan(SEXP x, SEXP which);
 SEXP _tm_tdm(SEXP stringsSEXP, SEXP remove_punctsSEXP, SEXP remove_digitsSEXP, SEXP stopwordsSEXP, SEXP dictionarySEXP, SEXP min_term_freqSEXP, SEXP max_term_freqSEXP, SEXP min_word_lengthSEXP, SEXP max_word_lengthSEXP);

@@ -68,11 +68,15 @@ List tdm(const StringVector strings,
             unsigned int freq = it->second;
 
             if (min_term_freq <= freq && freq <= max_term_freq) {
+                unsigned int tpt;
                 if (!terms_pos.count(term)) {
-                    terms_pos[term] = column++;
+                    tpt = column++;
+                    terms_pos[term] = tpt;
                     terms.push_back(term);
+                } else {
+                    tpt = terms_pos[term];
                 }
-                i.push_back(terms_pos[term]);
+                i.push_back(tpt);
                 j.push_back(index + 1);
                 v.push_back(freq);
             }

@@ -123,13 +123,17 @@ function(x, control = list())
     ## significant overhead (as SnowballC does not export its internal C
     ## functions).
     ##
-    ## Stemming afterwards is still quite performant as we already have all
-    ## terms. However, there is some overhead involved as we need to recheck
-    ## local bounds and word lengths.
+    ## Stemming afterwards is still quite performant as we already have
+    ## all terms.  However, there is some overhead involved as we need
+    ## to recheck local bounds and word lengths.
     ## </NOTE>
     if (isTRUE(control$stemming)) {
-        stems <- as.factor(SnowballC::wordStem(m$dimnames$Terms,
-                                               meta(x, "language")))
+        stems <- SnowballC::wordStem(m$dimnames$Terms,
+                                     meta(x, "language"))
+        ## Do as.factor(stems) "by hand" for performance reasons.
+        uniqs <- sort(unique(stems))
+        stems <- match(stems, uniqs)
+        attributes(stems) <- list(levels = uniqs, class = "factor")
         m <- rollup(m, "Terms", stems)
 
         ## Recheck local bounds
