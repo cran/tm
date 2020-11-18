@@ -6,7 +6,7 @@ function(x, dictionary,
                   "none", "random", "shortest"))
 {
     if (inherits(dictionary, "Corpus"))
-        dictionary <- unique(unlist(lapply(dictionary, words)))
+        dictionary <- unlist(lapply(dictionary, words))
 
     type <- match.arg(type)
     possibleCompletions <- lapply(x, function(w) grep(sprintf("^%s", w),

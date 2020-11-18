@@ -22,10 +22,10 @@ read_dtm_MC(file, scalingtype = NULL)
   \code{read_dtm_Blei_et_al} reads the (List of Lists type sparse
   matrix) format employed by the Latent Dirichlet Allocation and
   Correlated Topic Model C codes by Blei et al
-  (\url{http://www.cs.columbia.edu/~blei}).
+  (\url{http://www.cs.columbia.edu/~blei/}).
 
   MC is a toolkit for creating vector models from text documents (see 
-  \url{http://www.cs.utexas.edu/users/dml/software/mc/}).  It employs a
+  \url{https://www.cs.utexas.edu/users/dml/software/mc/}).  It employs a
   variant of Compressed Column Storage (CCS) sparse matrix format,
   writing data into several files with suitable names: e.g., a file with
   \file{_dim} appended to the base file name stores the matrix

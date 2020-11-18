@@ -24,7 +24,7 @@ PlainTextDocument(x = character(0),
   \item{datetimestamp}{an object of class \code{\link{POSIXt}} or a character
     string giving the creation date/time information.  If a character string,
     exactly one of the \acronym{ISO} 8601 formats defined by
-    \url{http://www.w3.org/TR/NOTE-datetime} should be used.
+    \url{https://www.w3.org/TR/NOTE-datetime} should be used.
     See \code{\link[NLP]{parse_ISO_8601_datetime}} in package \pkg{NLP}
     for processing such date/time information.
   }

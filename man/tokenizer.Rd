@@ -25,10 +25,10 @@ scan_tokenizer(x)
   tokenization function.
 
   \describe{
-    \item{Boost_tokenizer}{Uses the Boost (\url{http://www.boost.org})
+    \item{Boost_tokenizer}{Uses the Boost (\url{https://www.boost.org})
       Tokenizer (via \pkg{Rcpp}).}
     \item{MC_tokenizer}{Implements the functionality of the tokenizer in the
-      MC toolkit (\url{http://www.cs.utexas.edu/users/dml/software/mc/}).}
+      MC toolkit (\url{https://www.cs.utexas.edu/users/dml/software/mc/}).}
     \item{scan_tokenizer}{Simulates \code{scan(\dots, what = "character")}.}
   }
 }

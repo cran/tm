@@ -28,7 +28,7 @@ readRCV1asPlain(elem, language, id)
   Lewis, D. D.; Yang, Y.; Rose, T.; and Li, F (2004).
   RCV1: A New Benchmark Collection for Text Categorization Research.
   \emph{Journal of Machine Learning Research}, \bold{5}, 361--397.
-  \url{http://www.jmlr.org/papers/volume5/lewis04a/lewis04a.pdf}
+  \url{https://www.jmlr.org/papers/volume5/lewis04a/lewis04a.pdf}
 }
 \examples{
 f <- system.file("texts", "rcv1_2330.xml", package = "tm")

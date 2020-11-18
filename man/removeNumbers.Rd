@@ -28,7 +28,7 @@
   \code{\link{getTransformations}} to list available transformation
   (mapping) functions.
 
-  \url{http://unicode.org/reports/tr44/#General_Category_Values}.
+  \url{https://unicode.org/reports/tr44/#General_Category_Values}.
 }
 \examples{
 data("crude")

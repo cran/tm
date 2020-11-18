@@ -22,8 +22,8 @@
 \arguments{
   \item{x}{A corpus.}
   \item{FUN}{a filter function taking a text document or a string (if
-    \code{x} is a \code{SimpleCorpus}) as input and returning a
-    logical value.}
+    \code{x} is a \code{SimpleCorpus}) as input and returning the
+    logical value \code{TRUE} or \code{FALSE}.}
   \item{\dots}{arguments to \code{FUN}.}
 }
 \value{

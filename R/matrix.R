@@ -78,6 +78,12 @@ function(x, control = list())
 {
     stopifnot(is.list(control))
 
+    if (any(unlist(lapply(control, is.function))))
+        warning("custom functions are ignored")
+
+    if (!is.null(control$tokenize) && !identical(control$tokenize, "Boost"))
+        warning("custom tokenizer is ignored")
+
     txt <- content(x)
 
     ## Conversion to lower case

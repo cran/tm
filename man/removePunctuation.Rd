@@ -41,7 +41,7 @@
   \code{\link{regex}} shows the class \code{[:punct:]} of punctuation
   characters.
 
-  \url{http://unicode.org/reports/tr44/#General_Category_Values}.
+  \url{https://unicode.org/reports/tr44/#General_Category_Values}.
 }
 \examples{
 data("crude")

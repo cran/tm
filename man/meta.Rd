@@ -56,14 +56,14 @@ DublinCore(x, tag) <- value
   \code{DublinCore} is a convenience wrapper to access and modify the metadata
   of a text document using the Simple Dublin Core schema (supporting the 15
   metadata elements from the Dublin Core Metadata Element Set
-  \url{http://dublincore.org/documents/dces/}).
+  \url{https://dublincore.org/documents/dces/}).
 }
 \seealso{
   \code{\link[NLP]{meta}} for metadata in package \pkg{NLP}.
 }
 \references{
   Dublin Core Metadata Initiative.
-  \url{http://dublincore.org/}
+  \url{https://dublincore.org/}
 }
 \examples{
 data("crude")

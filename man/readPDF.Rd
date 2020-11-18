@@ -30,8 +30,8 @@ readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
     \item{\code{"xpdf"}}{command line \command{pdfinfo} and
       \command{pdftotext} executables which must be installed and accessible on
       your system. Suitable utilities are provided by the Xpdf
-      (\url{http://www.foolabs.com/xpdf/}) \acronym{PDF} viewer or by the
-      Poppler (\url{http://poppler.freedesktop.org/}) \acronym{PDF} rendering
+      (\url{http://www.xpdfreader.com/}) \acronym{PDF} viewer or by the
+      Poppler (\url{https://poppler.freedesktop.org/}) \acronym{PDF} rendering
       library.}
     \item{\code{"Rpoppler"}}{Poppler \acronym{PDF} rendering library as
       provided by the functions \code{\link[Rpoppler]{PDF_info}} and

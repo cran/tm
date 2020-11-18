@@ -45,11 +45,14 @@ function(x,
 
     cmeta <- CorpusMeta()
     dmeta <- data.frame(row.names = seq_along(tdl))
-    # Check if metadata retrieval is supported
-    if (is.function(getS3method("getMeta", class(x), TRUE))) {
-        m <- getMeta(x)
-        if (!is.null(m$cmeta)) cmeta <- m$cmeta
-        if (!is.null(m$dmeta)) dmeta <- m$dmeta
+    ## Check if metadata retrieval is supported
+    for(cl in class(x)) {
+        if (is.function(getS3method("getMeta", cl, TRUE))) {
+            m <- getMeta(x)
+            if (!is.null(m$cmeta)) cmeta <- m$cmeta
+            if (!is.null(m$dmeta)) dmeta <- m$dmeta
+            break
+        }
     }
 
     p <- list(content = tdl, meta = cmeta, dmeta = dmeta, dbcontrol = dbControl)
@@ -102,14 +105,22 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
 
     x <- open(x)
     tdl <- vector("list", length(x))
-    # Check for parallel element access
-    if (is.function(getS3method("pGetElem", class(x), TRUE)))
-        tdl <- mapply(function(elem, id)
-                        readerControl$reader(elem, readerControl$language, id),
-                      pGetElem(x),
-                      id = as.character(seq_along(x)),
-                      SIMPLIFY = FALSE)
-    else {
+    ## Check for parallel element access
+    found <- FALSE
+    for(cl in class(x)) {
+        if (is.function(getS3method("pGetElem", cl, TRUE))) {
+            tdl <- mapply(function(elem, id)
+                              readerControl$reader(elem,
+                                                   readerControl$language,
+                                                   id),
+                          pGetElem(x),
+                          id = as.character(seq_along(x)),
+                          SIMPLIFY = FALSE)
+            found <- TRUE
+            break
+        }
+    }
+    if(!found) {
         counter <- 1
         while (!eoi(x)) {
             x <- stepNext(x)
@@ -125,11 +136,14 @@ function(x, readerControl = list(reader = reader(x), language = "en"))
 
     cmeta <- CorpusMeta()
     dmeta <- data.frame(row.names = seq_along(tdl))
-    # Check if metadata retrieval is supported
-    if (is.function(getS3method("getMeta", class(x), TRUE))) {
-        m <- getMeta(x)
-        if (!is.null(m$cmeta)) cmeta <- m$cmeta
-        if (!is.null(m$dmeta)) dmeta <- m$dmeta
+    ## Check if metadata retrieval is supported
+    for(cl in class(x)) {
+        if (is.function(getS3method("getMeta", cl, TRUE))) {
+            m <- getMeta(x)
+            if (!is.null(m$cmeta)) cmeta <- m$cmeta
+            if (!is.null(m$dmeta)) dmeta <- m$dmeta
+            break
+        }
     }
 
     v <- as.VCorpus(tdl)
