@@ -177,6 +177,10 @@ function(x, control = list())
     .TermDocumentMatrix(m, control$weighting)
 }
 
+TermDocumentMatrix.default <-
+function(x, control = list())
+    TermDocumentMatrix(Corpus(VectorSource(x)), control)
+
 DocumentTermMatrix <-
 function(x, control = list())
     t(TermDocumentMatrix(x, control))

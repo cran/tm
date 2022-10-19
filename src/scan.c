@@ -23,7 +23,7 @@ static int is_ascii_space_or_punct(int c) {
     return strchr(s, c) == NULL ? 0 : 1;
 }
 
-static SEXP tm_scan_one(SEXP this, int (*test) ()) {
+static SEXP tm_scan_one(SEXP this, int (*test) (int)) {
     SEXP y;
     Rboolean skip;
     int size = 256, i, j, nb = 0, ne = 0, u, v, w;
@@ -97,7 +97,7 @@ SEXP _tm_scan(SEXP x, SEXP which) {
     R_xlen_t i, j, k, nx, ny;
     int w;
 
-    int (*test) () = is_ascii_space;
+    int (*test) (int) = is_ascii_space;
 
     if(LENGTH(which) > 0) {
 	PROTECT(this = AS_INTEGER(which));

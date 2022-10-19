@@ -10,9 +10,6 @@ bibentry(bibtype = "Article",
          volume = 25,
          number = 5,
 	 pages = "1--54",
-         url = "https://www.jstatsoft.org/v25/i05/",
          month = "March",
-         textVersion = paste("Ingo Feinerer, Kurt Hornik, and David Meyer (2008).",
-                   "Text Mining Infrastructure in R.",
-                   "Journal of Statistical Software 25(5): 1-54.",
-                   "URL: https://www.jstatsoft.org/v25/i05/."))
+	 doi = "10.18637/jss.v025.i05"
+	 )

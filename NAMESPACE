@@ -252,6 +252,8 @@ S3method("getElem", "ZipSource")
 S3method("open", "ZipSource")
 S3method("pGetElem", "ZipSource")
 
+S3method("TermDocumentMatrix", "default")
+
 S3method("as.DocumentTermMatrix", "DocumentTermMatrix")
 S3method("as.DocumentTermMatrix", "TermDocumentMatrix")
 S3method("as.DocumentTermMatrix", "default")

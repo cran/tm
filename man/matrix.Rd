@@ -14,10 +14,11 @@ as.TermDocumentMatrix(x, \dots)
 as.DocumentTermMatrix(x, \dots)
 }
 \arguments{
-  \item{x}{a corpus for the constructors and either a term-document
-    matrix or a document-term matrix or a \link[slam:matrix]{simple
-    triplet matrix} (package \pkg{slam}) or a \link[=termFreq]{term
-    frequency vector} for the coercing functions.}
+  \item{x}{for the constructors, a corpus or an \R object from which a
+    corpus can be generated via \code{Corpus(VectorSource(x))}; for the
+    coercing functions, either a term-document matrix or a document-term
+    matrix or a \link[slam:matrix]{simple triplet matrix} (package
+    \pkg{slam}) or a \link[=termFreq]{term frequency vector}.} 
   \item{control}{a named list of control options. There are local
     options which are evaluated for each document and global options
     which are evaluated once for the constructed matrix. Available local

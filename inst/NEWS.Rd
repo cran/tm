@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-9}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Compilation fixes.
+    }
+  }
+}
 \section{Changes in tm version 0.7-8}{
   \subsection{BUG FIXES}{
     \itemize{
@@ -60,7 +67,7 @@
         mandatory columns \code{"doc_id"} and \code{"text"}. Additional columns
         are used as document level metadata. This implements compatibility with
         \emph{Text Interchange Formats} corpora
-        (\url{https://github.com/ropensci/tif}).
+        (\url{https://github.com/ropenscilabs/tif}).
       \item \code{readTabular()} has been removed. Use \code{DataframeSource}
         instead.
       \item \code{removeNumbers()} and \code{removePunctuation()} now have an

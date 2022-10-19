@@ -30,7 +30,7 @@ SEXP _tm_remove_chars(SEXP x, SEXP which) {
     char c, *t, *p;
     cetype_t e;
 
-    int (*test) () = is_ascii_punct;
+    int (*test) (int) = is_ascii_punct;
 
     if(LENGTH(which) > 0) {
 	PROTECT(this = AS_INTEGER(which));
