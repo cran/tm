@@ -1,6 +1,14 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-10}{
+\subsection{NEW FEATURES}{
+    \itemize{
+      \item All built-in \code{pGetElem()} methods now use
+      \code{tm_parLapply()}.
+    }
+  }
+}
 \section{Changes in tm version 0.7-9}{
   \subsection{BUG FIXES}{
     \itemize{

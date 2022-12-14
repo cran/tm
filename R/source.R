@@ -261,41 +261,45 @@ function(x)
 
 pGetElem.DataframeSource <-
 function(x)
-    lapply(seq_len(x$length),
-           function(y) list(content = x$content[y, ],
-                            uri = NULL))
+    tm_parLapply(seq_len(x$length),
+                 function(y)
+                     list(content = x$content[y, ],
+                          uri = NULL))
 `[.DataframeSource` <- function(x, i, j, ...) x$content[i, j, ...]
 `[[.DataframeSource` <- function(x, ...) x$content[[...]]
 
 pGetElem.DirSource <-
 function(x)
-    lapply(x$filelist,
-           function(f) list(content = readContent(f, x$encoding, x$mode),
-                            uri = paste0("file://", f)))
+    tm_parLapply(x$filelist,
+                 function(f)
+                     list(content = readContent(f, x$encoding, x$mode),
+                          uri = paste0("file://", f)))
 `[.DirSource` <- function(x, i, ...) x$filelist[i, ...]
 `[[.DirSource` <- function(x, i, ...) x$filelist[[i, ...]]
 
 pGetElem.URISource <-
 function(x)
-    lapply(x$uri,
-           function(uri) list(content = readContent(uri, x$encoding, x$mode),
-                              uri = uri))
+    tm_parLapply(x$uri,
+                 function(uri)
+                     list(content = readContent(uri, x$encoding, x$mode),
+                          uri = uri))
 `[.URISource` <- function(x, i, ...) x$uri[i, ...]
 `[[.URISource` <- function(x, i, ...) x$uri[[i, ...]]
 
 pGetElem.VectorSource <-
 function(x)
-    lapply(x$content,
-           function(y) list(content = y,
-                            uri = NULL))
+    tm_parLapply(x$content,
+                 function(y) list(content = y,
+                                  uri = NULL))
 `[.VectorSource` <- function(x, i, ...) x$content[i, ...]
 `[[.VectorSource` <- function(x, i, ...) x$content[[i, ...]]
 
 pGetElem.ZipSource <-
 function(x)
-    lapply(file.path(x$exdir, x$files),
-           function(f) list(content = readContent(f, x$encoding, x$mode),
-                            uri = paste0("file://", f)))
+    tm_parLapply(file.path(x$exdir, x$files),
+                 function(f)
+                     list(content = readContent(f, x$encoding, x$mode),
+                          uri = paste0("file://", f)))
 
 reader <-
 function(x)
