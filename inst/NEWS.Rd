@@ -1,8 +1,15 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-11}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Use the default C++ standard instead of C++11.
+    }
+  }
+}
 \section{Changes in tm version 0.7-10}{
-\subsection{NEW FEATURES}{
+  \subsection{NEW FEATURES}{
     \itemize{
       \item All built-in \code{pGetElem()} methods now use
       \code{tm_parLapply()}.

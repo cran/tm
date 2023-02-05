@@ -23,11 +23,14 @@ readDOC(engine = c("antiword", "executable"), AntiwordOptions = "")
   \describe{
     \item{\code{"antiword"}}{(default) Antiword utility as provided by the
       function \code{\link[antiword]{antiword}} in package \pkg{antiword}.}
-    \item{\code{"executable"}}{command line \command{antiword} executable which
-      must be installed and accessible on your system. This can convert
-      documents from Microsoft Word version 2, 6, 7, 97, 2000, 2002 and 2003 to
-      plain text, and is available from \url{http://www.winfield.demon.nl/}. The
-      character vector \code{AntiwordOptions} is passed over to the executable.}
+    \item{\code{"executable"}}{command line \command{antiword}
+      executable which must be installed and accessible on your system.
+      This can convert documents from Microsoft Word version 2, 6, 7,
+      97, 2000, 2002 and 2003 to plain text.
+      %% As of 2023-02-05, http://www.winfield.demon.nl/ does not work.
+      %%   , and is available from \url{http://www.winfield.demon.nl/}.
+      The character vector \code{AntiwordOptions} is passed over to the
+      executable.}
   }
 }
 \value{

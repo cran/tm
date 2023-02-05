@@ -21,7 +21,7 @@
 
   Lewis, David (1997) \emph{Reuters-21578 Text Categorization
     Collection Distribution 1.0}.
-  \url{http://kdd.ics.uci.edu/databases/reuters21578/reuters21578.html}
+  \url{https://archive.ics.uci.edu/ml/datasets/reuters-21578+text+categorization+collection}
 
   %% Luz, Saturnino \emph{\acronym{XML}-encoded version of Reuters-21578}.
   %% \url{http://ronaldo.cs.tcd.ie/esslli07/data/reuters21578-xml/}
