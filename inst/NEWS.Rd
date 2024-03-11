@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-12}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Add missing S3 method registration.
+    }
+  }
+}
 \section{Changes in tm version 0.7-11}{
   \subsection{BUG FIXES}{
     \itemize{

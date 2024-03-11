@@ -19,9 +19,10 @@
   %% \url{http://ronaldo.cs.tcd.ie/esslli07/mlfornlp.pdf}
   %% \url{http://www.homepages.ed.ac.uk/sluzfil/esslli07/mlfornlp.pdf}
 
-  Lewis, David (1997) \emph{Reuters-21578 Text Categorization
-    Collection Distribution 1.0}.
-  \url{https://archive.ics.uci.edu/ml/datasets/reuters-21578+text+categorization+collection}
+  Lewis, David (1997).
+  \emph{Reuters-21578 Text Categorization Collection Distribution}.
+  UCI Machine Learning Repository.
+  \doi{10.24432/C52G6M}.
 
   %% Luz, Saturnino \emph{\acronym{XML}-encoded version of Reuters-21578}.
   %% \url{http://ronaldo.cs.tcd.ie/esslli07/data/reuters21578-xml/}
