@@ -23,9 +23,9 @@ termFreq(doc, control = list())
           \item{\code{"Boost"}}{for \code{\link{Boost_tokenizer}}, or}
           \item{\code{"MC"}}{for \code{\link{MC_tokenizer}}, or}
           \item{\code{"scan"}}{for \code{\link{scan_tokenizer}}, or}
-          \item{\code{"words"}}{for \code{\link{words}}.}
+          \item{\code{"words"}}{for \code{\link[NLP]{words}}.}
         }
-        Defaults to \code{\link{words}}.}
+        Defaults to \code{\link[NLP]{words}}.}
       \item{\code{tolower}}{Either a logical value indicating whether
         characters should be translated to lower case or a custom function
         converting characters to lower case. Defaults to

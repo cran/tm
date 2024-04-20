@@ -15,7 +15,7 @@ content_transformer(FUN)
   A function with two arguments:
   \describe{
     \item{\code{x}}{an \R object with implemented content getter
-      (\code{\link[NLP]{content}}) and setter (\code{\link{content<-}})
+      (\code{\link[NLP]{content}}) and setter (\code{\link[NLP]{content<-}})
       functions.}
     \item{\code{\dots}}{arguments passed over to \code{FUN}.}
   }
