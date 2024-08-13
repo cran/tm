@@ -25,7 +25,7 @@ read_dtm_MC(file, scalingtype = NULL)
   (\url{http://www.cs.columbia.edu/~blei/}).
 
   MC is a toolkit for creating vector models from text documents (see 
-  \url{https://www.cs.utexas.edu/users/dml/software/mc/}).  It employs a
+  \url{https://www.cs.utexas.edu/~dml/software/mc/}).  It employs a
   variant of Compressed Column Storage (CCS) sparse matrix format,
   writing data into several files with suitable names: e.g., a file with
   \file{_dim} appended to the base file name stores the matrix

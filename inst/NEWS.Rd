@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-14}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Use R_Calloc/R_Free instead of the long-deprecated Calloc/Free.
+    }
+  }
+}
 \section{Changes in tm version 0.7-13}{
   \subsection{BUG FIXES}{
     \itemize{

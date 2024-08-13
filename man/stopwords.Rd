@@ -22,7 +22,7 @@ stopwords(kind = "en")
       retrieval system (as documented in Appendix 11 of
       \url{https://jmlr.csail.mit.edu/papers/volume5/lewis04a/})
       (which coincides with the stopword list used by the MC toolkit
-      (\url{https://www.cs.utexas.edu/users/dml/software/mc/})),}
+      (\url{https://www.cs.utexas.edu/~dml/software/mc/})),}
   }
   and a set of stopword lists from the Snowball stemmer project in different
   languages (obtained from

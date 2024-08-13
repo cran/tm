@@ -21,5 +21,7 @@
 \examples{
 data("crude")
 inspect(crude[[1]])
-inspect(stemDocument(crude[[1]]))
+if(requireNamespace("SnowballC")) {
+    inspect(stemDocument(crude[[1]]))
+}
 }

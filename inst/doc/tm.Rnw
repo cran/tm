@@ -12,6 +12,7 @@
 \newcommand{\proglang}[1]{\textsf{#1}}
 
 %% \VignetteIndexEntry{Introduction to the tm Package}
+%% \VignetteDepends{SnowballC}
 
 \begin{document}
 <<Init,echo=FALSE,results=hide>>=

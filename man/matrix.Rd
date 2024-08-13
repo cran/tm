@@ -75,10 +75,12 @@ inspect(tdm[202:205, 1:5])
 inspect(tdm[c("price", "prices", "texas"), c("127", "144", "191", "194")])
 inspect(dtm[1:5, 273:276])
 
-s <- SimpleCorpus(VectorSource(unlist(lapply(crude, as.character))))
-m <- TermDocumentMatrix(s,
-                        control = list(removeNumbers = TRUE,
-                                       stopwords = TRUE,
-                                       stemming = TRUE))
-inspect(m[c("price", "texa"), c("127", "144", "191", "194")])
+if(requireNamespace("SnowballC")) {
+    s <- SimpleCorpus(VectorSource(unlist(lapply(crude, as.character))))
+    m <- TermDocumentMatrix(s,
+                            control = list(removeNumbers = TRUE,
+                                           stopwords = TRUE,
+                                           stemming = TRUE))
+    inspect(m[c("price", "texa"), c("127", "144", "191", "194")])
+}
 }
