@@ -16,7 +16,7 @@ tm_parLapply_engine(new)
   \item{FUN}{the function to be applied to each element of \code{X}.}
   \item{...}{optional arguments to \code{FUN}.}
   \item{new}{an object inheriting from class \code{cluster} as created
-    by \code{\link[parallel:makeCluster]{makeCluster}()} from package
+    by \code{\link[parallel]{makeCluster}()} from package
     \pkg{parallel}, or a function with formals \code{X}, \code{FUN} and
     \code{...}, or \code{NULL} corresponding to the default of using no
     parallelization engine.}
@@ -38,20 +38,20 @@ tm_parLapply_engine(new)
 
   If an engine is set to an object inheriting from class \code{cluster},
   \code{tm_parLapply()} calls
-  \code{\link[parallel:parLapply]{parLapply}()} with this cluster and 
+  \code{\link[parallel]{parLapply}()} with this cluster and 
   the given arguments.  If set to a function, \code{tm_parLapply()}
   calls the function with the given arguments.  Otherwise, it simply
   calls \code{\link{lapply}()}.
 
   Hence, parallelization via
-  \code{\link[parallel:parLapply]{parLapply}()}
+  \code{\link[parallel]{parLapply}()}
   and a default cluster registered via
-  \code{\link[parallel:setDefaultCluster]{setDefaultCluster}()} can be
+  \code{\link[parallel]{setDefaultCluster}()} can be
   achieved via \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::parLapply(NULL, X, FUN, ...))}
   or re-registering the cluster, say \code{cl}, using \preformatted{  tm_parLapply_engine(cl)}
   (note that since \R version 3.5.0, one can use
-  \code{\link[parallel:getDefaultCluster]{getDefaultCluster}()} to get
+  \code{\link[parallel]{getDefaultCluster}()} to get
   the registered default cluster).  Using \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::parLapplyLB(NULL, X, FUN, ...))}
   or \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
@@ -59,10 +59,10 @@ tm_parLapply_engine(new)
   gives load-balancing parallelization with the registered default or
   given cluster, respectively.  To achieve parallelization via forking
   (on Unix-alike platforms), one can use the above with clusters created
-  by \code{\link[parallel:makeForkCluster]{makeForkCluster}()}, or use \preformatted{  tm_parLapply_engine(parallel::mclapply)}
+  by \code{\link[parallel]{makeForkCluster}()}, or use \preformatted{  tm_parLapply_engine(parallel::mclapply)}
   or \preformatted{  tm_parLapply_engine(function(X, FUN, ...)
       parallel::mclapply(X, FUN, ..., mc.cores = n))}
-  to use \code{\link[parallel:mclapply]{mclapply}()} with the default or
+  to use \code{\link[parallel]{mclapply}()} with the default or
   given number \code{n} of cores.
 }
 \value{
@@ -70,8 +70,8 @@ tm_parLapply_engine(new)
   together with the \code{...} arguments to each element of \code{X}.
 }
 \seealso{
-  \code{\link[parallel:makeCluster]{makeCluster}()},
-  \code{\link[parallel:parLapply]{parLapply}()},
-  \code{\link[parallel:parLapplyLB]{parLapplyLB}()}, and
-  \code{\link[parallel:mclapply]{mclapply}()}.
+  \code{\link[parallel]{makeCluster}()},
+  \code{\link[parallel]{parLapply}()},
+  \code{\link[parallel]{parLapplyLB}()}, and
+  \code{\link[parallel]{mclapply}()}.
 }

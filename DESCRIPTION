@@ -1,7 +1,7 @@
 Package: tm
 Title: Text Mining Package
-Version: 0.7-14
-Date: 2024-08-13
+Version: 0.7-15
+Date: 2024-11-11
 Authors@R: c(person("Ingo", "Feinerer", role = "aut",
                     email = "feinerer@logic.at",
                     comment = c(ORCID = "0000-0001-7656-8338")),
@@ -21,11 +21,11 @@ License: GPL-3
 URL: https://tm.r-forge.r-project.org/
 Additional_repositories: https://datacube.wu.ac.at
 NeedsCompilation: yes
-Packaged: 2024-08-13 11:55:29 UTC; hornik
+Packaged: 2024-11-18 09:01:30 UTC; hornik
 Author: Ingo Feinerer [aut] (<https://orcid.org/0000-0001-7656-8338>),
   Kurt Hornik [aut, cre] (<https://orcid.org/0000-0003-4198-9911>),
   Artifex Software, Inc. [ctb, cph] (pdf_info.ps taken from GPL
     Ghostscript)
 Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 Repository: CRAN
-Date/Publication: 2024-08-13 13:00:22 UTC
+Date/Publication: 2024-11-18 09:34:11 UTC

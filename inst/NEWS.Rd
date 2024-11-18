@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-15}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Improvements for Rd cross-references.
+    }
+  }
+}
 \section{Changes in tm version 0.7-14}{
   \subsection{BUG FIXES}{
     \itemize{

@@ -23,9 +23,9 @@
   \item{weighting}{Define whether the line width corresponds to the
     correlation.}
   \item{attrs}{Argument passed to the plot method for class
-    \code{\link[graph:graphNEL-class]{graphNEL}}.}
+    \code{\link[graph]{graphNEL}}.}
   \item{\dots}{Other arguments passed to the
-    \code{\link[graph:graphNEL-class]{graphNEL}} plot method.}
+    \code{\link[graph]{graphNEL}} plot method.}
 }
 \details{
   Visualization requires that package \pkg{Rgraphviz} is available.
