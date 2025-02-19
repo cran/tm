@@ -22,7 +22,6 @@
 \alias{pGetElem.VectorSource}
 \alias{reader}
 \alias{reader.SimpleSource}
-\alias{Source}
 \alias{stepNext}
 \alias{stepNext.SimpleSource}
 \title{Sources}
