@@ -59,7 +59,7 @@ DublinCore(x, tag) <- value
   \url{https://dublincore.org/documents/dces/}).
 }
 \seealso{
-  \code{\link[NLP]{meta}} for metadata in package \pkg{NLP}.
+  \code{\link[NLP]{meta}} for metadata in package \CRANpkg{NLP}.
 }
 \references{
   Dublin Core Metadata Initiative.

@@ -26,7 +26,7 @@ scan_tokenizer(x)
 
   \describe{
     \item{Boost_tokenizer}{Uses the Boost (\url{https://www.boost.org})
-      Tokenizer (via \pkg{Rcpp}).}
+      Tokenizer (via \CRANpkg{Rcpp}).}
     \item{MC_tokenizer}{Implements the functionality of the tokenizer in the
       MC toolkit (\url{https://www.cs.utexas.edu/~dml/software/mc/}).}
     \item{scan_tokenizer}{Simulates \code{scan(\dots, what = "character")}.}
@@ -36,13 +36,13 @@ scan_tokenizer(x)
   \code{\link{getTokenizers}} to list tokenizers provided by package \pkg{tm}.
 
   \code{\link[NLP]{Regexp_Tokenizer}} for tokenizers using regular expressions
-    provided by package \pkg{NLP}.
+    provided by package \CRANpkg{NLP}.
 
   \code{\link[tau]{tokenize}} for a simple regular expression based tokenizer
-    provided by package \pkg{tau}.
+    provided by package \CRANpkg{tau}.
 
   \code{\link[tokenizers]{tokenizers}} for a collection of tokenizers provided
-    by package \pkg{tokenizers}.
+    by package \CRANpkg{tokenizers}.
 }
 \examples{
 data("crude")

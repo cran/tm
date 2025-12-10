@@ -23,7 +23,7 @@ readXML(spec, doc)
         expression \code{spec} extracts information from an \acronym{XML} node.}
       \item{\code{type = "function", spec = function(doc) \dots}}{The function
         \code{spec} is called, passing over the \acronym{XML} document (as
-        delivered by \code{\link[xml2]{read_xml}} from package \pkg{xml2}) as
+        delivered by \code{\link[xml2]{read_xml}} from package \CRANpkg{xml2}) as
         first argument.}
       \item{\code{type = "unevaluated", spec = "String"}}{The character vector
         \code{spec} is returned without modification.}

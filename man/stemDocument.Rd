@@ -15,6 +15,7 @@
   \item{language}{A string giving the language for stemming.}
 }
 \details{
+  Stemming requires that package \CRANpkg{SnowballC} is installed.
   The argument \code{language} is passed over to
   \code{\link[SnowballC]{wordStem}} as the name of the Snowball stemmer.
 }

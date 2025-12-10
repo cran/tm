@@ -22,7 +22,7 @@
   \code{\link{getTransformations}} to list available transformation (mapping)
   functions.
 
-  \code{\link[tau]{remove_stopwords}} provided by package \pkg{tau}.
+  \code{\link[tau]{remove_stopwords}} provided by package \CRANpkg{tau}.
 }
 \examples{
 data("crude")

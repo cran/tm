@@ -22,7 +22,7 @@ readDOC(engine = c("antiword", "executable"), AntiwordOptions = "")
   Available \acronym{DOC} extraction engines are as follows.
   \describe{
     \item{\code{"antiword"}}{(default) Antiword utility as provided by the
-      function \code{\link[antiword]{antiword}} in package \pkg{antiword}.}
+      function \code{\link[antiword]{antiword}} in package \CRANpkg{antiword}.}
     \item{\code{"executable"}}{command line \command{antiword}
       executable which must be installed and accessible on your system.
       This can convert documents from Microsoft Word version 2, 6, 7,

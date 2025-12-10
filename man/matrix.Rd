@@ -18,7 +18,7 @@ as.DocumentTermMatrix(x, \dots)
     corpus can be generated via \code{Corpus(VectorSource(x))}; for the
     coercing functions, either a term-document matrix or a document-term
     matrix or a \link[slam]{simple triplet matrix} (package
-    \pkg{slam}) or a \link[=termFreq]{term frequency vector}.} 
+    \CRANpkg{slam}) or a \link[=termFreq]{term frequency vector}.} 
   \item{control}{a named list of control options. There are local
     options which are evaluated for each document and global options
     which are evaluated once for the constructed matrix. Available local
@@ -28,7 +28,7 @@ as.DocumentTermMatrix(x, \dots)
     This is different for a \code{\link{SimpleCorpus}}. In this case all
     options are processed in a fixed order in one pass to improve performance.
     It always uses the Boost (\url{https://www.boost.org}) Tokenizer (via
-    \pkg{Rcpp}) and takes no custom functions as option arguments.
+    \CRANpkg{Rcpp}) and takes no custom functions as option arguments.
 
     Available global options are:
     \describe{
@@ -52,7 +52,7 @@ as.DocumentTermMatrix(x, \dots)
 \value{
   An object of class \code{TermDocumentMatrix} or class
   \code{DocumentTermMatrix} (both inheriting from a
-  \link[slam]{simple triplet matrix} in package \pkg{slam})
+  \link[slam]{simple triplet matrix} in package \CRANpkg{slam})
   containing a sparse term-document matrix or document-term matrix. The
   attribute \code{weighting} contains the weighting applied to the
   matrix.

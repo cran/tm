@@ -40,7 +40,7 @@ termFreq(doc, control = list())
     \describe{
       \item{\code{language}}{A character giving the language (preferably as
         \acronym{IETF} language tags, see \link[NLP]{language} in package
-        \pkg{NLP}) to be used for \code{stopwords} and \code{stemming} if
+        \CRANpkg{NLP}) to be used for \code{stopwords} and \code{stemming} if
         not provided by \code{doc}.}
       \item{\code{removePunctuation}}{A logical value indicating whether
         punctuation characters should be removed from

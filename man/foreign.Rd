@@ -42,6 +42,6 @@ read_dtm_MC(file, scalingtype = NULL)
   A \link[=DocumentTermMatrix]{document-term matrix}.
 }
 \seealso{
-  \code{\link[slam]{read_stm_MC}} in package \pkg{slam}.
+  \code{\link[slam]{read_stm_MC}} in package \CRANpkg{slam}.
 }
 \keyword{IO}

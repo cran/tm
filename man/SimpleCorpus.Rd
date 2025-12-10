@@ -14,7 +14,7 @@ SimpleCorpus(x, control = list(language = "en"))
     \describe{
       \item{\code{language}}{a character giving the language (preferably as
         \acronym{IETF} language tags, see \link[NLP]{language} in
-        package \pkg{NLP}).
+        package \CRANpkg{NLP}).
         The default language is assumed to be English (\code{"en"}).}
     }
   }

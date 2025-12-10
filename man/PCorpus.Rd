@@ -18,12 +18,12 @@ PCorpus(x,
         format delivered by \code{x}.}
       \item{\code{language}}{a character giving the language (preferably as
         \acronym{IETF} language tags, see \link[NLP]{language} in
-        package \pkg{NLP}).
+        package \CRANpkg{NLP}).
         The default language is assumed to be English (\code{"en"}).}
     }
   }
   \item{dbControl}{a named list of control parameters for the underlying
-    database storage provided by package \pkg{filehash}.
+    database storage provided by package \CRANpkg{filehash}.
     \describe{
       \item{\code{dbName}}{a character giving the filename for the database.}
       \item{\code{dbType}}{a character giving the database format (see

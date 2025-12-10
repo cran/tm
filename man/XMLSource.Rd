@@ -10,7 +10,7 @@ XMLSource(x, parser = xml_contents, reader)
 \arguments{
   \item{x}{a character giving a uniform resource identifier.}
   \item{parser}{a function accepting an \acronym{XML} document (as delivered by
-    \code{\link[xml2]{read_xml}} in package \pkg{xml2}) as input and returning
+    \code{\link[xml2]{read_xml}} in package \CRANpkg{xml2}) as input and returning
     \acronym{XML} elements/nodes.}
   \item{reader}{a function capable of turning \acronym{XML} elements/nodes as
     returned by \code{parser} into a subclass of \code{\link{TextDocument}}.}

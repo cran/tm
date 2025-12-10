@@ -28,7 +28,8 @@
     \code{\link[graph]{graphNEL}} plot method.}
 }
 \details{
-  Visualization requires that package \pkg{Rgraphviz} is available.
+  Visualization requires that Bioconductor software package
+  \pkg{Rgraphviz} is installed.
 }
 \examples{
 \dontrun{data(crude)

@@ -6,7 +6,7 @@
 }
 \details{
   \emph{Text documents} are documents containing (natural language) text. The
-  \pkg{tm} package employs the infrastructure provided by package \pkg{NLP} and
+  \pkg{tm} package employs the infrastructure provided by package \CRANpkg{NLP} and
   represents text documents via the virtual S3 class \code{TextDocument}.
   Actual S3 text document classes then extend the virtual base class (such as
   \code{\link{PlainTextDocument}}).

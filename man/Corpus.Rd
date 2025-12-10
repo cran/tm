@@ -35,5 +35,5 @@
   for the corpora classes provided by package \pkg{tm}.
 
   \code{\link[tm.plugin.dc]{DCorpus}} for a distributed corpus class provided by
-  package \pkg{tm.plugin.dc}.
+  package \CRANpkg{tm.plugin.dc}.
 }

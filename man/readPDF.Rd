@@ -26,7 +26,7 @@ readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
   \describe{
     \item{\code{"pdftools"}}{(default) Poppler \acronym{PDF} rendering library
       as provided by the functions \code{\link[pdftools]{pdf_info}} and
-      \code{\link[pdftools]{pdf_text}} in package \pkg{pdftools}.}
+      \code{\link[pdftools]{pdf_text}} in package \CRANpkg{pdftools}.}
     \item{\code{"xpdf"}}{command line \command{pdfinfo} and
       \command{pdftotext} executables which must be installed and accessible on
       your system. Suitable utilities are provided by the Xpdf
@@ -35,7 +35,7 @@ readPDF(engine = c("pdftools", "xpdf", "Rpoppler",
       library.}
     \item{\code{"Rpoppler"}}{Poppler \acronym{PDF} rendering library as
       provided by the functions \code{\link[Rpoppler]{PDF_info}} and
-      \code{\link[Rpoppler]{PDF_text}} in package \pkg{Rpoppler}.}
+      \code{\link[Rpoppler]{PDF_text}} in package \CRANpkg{Rpoppler}.}
     \item{\code{"ghostscript"}}{Ghostscript using \file{pdf_info.ps} and
       \file{ps2ascii.ps}.}
     \item{\code{"Rcampdf"}}{Perl CAM::PDF \acronym{PDF} manipulation library
