@@ -36,7 +36,5 @@ data("crude")
 stemCompletion(c("compan", "entit", "suppl"), crude)
 }
 \references{
-  Ingo Feinerer (2010).
-  Analysis and Algorithms for Stemming Inversion.
-  \emph{Information Retrieval Technology --- 6th Asia Information Retrieval Societies Conference, AIRS 2010, Taipei, Taiwan, December 1--3, 2010. Proceedings}, volume 6458 of \emph{Lecture Notes in Computer Science}, pages 290--299. Springer-Verlag, December 2010.
+  \bibshow{Feinerer:2010}
 }

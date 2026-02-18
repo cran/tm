@@ -72,9 +72,7 @@ weightSMART(m, spec = "nnn", control = list())
   The weighted matrix.
 }
 \references{
-  Christopher D. Manning and Prabhakar Raghavan and Hinrich Schütze (2008).
-  \emph{Introduction to Information Retrieval}.
-  Cambridge University Press, ISBN 0521865719.
+  \bibshow{Manning+Raghavan+Schütze:2008}
 }
 \examples{
 data("crude")
