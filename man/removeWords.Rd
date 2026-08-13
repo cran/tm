@@ -7,13 +7,14 @@
   Remove words from a text document.
 }
 \usage{
-\method{removeWords}{character}(x, words)
+removeWords(x, \dots)
+\method{removeWords}{character}(x, words, \dots)
 \method{removeWords}{PlainTextDocument}(x, \dots)
 }
 \arguments{
   \item{x}{A character or text document.}
   \item{words}{A character vector giving the words to be removed.}
-  \item{\dots}{passed over argument \code{words}.}
+  \item{\dots}{arguments to be passed to or from methods.}
 }
 \value{
   The character or text document without the specified words.

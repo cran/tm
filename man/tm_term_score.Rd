@@ -9,6 +9,7 @@
   Compute a score based on the number of matching terms.
 }
 \usage{
+tm_term_score(x, terms, FUN)
 \method{tm_term_score}{DocumentTermMatrix}(x, terms, FUN = row_sums)
 \method{tm_term_score}{PlainTextDocument}(x, terms, FUN = function(x) sum(x, na.rm = TRUE))
 \method{tm_term_score}{term_frequency}(x, terms, FUN = function(x) sum(x, na.rm = TRUE))

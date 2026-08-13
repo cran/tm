@@ -7,6 +7,7 @@
   Remove numbers from a text document.
 }
 \usage{
+removeNumbers(x, \dots)
 \method{removeNumbers}{character}(x, ucp = FALSE, \dots)
 \method{removeNumbers}{PlainTextDocument}(x, \dots)
 }

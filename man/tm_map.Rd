@@ -9,6 +9,7 @@
   to corpora.
 }
 \usage{
+tm_map(x, FUN, \dots)
 \method{tm_map}{PCorpus}(x, FUN, \dots)
 \method{tm_map}{SimpleCorpus}(x, FUN, \dots)
 \method{tm_map}{VCorpus}(x, FUN, \dots, lazy = FALSE)

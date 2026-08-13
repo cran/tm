@@ -7,6 +7,7 @@
   Stem words in a text document using Porter's stemming algorithm.
 }
 \usage{
+stemDocument(x, language = "english")
 \method{stemDocument}{character}(x, language = "english")
 \method{stemDocument}{PlainTextDocument}(x, language = meta(x, "language"))
 }

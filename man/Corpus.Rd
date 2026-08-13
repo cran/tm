@@ -4,6 +4,15 @@
 \description{
   Representing and computing on corpora.
 }
+\usage{
+Corpus(x, readerControl = list(reader = reader(x), language = "en"))
+}
+\arguments{
+  \item{x}{a \code{\link{Source}} object.}
+  \item{readerControl}{a named list of control parameters for reading in
+    content from \code{x}.  See \code{\link{SimpleCorpus}} or
+    \code{\link{VCorpus}} for details.}
+}
 \details{
   \emph{Corpora} are collections of documents containing (natural language)
   text. In packages which employ the infrastructure provided by package
@@ -27,13 +36,16 @@
   or for performance reasons (single access instead of extracting metadata of
   each document).
 
-  The function \code{Corpus} is a convenience alias to \code{SimpleCorpus} or
-  \code{VCorpus}, depending on the arguments provided.
+  The function \code{Corpus} is a convenience alias to
+  \code{\link{SimpleCorpus}} or \code{\link{VCorpus}}, depending on the
+  arguments provided.
 }
 \seealso{
-  \code{\link{SimpleCorpus}}, \code{\link{VCorpus}}, and \code{\link{PCorpus}}
+  \code{\link{SimpleCorpus}},
+  \code{\link{VCorpus}}, and
+  \code{\link{PCorpus}}
   for the corpora classes provided by package \pkg{tm}.
 
-  \code{\link[tm.plugin.dc]{DCorpus}} for a distributed corpus class provided by
-  package \CRANpkg{tm.plugin.dc}.
+  \code{\link[tm.plugin.dc]{DCorpus}} for a distributed corpus class
+  provided by package \CRANpkg{tm.plugin.dc}.
 }

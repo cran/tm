@@ -7,6 +7,7 @@
   Remove punctuation marks from a text document.
 }
 \usage{
+removePunctuation(x, \dots)
 \method{removePunctuation}{character}(x,
                   preserve_intra_word_contractions = FALSE,
                   preserve_intra_word_dashes = FALSE,

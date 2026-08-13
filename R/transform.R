@@ -128,11 +128,11 @@ removePunctuation.PlainTextDocument <-
     content_transformer(removePunctuation.character)
 
 removeWords <-
-function(x, words)
+function(x, ...)
     UseMethod("removeWords", x)
 # Improvements by Kurt Hornik
 removeWords.character <-
-function(x, words)
+function(x, words, ...)
     gsub(sprintf("(*UCP)\\b(%s)\\b",
                  paste(sort(words, decreasing = TRUE), collapse = "|")),
          "", x, perl = TRUE)
@@ -164,10 +164,10 @@ function(x, language = meta(x, "language"))
 }
 
 stripWhitespace <-
-function(x)
+function(x, ...)
     UseMethod("stripWhitespace", x)
 stripWhitespace.character <-
-function(x)
+function(x, ...)
     gsub("[[:space:]]+", " ", x)
 stripWhitespace.PlainTextDocument <-
     content_transformer(stripWhitespace.character)

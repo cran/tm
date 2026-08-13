@@ -12,9 +12,11 @@
   Interface to apply filter and index functions to corpora.
 }
 \usage{
+tm_filter(x, FUN, \dots)
 \method{tm_filter}{PCorpus}(x, FUN, \dots)
 \method{tm_filter}{SimpleCorpus}(x, FUN, \dots)
 \method{tm_filter}{VCorpus}(x, FUN, \dots)
+tm_index(x, FUN, \dots)
 \method{tm_index}{PCorpus}(x, FUN, \dots)
 \method{tm_index}{SimpleCorpus}(x, FUN, \dots)
 \method{tm_index}{VCorpus}(x, FUN, \dots)

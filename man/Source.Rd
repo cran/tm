@@ -29,13 +29,22 @@
   Creating and accessing sources.
 }
 \usage{
+eoi(x)
+getElem(x)
+getMeta(x)
+pGetElem(x)
+reader(x)
+stepNext(x)
+
+getSources()
+
 SimpleSource(encoding = "",
              length = 0,
              position = 0,
              reader = readPlain,
              \dots,
              class)
-getSources()
+
 \method{close}{SimpleSource}(con, \dots)
 \method{eoi}{SimpleSource}(x)
 \method{getMeta}{DataframeSource}(x)

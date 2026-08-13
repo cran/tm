@@ -10,6 +10,7 @@
   term-document matrix, or a text document.
 }
 \usage{
+inspect(x)
 \method{inspect}{PCorpus}(x)
 \method{inspect}{VCorpus}(x)
 \method{inspect}{TermDocumentMatrix}(x)

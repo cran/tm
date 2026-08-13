@@ -91,5 +91,3 @@ corpus <- VCorpus(mySource(custom.xml))
 ###################################################
 corpus[[1]]
 meta(corpus[[1]])
-
-

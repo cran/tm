@@ -7,6 +7,7 @@
   Find associations in a document-term or term-document matrix.
 }
 \usage{
+findAssocs(x, terms, corlimit)
 \method{findAssocs}{DocumentTermMatrix}(x, terms, corlimit)
 \method{findAssocs}{TermDocumentMatrix}(x, terms, corlimit)
 }

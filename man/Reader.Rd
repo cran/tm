@@ -8,6 +8,11 @@
 }
 \usage{
 getReaders()
+
+FunctionGenerator(x)
+}
+\arguments{
+  \item{x}{a \code{\link{function}} object.}
 }
 \details{
   \emph{Readers} are functions for extracting textual content and metadata out
@@ -35,6 +40,9 @@ getReaders()
   the additional arguments via lexical scoping. All corpus constructors in
   package \pkg{tm} check the reader function for being a function generator and
   if so apply it to yield the reader with the expected signature.
+
+  Function \code{FunctionGenerator} conveniently returns a function
+  inheriting from class \code{FunctionGenerator} and \code{function}.
 }
 \value{
   For \code{getReaders()}, a character vector with readers provided by package
