@@ -1,6 +1,17 @@
 \name{NEWS}
 \title{News for Package 'tm'}
 \encoding{UTF-8}
+\section{Changes in tm version 0.7-20}{
+  \subsection{SIGNIFICANT USER-VISIBLE CHANGES}{
+    \itemize{
+      \item Package \pkg{NLP} was moved from Depends to Imports, and
+      hence is no longer automatically attached when \pkg{tm} is loaded
+      and attached by \code{library()} or \code{require()}.  For
+      convenience, \pkg{tm} now re-exports the \code{content()} and
+      \code{meta()} generics it imports from package \pkg{NLP},
+      as well as the corresponding content and metadata setters.}
+  }
+}
 \section{Changes in tm version 0.7-19}{
   \subsection{BUG FIXES}{
     \itemize{

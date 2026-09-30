@@ -275,3 +275,5 @@ S3method("nTerms", "DocumentTermMatrix")
 S3method("nTerms", "TermDocumentMatrix")
 
 S3method("findAssocs", "matrix")
+
+export("content", "content<-", "meta", "meta<-")

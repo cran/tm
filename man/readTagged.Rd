@@ -45,5 +45,5 @@ x <- paste("The/at grand/jj jury/nn commented/vbd on/in a/at number/nn of/in",
 vs <- VectorSource(x)
 elem <- getElem(stepNext(vs))
 (doc <- readTagged()(elem, language = "en", id = "id1"))
-tagged_words(doc)
+NLP::tagged_words(doc)
 }

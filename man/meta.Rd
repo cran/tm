@@ -1,7 +1,6 @@
 \name{meta}
 \alias{DublinCore}
 \alias{DublinCore<-}
-\alias{meta}
 \alias{meta.PCorpus}
 \alias{meta.SimpleCorpus}
 \alias{meta.VCorpus}

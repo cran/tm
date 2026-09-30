@@ -41,8 +41,8 @@ function(file)
     out <- system2(gs_cmd,
                    c("-dNODISPLAY -q",
                      sprintf("-sFile=%s", shQuote(file)),
-                     system.file("ghostscript", "pdf_info.ps",
-                                 package = "tm")),
+                     shQuote(system.file("ghostscript", "pdf_info.ps",
+                                         package = "tm"))),
                    stdout = TRUE)
     out <- out[cumsum(out == "") == 2L][-1L]
     val <- sub("^[^:]+:[[:space:]]*", "", out)
